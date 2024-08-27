@@ -64,7 +64,7 @@ if [ -z "$BRANCH" ]; then
 fi
 
 # Verzeichnisname basierend auf Branch
-CLONE_DIR="/etc/DevOpsToolkit-$BRANCH"
+CLONE_DIR="/etc/DevOpsToolkit"
 
 # Überprüfen, ob das Skript als Root ausgeführt wird
 if [ "$EUID" -ne 0 ]; then

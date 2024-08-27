@@ -178,16 +178,11 @@ initialize_config() {
     echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
 
     # Speichern der Konfiguration
-    cat <<- EOL > "$CONFIG_FILE"
-
+cat <<- EOL > "$CONFIG_FILE"
 system_name: "$SYSTEM_NAME"
-
 ssh_port: "$SSH_PORT"
-
 log_level: "$LOG_LEVEL"
-
 data_dir: "$DATA_DIR"
-
 EOL
 
     echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"

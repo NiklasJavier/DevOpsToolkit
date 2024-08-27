@@ -17,6 +17,7 @@ BRANCH=""
 USE_DEFAULTS=false
 
 SSH_KEY_PUBLIC=""
+SSH_KEY_FUNCTION_ENABLED=false
 
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {

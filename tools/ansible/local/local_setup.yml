@@ -3,9 +3,6 @@
   hosts: local
   become: true
 
-  roles:
-    - load_config  # Lädt die config.yaml über die Rolle
-
   tasks:
     - name: Print the tools directory
       debug:

@@ -179,7 +179,7 @@ initialize_config() {
 
     # Speichern der Konfiguration
     cat <<- EOL > "$CONFIG_FILE"
-    
+
 system_name: "$SYSTEM_NAME"
 
 ssh_port: "$SSH_PORT"
@@ -200,3 +200,19 @@ if [ ! -f "$CONFIG_FILE" ]; then
 else
     echo -e "${GREEN}Using existing configuration from $CONFIG_FILE.${NC}"
 fi
+
+# Funktion zum Anfügen der Inhalte von var.temp.yaml an config.yaml
+append_temp_to_config() {
+    echo -e "${GREEN}Appending contents of var.temp.yaml to config.yaml...${NC}"
+
+    # Überprüfen, ob var.temp.yaml existiert
+    if [ -f "$CLONE_DIR/environments/var.temp.yaml" ]; then
+        # Inhalte von var.temp.yaml an config.yaml anhängen
+        cat "$CLONE_DIR/environments/var.temp.yaml" >> "$SETTINGS_DIR/config.yaml"
+        echo -e "${GREEN}Contents of var.temp.yaml successfully appended to config.yaml.${NC}"
+    else
+        echo -e "${RED}var.temp.yaml not found!${NC}"
+    fi
+}
+
+append_temp_to_config

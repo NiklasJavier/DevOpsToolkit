@@ -1,0 +1,20 @@
+---
+- name: Configure localhost
+  hosts: local
+  become: true
+
+  roles:
+    - load_config  # Lädt die config.yaml über die Rolle
+
+  tasks:
+    - name: Print the tools directory
+      debug:
+        msg: "Tools directory is: {{ tools_dir }}"
+
+    - name: Print the scripts directory
+      debug:
+        msg: "Scripts directory is: {{ scripts_dir }}"
+
+    - name: Print the pipelines directory
+      debug:
+        msg: "Pipelines directory is: {{ pipelines_dir }}"

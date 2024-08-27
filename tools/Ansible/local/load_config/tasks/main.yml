@@ -1,0 +1,4 @@
+---
+- name: Load config variables from config.yaml
+  include_vars:
+    file: "{{ lookup('env', 'SETTINGS_DIR') }}/config.yaml"

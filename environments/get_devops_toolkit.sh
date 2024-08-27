@@ -312,3 +312,12 @@ else
     echo -e "${GREEN}Error: $CLONE_DIR/environments/get_tools.sh not found!${NC}"
     exit 1
 fi
+
+# Überprüfen, ob start_ansible_setup.sh existiert und ausführen
+if [ -f "$CLONE_DIR/environments/start_ansible_setup.sh" ]; then
+    echo -e "${GREEN}Switching to $CLONE_DIR/environments/start_ansible_setup.sh${NC}"
+    exec bash "$CLONE_DIR/environments/start_ansible_setup.sh" "$TOOLS_DIR" "$TOOLS" "$SETTINGS_DIR"
+else
+    echo -e "${RED}Error: $CLONE_DIR/environments/start_ansible_setup.sh not found!${NC}"
+    exit 1
+fi

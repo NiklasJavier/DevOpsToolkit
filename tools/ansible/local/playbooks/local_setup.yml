@@ -8,6 +8,10 @@
       include_vars:
         file: "{{ CONFIG_YAML }}"
 
+    - name: Verify system_name variable is loaded
+      debug:
+        msg: "The system_name is {{ system_name }}"
+
     - name: Print the tools directory
       debug:
         msg: "Tools directory is: {{ tools_dir }}"
@@ -20,5 +24,5 @@
       debug:
         msg: "Pipelines directory is: {{ pipelines_dir }}"
 
-  roles:
-    - role: default_settings  # Einbinden der Rolle für die Standardkonfigurationen
+#  roles:
+#    - role: default_settings  # Einbinden der Rolle für die Standardkonfigurationen

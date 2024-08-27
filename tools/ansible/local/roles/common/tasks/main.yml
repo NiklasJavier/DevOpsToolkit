@@ -25,21 +25,6 @@
     state: present
   notify: Restart-SSH
 
-- name: Get list of all system users
-  command: "awk -F':' '{ print $1 }' /etc/passwd"
-  register: system_users
-
-- name: Filter users (remove root)
-  set_fact:
-    users_to_delete: "{{ system_users.stdout_lines | difference(['root']) }}"
-
-- name: Delete users except root with their home directories
-  user:
-    name: "{{ item }}"
-    state: absent
-    remove: yes  # Löscht den Benutzer und das Home-Verzeichnis
-  loop: "{{ users_to_delete }}"
-
 - name: Create a user with the username from variable
   user:
     name: "{{ username }}"

@@ -16,10 +16,10 @@ BRANCH=""
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
     echo -e "${GREEN}Please select the branch to clone:${NC}"
-    echo "1) ${BLUE}production${NC}"
-    echo "2) ${YELLOW}staging${NC}"
-    echo "3) ${RED}dev${NC}"
-    read -p "${GREEN}Enter your choice (1-3): ${NC}" choice < /dev/tty
+    echo -e "1) ${BLUE}production${NC}"
+    echo -e "2) ${YELLOW}staging${NC}"
+    echo -e "3) ${RED}dev${NC}"
+    read -p "Enter your choice (1-3):" choice < /dev/tty
 
     case $choice in
       1)

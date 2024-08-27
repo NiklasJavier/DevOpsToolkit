@@ -5,6 +5,11 @@
     state: present
     update_cache: yes
 
+- name: Reset all UFW rules to default
+  become: true  # Erfordert Root-Rechte
+  command: ufw reset
+  notify: Restart UFW  # Optionaler Handler, um UFW neu zu starten, falls erforderlich
+
 - name: Allow SSH port through UFW
   ufw:
     rule: allow
@@ -12,6 +17,7 @@
     proto: tcp
 
 - name: Enable UFW
+  become: true  # Erfordert Root-Rechte
   ufw:
     state: enabled
     policy: allow  # Standardrichtlinie "allow"

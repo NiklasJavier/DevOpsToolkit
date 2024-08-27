@@ -5,12 +5,6 @@
 
   tasks:
 
-  handlers:
-    - name: Restart SSHD
-      service:
-        name: ssh
-        state: restarted
-
   roles:
     - role: variables  # Einbinden der Rolle zum Laden der Variablen
     - role: common

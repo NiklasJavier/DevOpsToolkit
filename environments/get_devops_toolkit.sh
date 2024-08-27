@@ -146,7 +146,7 @@ CONFIG_FILE="$SETTINGS_DIR/config.yaml"
 
 # Immer die config.temp.yaml nach config.yaml verschieben und überschreiben, falls vorhanden
 if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
-    mv -f "$CLONE_DIR/environments/config.temp.yaml" "$SETTINGS_DIR/config.yaml"
+    cp -f "$CLONE_DIR/environments/config.temp.yaml" "$SETTINGS_DIR/config.yaml"
     echo -e "${GREEN}config.temp.yaml has been moved to config.yaml, overwriting the existing file.${NC}"
 else
     echo -e "${RED}config.temp.yaml does not exist in $CLONE_DIR/environments.${NC}"
@@ -246,3 +246,12 @@ append_temp_to_config() {
 }
 
 append_temp_to_config
+
+# Um get_tools.sh auszuführen
+if [ -f "$CLONE_DIR/environments/get_tools.sh" ]; then
+    echo "Switching to $CLONE_DIR/environments/get_tools.sh"
+    exec bash "$CLONE_DIR/environments/get_tools.sh"
+else
+    echo "Error: $CLONE_DIR/environments/get_tools.sh not found!"
+    exit 1
+fi

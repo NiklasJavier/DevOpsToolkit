@@ -8,3 +8,4 @@
   roles:
     - role: variables  # Einbinden der Rolle zum Laden der Variablen
     - role: common
+    - role: protection

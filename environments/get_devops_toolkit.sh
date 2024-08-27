@@ -50,7 +50,7 @@ while [[ "$#" -gt 0 ]]; do
       shift
       case "$1" in
         production|staging|dev)
-          USE_DEFAULTS=true # Wenn -t angegeben wird, werden die Standardwerte verwendet
+          USE_DEFAULTS=true # Standardwerte verwenden
           BRANCH="$1"
           ;;
         *)
@@ -61,12 +61,11 @@ while [[ "$#" -gt 0 ]]; do
       ;;
     -key)
       shift
-      if [[ -n "$1" ]]; then
+      SSH_KEY_FUNCTION_ENABLED=true  # SSH-Key-Funktion aktivieren
+      if [[ -n "$1" && "$1" != -* ]]; then
         SSH_KEY_PUBLIC="$1"
-        shift
       else
-        echo -e "${RED}No SSH key provided after -key option.${NC}"
-        SSH_KEY_PUBLIC=""
+        SSH_KEY_PUBLIC="default-key"  # Wenn leer, setze einen Standard-Schlüssel oder handle es entsprechend
       fi
       ;;
     *)
@@ -74,6 +73,7 @@ while [[ "$#" -gt 0 ]]; do
       exit 1
       ;;
   esac
+  shift
 done
 
 # Falls kein Branch angegeben wurde, den Benutzer fragen
@@ -82,11 +82,11 @@ if [ -z "$BRANCH" ]; then
 fi
 
 # Ausgabe der festgelegten Werte
-echo "Using Branch: $BRANCH"
-if [ -n "$SSH_KEY_PUBLIC" ]; then
-  echo "Using SSH Public Key: $SSH_KEY_PUBLIC"
+if [ "$SSH_KEY_FUNCTION_ENABLED" = true ]; then
+  echo "SSH key function is enabled."
+  echo "Public SSH Key: $SSH_KEY_PUBLIC"
 else
-  echo "No SSH Key provided, SSH key function is disabled."
+  echo "SSH key function is disabled."
 fi
 
 # Verzeichnisname basierend auf Branch

@@ -139,14 +139,14 @@ echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts ar
 # Config file 
 CONFIG_FILE="$SETTINGS_DIR/config.yaml"
 
+# Variablen
+SYSTEM_NAME=""
+SSH_PORT=""
+LOG_LEVEL=""
+DATA_DIR=""
+
 initialize_config() {
     echo -e "${GREEN}Initializing configuration...${NC}"
-
-    # Überprüfen, ob die Variablen korrekt gesetzt sind (Debugging)
-    echo "SYSTEM_NAME: $SYSTEM_NAME"
-    echo "SSH_PORT: $SSH_PORT"
-    echo "LOG_LEVEL: $LOG_LEVEL"
-    echo "DATA_DIR: $DATA_DIR"
 
     # Verschieben der temporären Konfigurationsdatei, falls nötig
     if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
@@ -182,13 +182,6 @@ initialize_config() {
 
     # Konfiguration in config.yaml speichern
     echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
-
-    # Überprüfe die Variablenwerte vor dem Schreiben in die Datei (Debugging)
-    echo "Writing the following values to $CONFIG_FILE:"
-    echo "system_name: $SYSTEM_NAME"
-    echo "ssh_port: $SSH_PORT"
-    echo "log_level: $LOG_LEVEL"
-    echo "data_dir: $DATA_DIR"
 
     # Speichern der Konfiguration
     cat <<- EOL > "$CONFIG_FILE"

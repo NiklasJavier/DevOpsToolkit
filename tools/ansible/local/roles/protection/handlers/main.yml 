@@ -1,6 +1,1 @@
 ---
-- name: Install UFW (Uncomplicated Firewall)
-  apt:
-    name: ufw
-    state: present
-    update_cache: yes

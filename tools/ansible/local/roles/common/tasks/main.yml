@@ -23,7 +23,7 @@
     regexp: '^#?Port.*'
     line: "Port {{ ssh_port }}"
     state: present
-  notify: Restart SSHD
+  notify: Restart-SSH
 
 - name: Add SSH public key if ssh_key_function_enabled is true
   authorized_key:

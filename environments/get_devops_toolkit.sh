@@ -196,13 +196,16 @@ else
 fi
 
 # Konfigurationsdatei einlesen (mit yq)
-SYSTEM_NAME=$(yq '.system_name' $CONFIG_FILE)
-SSH_PORT=$(yq '.ssh_port' $CONFIG_FILE)
-LOG_LEVEL=$(yq '.log_level' $CONFIG_FILE)
-DATA_DIR=$(yq '.data_dir' $CONFIG_FILE)
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo -e "Configuration file not found. Initializing configuration..."
+    # Initialisiere und erstelle config.sh
+else
+    # Lade die Konfiguration
+    source "$CONFIG_FILE"
+fi
 
 # Beispiel für die Verwendung der Variablen nach der Initialisierung
-echo -e "${GREEN}System name: $SYSTEM_NAME${NC}"
-echo -e "${GREEN}Running on Port: $SSH_PORT${NC}"
-echo -e "${GREEN}Log Level: $LOG_LEVEL${NC}"
-echo -e "${GREEN}Data Directory: $DATA_DIR${NC}"
+echo "System Name: $SYSTEM_NAME"
+echo "SSH Port: $SSH_PORT"
+echo "Log Level: $LOG_LEVEL"
+echo "Data Directory: $DATA_DIR"

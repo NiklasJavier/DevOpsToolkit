@@ -13,6 +13,9 @@ REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git"
 # Variable zur Speicherung des Branch-Namens
 BRANCH=""
 
+# Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
+USE_DEFAULTS=false
+
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
     echo -e "${GREEN}Please select the branch to clone:${NC}"
@@ -44,6 +47,7 @@ while [[ "$#" -gt 0 ]]; do
     -t)
       shift
       if [[ "$1" == "production" || "$1" == "staging" || "$1" == "dev" ]]; then
+        USE_DEFAULTS=true # Wenn -t angegeben wird, werden die Standardwerte verwendet
         BRANCH="$1"
       else
         echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
@@ -154,30 +158,48 @@ echo -e "${GREEN}Initializing configuration...${NC}"
 if [ -z "$SYSTEM_NAME" ]; then
     random_string=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
     default_system_name="SRVID-$random_string"
-    read -r -p "Enter system name (default: $default_system_name): " SYSTEM_NAME < /dev/tty
-    SYSTEM_NAME=${SYSTEM_NAME:-"$default_system_name"}
+    if [ "$USE_DEFAULTS" = true ]; then
+        SYSTEM_NAME="$default_system_name"
+    else
+        read -r -p "Enter system name (default: $default_system_name): " SYSTEM_NAME < /dev/tty
+        SYSTEM_NAME=${SYSTEM_NAME:-"$default_system_name"}
+    fi
     echo "SYSTEM_NAME set to: $SYSTEM_NAME"
 fi
 
 # SSH_PORT festlegen
 if [ -z "$SSH_PORT" ]; then
-    read -r -p "Enter the SSH_PORT (default: 282): " SSH_PORT < /dev/tty
-    SSH_PORT=${SSH_PORT:-"282"}
+    default_ssh_port="282"
+    if [ "$USE_DEFAULTS" = true ]; then
+        SSH_PORT="$default_ssh_port"
+    else
+        read -r -p "Enter the SSH_PORT (default: $default_ssh_port): " SSH_PORT < /dev/tty
+        SSH_PORT=${SSH_PORT:-"$default_ssh_port"}
+    fi
     echo "SSH_PORT set to: $SSH_PORT"
 fi
 
 # Log Level festlegen
 if [ -z "$LOG_LEVEL" ]; then
-    read -r -p "Enter the log level (default: info) [debug, info, warn, error]: " LOG_LEVEL < /dev/tty
-    LOG_LEVEL=${LOG_LEVEL:-"info"}
+    default_log_level="info"
+    if [ "$USE_DEFAULTS" = true ]; then
+        LOG_LEVEL="$default_log_level"
+    else
+        read -r -p "Enter the log level (default: $default_log_level) [debug, info, warn, error]: " LOG_LEVEL < /dev/tty
+        LOG_LEVEL=${LOG_LEVEL:-"$default_log_level"}
+    fi
     echo "LOG_LEVEL set to: $LOG_LEVEL"
 fi
 
 # OPT Datenverzeichnis festlegen, das auf dem Systemnamen basiert
 if [ -z "$OPT_DATA_DIR" ]; then
     default_opt_data_dir="/opt/$SYSTEM_NAME/data"
-    read -r -p "Enter the opt data directory (default: $default_opt_data_dir): " OPT_DATA_DIR < /dev/tty
-    OPT_DATA_DIR=${OPT_DATA_DIR:-"$default_opt_data_dir"}
+    if [ "$USE_DEFAULTS" = true ]; then
+        OPT_DATA_DIR="$default_opt_data_dir"
+    else
+        read -r -p "Enter the opt data directory (default: $default_opt_data_dir): " OPT_DATA_DIR < /dev/tty
+        OPT_DATA_DIR=${OPT_DATA_DIR:-"$default_opt_data_dir"}
+    fi
     echo "OPT_DATA_DIR set to: $OPT_DATA_DIR"
 fi
 

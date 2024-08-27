@@ -1,3 +1,5 @@
 # var
+
 backup_dir: "/var/backup"
+
 max_log_size: "10M"

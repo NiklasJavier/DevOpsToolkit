@@ -186,13 +186,24 @@ echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
 
 # Speichern der Konfiguration
 cat <<- EOL > "$CONFIG_FILE"
+# system_name: Der Name des Systems oder Servers, der für die Konfiguration verwendet wird.
+# Wenn der Benutzer keinen Namen eingibt, wird ein Standardname generiert.
 system_name: "$SYSTEM_NAME"
 
+# ssh_port: Der SSH-Port, über den die Verbindung zum Server hergestellt wird.
+# Standardmäßig wird Port 282 verwendet, falls der Benutzer keinen Port angibt.
 ssh_port: "$SSH_PORT"
 
+# log_level: Das gewünschte Log-Level für die Protokollierung der Anwendung.
+# Mögliche Optionen sind "debug", "info", "warn" und "error".
+# Wenn der Benutzer keinen Wert angibt, wird "info" verwendet.
 log_level: "$LOG_LEVEL"
 
+# var_data_dir: Das Datenverzeichnis, in dem Anwendungsdaten gespeichert werden.
+# Dieses Verzeichnis basiert standardmäßig auf dem system_name (z.B. /var/$SYSTEM_NAME/data),
+# falls der Benutzer kein anderes Verzeichnis angibt.
 var_data_dir: "$VAR_DATA_DIR"
+
 EOL
 
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"

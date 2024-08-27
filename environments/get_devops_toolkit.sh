@@ -241,9 +241,9 @@ fi
 # Konfiguration in config.yaml speichern
 echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
 
-TOOLS_DIR="$CLONE_DIR/tools/"
-SCRIPTS_DIR="$BRANCH_DIR/scripts/"
-PIPELINES_DIR="$BRANCH_DIR/pipelines/"
+TOOLS_DIR="$CLONE_DIR/tools"
+SCRIPTS_DIR="$BRANCH_DIR/scripts"
+PIPELINES_DIR="$BRANCH_DIR/pipelines"
 
 # Speichern der Konfiguration
 cat <<- EOL > "$CONFIG_FILE"

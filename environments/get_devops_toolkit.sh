@@ -277,12 +277,12 @@ tools: "$TOOLS"
 # Sie wird auf "false" gesetzt, wenn kein SSH-Key angegeben wird oder die Funktion
 # standardmäßig deaktiviert ist. Wenn ein gültiger SSH-Schlüssel eingegeben wird,
 # wird sie auf "true" gesetzt und die SSH-Key-Funktion wird aktiviert.
-SSH_KEY_FUNCTION_ENABLED: false
+ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
 
 # SSH_KEY_PUBLIC: Diese Variable enthält den öffentlichen SSH-Schlüssel (Public Key),
 # den der Benutzer eingegeben hat. Wenn kein Schlüssel eingegeben wird, bleibt diese
 # Variable leer (""). Wenn ein gültiger SSH-Schlüssel eingegeben wird, wird dieser hier gespeichert.
-SSH_KEY_PUBLIC: ""
+SSH_KEY_PUBLIC: "$SSH_KEY_PUBLIC"
 
 EOL
 

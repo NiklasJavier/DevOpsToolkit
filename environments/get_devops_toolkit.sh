@@ -111,6 +111,25 @@ else
     fi
 fi
 
+# Prüfen, ob der branch-spezifische Ordner existiert, und erstellen, wenn nicht
+BRANCH_DIR="$CLONE_DIR/$BRANCH"
+SETTINGS_DIR="$BRANCH_DIR/.settings"
+
+if [ ! -d "$BRANCH_DIR" ]; then
+    echo -e "${GREEN}Creating branch-specific folder: $BRANCH_DIR...${NC}"
+    mkdir -p "$BRANCH_DIR"
+else
+    echo -e "${GREEN}Branch-specific folder already exists: $BRANCH_DIR...${NC}"
+fi
+
+# Prüfen, ob der .settings-Ordner existiert, und erstellen, wenn nicht
+if [ ! -d "$SETTINGS_DIR" ]; then
+    echo -e "${GREEN}Creating .settings folder in $BRANCH_DIR...${NC}"
+    mkdir -p "$SETTINGS_DIR"
+else
+    echo -e "${GREEN}.settings folder already exists in $BRANCH_DIR...${NC}"
+fi
+
 # Alle Skripte ausführbar machen
 echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
 sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;

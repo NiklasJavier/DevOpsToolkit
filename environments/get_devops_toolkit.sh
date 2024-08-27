@@ -13,6 +13,9 @@ REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git"
 # Variable zur Speicherung des Branch-Namens
 BRANCH=""
 
+# Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
+USE_DEFAULTS=false
+
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
     echo -e "${GREEN}Please select the branch to clone:${NC}"
@@ -44,6 +47,7 @@ while [[ "$#" -gt 0 ]]; do
     -t)
       shift
       if [[ "$1" == "production" || "$1" == "staging" || "$1" == "dev" ]]; then
+        USE_DEFAULTS=true # Wenn -t angegeben wird, werden die Standardwerte verwendet
         BRANCH="$1"
       else
         echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
@@ -64,7 +68,7 @@ if [ -z "$BRANCH" ]; then
 fi
 
 # Verzeichnisname basierend auf Branch
-CLONE_DIR="/etc/DevOpsToolkit-$BRANCH"
+CLONE_DIR="/etc/DevOpsToolkit"
 
 # Überprüfen, ob das Skript als Root ausgeführt wird
 if [ "$EUID" -ne 0 ]; then
@@ -111,8 +115,134 @@ else
     fi
 fi
 
+# Prüfen, ob der branch-spezifische Ordner existiert, und erstellen, wenn nicht
+BRANCH_DIR="$CLONE_DIR/environments/$BRANCH"
+SETTINGS_DIR="$BRANCH_DIR/.settings"
+
+if [ ! -d "$BRANCH_DIR" ]; then
+    echo -e "${GREEN}Creating branch-specific folder: $BRANCH_DIR...${NC}"
+    mkdir -p "$BRANCH_DIR"
+else
+    echo -e "${GREEN}Branch-specific folder already exists: $BRANCH_DIR...${NC}"
+fi
+
+# Prüfen, ob der .settings-Ordner existiert, und erstellen, wenn nicht
+if [ ! -d "$SETTINGS_DIR" ]; then
+    echo -e "${GREEN}Creating .settings folder in $BRANCH_DIR...${NC}"
+    mkdir -p "$SETTINGS_DIR"
+else
+    echo -e "${GREEN}.settings folder already exists in $BRANCH_DIR...${NC}"
+fi
+
 # Alle Skripte ausführbar machen
 echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
 sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;
 
 echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts are now executable.${NC}"
+
+# Config file 
+CONFIG_FILE="$SETTINGS_DIR/config.yaml"
+
+
+# Immer die config.temp.yaml nach config.yaml verschieben und überschreiben, falls vorhanden
+if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
+    mv -f "$CLONE_DIR/environments/config.temp.yaml" "$SETTINGS_DIR/config.yaml"
+    echo -e "${GREEN}config.temp.yaml has been moved to config.yaml, overwriting the existing file.${NC}"
+else
+    echo -e "${RED}config.temp.yaml does not exist in $CLONE_DIR/environments.${NC}"
+fi
+
+echo -e "${GREEN}Initializing configuration...${NC}"
+
+# System Name festlegen (ehemals Hostname)
+if [ -z "$SYSTEM_NAME" ]; then
+    random_string=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
+    default_system_name="SRVID-$random_string"
+    if [ "$USE_DEFAULTS" = true ]; then
+        SYSTEM_NAME="$default_system_name"
+    else
+        read -r -p "Enter system name (default: $default_system_name): " SYSTEM_NAME < /dev/tty
+        SYSTEM_NAME=${SYSTEM_NAME:-"$default_system_name"}
+    fi
+    echo "SYSTEM_NAME set to: $SYSTEM_NAME"
+fi
+
+# SSH_PORT festlegen
+if [ -z "$SSH_PORT" ]; then
+    default_ssh_port="282"
+    if [ "$USE_DEFAULTS" = true ]; then
+        SSH_PORT="$default_ssh_port"
+    else
+        read -r -p "Enter the SSH_PORT (default: $default_ssh_port): " SSH_PORT < /dev/tty
+        SSH_PORT=${SSH_PORT:-"$default_ssh_port"}
+    fi
+    echo "SSH_PORT set to: $SSH_PORT"
+fi
+
+# Log Level festlegen
+if [ -z "$LOG_LEVEL" ]; then
+    default_log_level="info"
+    if [ "$USE_DEFAULTS" = true ]; then
+        LOG_LEVEL="$default_log_level"
+    else
+        read -r -p "Enter the log level (default: $default_log_level) [debug, info, warn, error]: " LOG_LEVEL < /dev/tty
+        LOG_LEVEL=${LOG_LEVEL:-"$default_log_level"}
+    fi
+    echo "LOG_LEVEL set to: $LOG_LEVEL"
+fi
+
+# OPT Datenverzeichnis festlegen, das auf dem Systemnamen basiert
+if [ -z "$OPT_DATA_DIR" ]; then
+    default_opt_data_dir="/opt/$SYSTEM_NAME/data"
+    if [ "$USE_DEFAULTS" = true ]; then
+        OPT_DATA_DIR="$default_opt_data_dir"
+    else
+        read -r -p "Enter the opt data directory (default: $default_opt_data_dir): " OPT_DATA_DIR < /dev/tty
+        OPT_DATA_DIR=${OPT_DATA_DIR:-"$default_opt_data_dir"}
+    fi
+    echo "OPT_DATA_DIR set to: $OPT_DATA_DIR"
+fi
+
+# Konfiguration in config.yaml speichern
+echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
+
+# Speichern der Konfiguration
+cat <<- EOL > "$CONFIG_FILE"
+# system_name: Der Name des Systems oder Servers, der für die Konfiguration verwendet wird.
+# Wenn der Benutzer keinen Namen eingibt, wird ein Standardname generiert.
+system_name: "$SYSTEM_NAME"
+
+# ssh_port: Der SSH-Port, über den die Verbindung zum Server hergestellt wird.
+# Standardmäßig wird Port 282 verwendet, falls der Benutzer keinen Port angibt.
+ssh_port: "$SSH_PORT"
+
+# log_level: Das gewünschte Log-Level für die Protokollierung der Anwendung.
+# Mögliche Optionen sind "debug", "info", "warn" und "error".
+# Wenn der Benutzer keinen Wert angibt, wird "info" verwendet.
+log_level: "$LOG_LEVEL"
+
+# opt: Das Datenverzeichnis, in dem Anwendungsdaten gespeichert werden.
+# Dieses Verzeichnis basiert standardmäßig auf dem system_name (z.B. /opt/$SYSTEM_NAME/data),
+# falls der Benutzer kein anderes Verzeichnis angibt.
+opt_data_dir: "$OPT_DATA_DIR"
+
+EOL
+
+echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
+
+
+# Funktion zum Anfügen der Inhalte von var.temp.yaml an config.yaml
+append_temp_to_config() {
+    echo -e "${GREEN}Appending contents of var.temp.yaml to config.yaml...${NC}"
+
+    # Überprüfen, ob var.temp.yaml existiert
+    if [ -f "$CLONE_DIR/environments/var.temp.yaml" ]; then
+        # Inhalte von opt.temp.yaml an config.yaml anhängen
+        cat "$CLONE_DIR/environments/var.temp.yaml" >> "$SETTINGS_DIR/config.yaml"
+        echo -e "${GREEN}Contents of var.temp.yaml successfully appended to config.yaml.${NC}"
+    else
+        echo -e "${RED}var.temp.yaml not found!${NC}"
+    fi
+}
+
+append_temp_to_config

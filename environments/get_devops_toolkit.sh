@@ -83,14 +83,6 @@ if [ -z "$BRANCH" ]; then
     choose_branch
 fi
 
-# Ausgabe der festgelegten Werte
-if [ "$SSH_KEY_FUNCTION_ENABLED" = true ]; then
-  echo "SSH key function is enabled."
-  echo "Public SSH Key: $SSH_KEY_PUBLIC"
-else
-  echo "SSH key function is disabled."
-fi
-
 # Verzeichnisname basierend auf Branch
 CLONE_DIR="/etc/DevOpsToolkit"
 
@@ -177,6 +169,15 @@ else
 fi
 
 echo -e "${GREEN}Initializing configuration...${NC}"
+
+
+# Check Public SSH Key Option -key
+if [ "$SSH_KEY_FUNCTION_ENABLED" = true ]; then
+  echo "SSH key function is enabled."
+  echo "Public SSH Key: $SSH_KEY_PUBLIC"
+else
+  echo "SSH key function is disabled."
+fi
 
 # System Name festlegen (ehemals Hostname)
 if [ -z "$SYSTEM_NAME" ]; then

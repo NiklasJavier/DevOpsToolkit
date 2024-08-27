@@ -17,7 +17,7 @@ choose_branch() {
     echo "1) production"
     echo "2) staging"
     echo "3) dev"
-    read -p "Enter your choice (1-3): " choice
+    read -p "Enter your choice (1-3): " choice < /dev/tty
 
     case $choice in
       1)

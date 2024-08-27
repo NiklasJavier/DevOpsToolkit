@@ -1,2 +1,3 @@
-#!bin/bash
-echo "befinden uns nun in der get_tools.sh"
+#!/bin/bash
+TOOLS_DIR="$1"
+echo "Tools directory is: $TOOLS_DIR"

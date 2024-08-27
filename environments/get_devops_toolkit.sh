@@ -241,6 +241,10 @@ fi
 # Konfiguration in config.yaml speichern
 echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
 
+TOOLS_DIR="$CLONE_DIR/tools/"
+SCRIPTS_DIR="$BRANCH_DIR/scripts/"
+PIPELINES_DIR="$BRANCH_DIR/pipelines/"
+
 # Speichern der Konfiguration
 cat <<- EOL > "$CONFIG_FILE"
 # system_name: Der Name des Systems oder Servers, der für die Konfiguration verwendet wird.
@@ -284,14 +288,27 @@ ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
 # Variable leer (""). Wenn ein gültiger SSH-Schlüssel eingegeben wird, wird dieser hier gespeichert.
 SSH_KEY_PUBLIC: "$SSH_KEY_PUBLIC"
 
+# tools_dir: Speichert den Pfad zu dem Verzeichnis, in dem verschiedene Tools (z.B. Ansible, Docker, Terraform)
+# abgelegt sind. Dies ist der Ort, an dem alle Tool-spezifischen Dateien oder Konfigurationen gespeichert werden.
+tools_dir: "$TOOLS_DIR"
+
+# scripts_dir: Speichert den Pfad zu dem Verzeichnis, in dem allgemeine Skripte abgelegt sind.
+# Hier befinden sich Automatisierungsskripte oder Hilfsskripte, die für verschiedene Aufgaben oder Prozesse genutzt werden.
+scripts_dir: "$SCRIPTS_DIR"
+
+# pipelines_dir: Speichert den Pfad zu dem Verzeichnis, in dem Pipeline-Konfigurationsdateien (z.B. CI/CD-Pipelines) gespeichert sind.
+# Dieses Verzeichnis enthält die Dateien für Jenkins, GitLab CI oder andere CI/CD-Tools, die in Automatisierungsprozesse integriert sind.
+pipelines_dir: "$PIPELINES_DIR"
+
 EOL
 
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 
-# Um get_tools.sh auszuführen
+# Überprüfen, ob get_tools.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/get_tools.sh" ]; then
     echo -e "${GREEN}Switching to $CLONE_DIR/environments/get_tools.sh${NC}"
-    exec bash "$CLONE_DIR/environments/get_tools.sh"
+    TOOLS_DIR="/path/to/tools_dir"
+    exec bash "$CLONE_DIR/environments/get_tools.sh" "$TOOLS_DIR"
 else
     echo -e "${GREEN}Error: $CLONE_DIR/environments/get_tools.sh not found!${NC}"
     exit 1

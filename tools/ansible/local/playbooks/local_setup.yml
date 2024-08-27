@@ -1,0 +1,9 @@
+---
+- name: Configure localhost
+  hosts: local
+  become: true
+
+  tasks:
+
+  roles:
+    - role: variables  # Einbinden der Rolle zum Laden der Variablen

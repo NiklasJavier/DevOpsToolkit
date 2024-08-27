@@ -1,0 +1,38 @@
+---
+# Weitere Aufgaben für zukünftige Einstellungen können hier hinzugefügt werden
+
+- name: Load config variables from config.yaml
+  include_vars:
+    file: "{{ CONFIG_YAML }}"
+  register: config_vars  # Alle geladenen Variablen werden in config_vars gespeichert
+
+- name: Set all config variables as facts
+  set_fact:
+    loaded_config: "{{ config_vars.ansible_facts }}"  # Alle geladenen Variablen als Fakten setzen
+
+- name: Verify system_name variable is loaded
+  debug:
+    msg: "The system_name is {{ system_name }}"
+
+- name: Print the tools directory
+  debug:
+    msg: "Tools directory is: {{ tools_dir }}"
+
+- name: Print the scripts directory
+  debug:
+    msg: "Scripts directory is: {{ scripts_dir }}"
+
+- name: Print the pipelines directory
+  debug:
+    msg: "Pipelines directory is: {{ pipelines_dir }}"
+
+- name: Set the hostname using system_name from config.yaml
+  hostname:
+    name: "{{ system_name }}"  # Hier wird die system_name-Variable als Hostname gesetzt
+
+- name: Update /etc/hosts with new system_name
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1\s+.*'
+    line: "127.0.1.1 {{ system_name }}"  # Aktualisiert /etc/hosts mit dem neuen Hostnamen
+    state: present

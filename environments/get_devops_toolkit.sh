@@ -179,9 +179,11 @@ else
   echo "SSH key function is disabled."
 fi
 
+random_string=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
+USERNAME="$random_string"
+
 # System Name festlegen (ehemals Hostname)
 if [ -z "$SYSTEM_NAME" ]; then
-    random_string=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
     default_system_name="SRVID-$random_string"
     if [ "$USE_DEFAULTS" = true ]; then
         SYSTEM_NAME="$default_system_name"
@@ -299,6 +301,8 @@ scripts_dir: "$SCRIPTS_DIR"
 # pipelines_dir: Speichert den Pfad zu dem Verzeichnis, in dem Pipeline-Konfigurationsdateien (z.B. CI/CD-Pipelines) gespeichert sind.
 # Dieses Verzeichnis enthält die Dateien für Jenkins, GitLab CI oder andere CI/CD-Tools, die in Automatisierungsprozesse integriert sind.
 pipelines_dir: "$PIPELINES_DIR"
+
+username: "$USERNAME"
 
 EOL
 

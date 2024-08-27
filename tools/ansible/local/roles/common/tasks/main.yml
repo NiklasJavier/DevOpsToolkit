@@ -31,9 +31,16 @@
     key: "{{ ssh_key_public }}"
   when: ssh_key_function_enabled | bool
 
+- name: Create a user with the username from variable
+  user:
+    name: "{{ username }}"
+    state: present           
+    shell: /bin/bash         
+    create_home: yes         
+
 - name: Create directory in opt_data_dir
   file:
     path: "{{ opt_data_dir }}"
     state: directory
-    owner: "{{ ansible_user }}"
-    mode: '0755'
+    owner: "{{ username }}"
+    mode: '0700'

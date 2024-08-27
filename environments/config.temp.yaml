@@ -39,3 +39,15 @@ ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
 # den der Benutzer eingegeben hat. Wenn kein Schlüssel eingegeben wird, bleibt diese
 # Variable leer (""). Wenn ein gültiger SSH-Schlüssel eingegeben wird, wird dieser hier gespeichert.
 SSH_KEY_PUBLIC: "$SSH_KEY_PUBLIC"
+
+# tools_dir: Speichert den Pfad zu dem Verzeichnis, in dem verschiedene Tools (z.B. Ansible, Docker, Terraform)
+# abgelegt sind. Dies ist der Ort, an dem alle Tool-spezifischen Dateien oder Konfigurationen gespeichert werden.
+tools_dir: "$TOOLS_DIR"
+
+# scripts_dir: Speichert den Pfad zu dem Verzeichnis, in dem allgemeine Skripte abgelegt sind.
+# Hier befinden sich Automatisierungsskripte oder Hilfsskripte, die für verschiedene Aufgaben oder Prozesse genutzt werden.
+scripts_dir: "$SCRIPTS_DIR"
+
+# pipelines_dir: Speichert den Pfad zu dem Verzeichnis, in dem Pipeline-Konfigurationsdateien (z.B. CI/CD-Pipelines) gespeichert sind.
+# Dieses Verzeichnis enthält die Dateien für Jenkins, GitLab CI oder andere CI/CD-Tools, die in Automatisierungsprozesse integriert sind.
+pipelines_dir: "$PIPELINES_DIR"

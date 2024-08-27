@@ -5,9 +5,39 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # Keine Farbe
 
-# Name des Repositories und des Verzeichnisses
+# Name des Repositories
 REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git"
-BRANCH="dev"
+
+# Wenn eine Zahl als Argument übergeben wird, nutze diese
+if [ $# -eq 1 ]; then
+    choice=$1
+else
+    # Branch auswählen, wenn keine Zahl übergeben wurde
+    echo -e "${GREEN}Please select the branch to clone:${NC}"
+    echo "1) production"
+    echo "2) staging"
+    echo "3) dev"
+    read -p "Enter your choice (1-3): " choice
+fi
+
+# Branch abhängig von der Auswahl festlegen
+case $choice in
+  1)
+    BRANCH="production"
+    ;;
+  2)
+    BRANCH="staging"
+    ;;
+  3)
+    BRANCH="dev"
+    ;;
+  *)
+    echo -e "${RED}Invalid choice. Exiting...${NC}"
+    exit 1
+    ;;
+esac
+
+# Verzeichnisname basierend auf Branch
 CLONE_DIR="/etc/DevOpsToolkit-$BRANCH"
 
 # Überprüfen, ob das Skript als Root ausgeführt wird
@@ -16,7 +46,7 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-echo -e "${GREEN}Starting the setup...${NC}"
+echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
 
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
@@ -47,8 +77,8 @@ if [ -d "$CLONE_DIR/.git" ]; then
     cd "$CLONE_DIR"
     sudo git pull
 else
-    echo -e "${GREEN}Cloning the repository into $CLONE_DIR...${NC}"
-    sudo git clone -b ${BRANCH} --single-branch "$REPO_URL" "$CLONE_DIR"
+    echo -e "${GREEN}Cloning the repository into $CLONE_DIR with branch $BRANCH...${NC}"
+    sudo git clone -b "$BRANCH" --single-branch "$REPO_URL" "$CLONE_DIR"
     if [ $? -ne 0 ]; then
         echo -e "${RED}Failed to clone the repository. Aborting...${NC}"
         exit 1

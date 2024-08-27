@@ -151,12 +151,12 @@ fi
 echo -e "${GREEN}Initializing configuration...${NC}"
 
 # Variablen
-SYSTEM_NAME=""
-SSH_PORT=""
-LOG_LEVEL=""
-DATA_DIR=""
+#SYSTEM_NAME=""
+#SSH_PORT=""
+#LOG_LEVEL=""
+#DATA_DIR=""
 
-    # System Name festlegen (ehemals Hostname)
+# System Name festlegen (ehemals Hostname)
     if [ -z "$SYSTEM_NAME" ]; then
         random_string=$(pwgen -1 -A 8)
         default_system_name="SRVID-$random_string"

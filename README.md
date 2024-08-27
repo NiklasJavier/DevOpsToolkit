@@ -4,12 +4,12 @@ Das **DevOpsToolkit**-Repository bietet eine Sammlung von Skripten und Konfigura
 
 ## Konfiguration
 
-Die Konfiguration erfolgt über eine Datei namens `config.temp.yaml`. Diese Datei enthält mehrere Variablen, die vom Benutzer definiert werden können, oder automatisch generierte Standardwerte.
+Die Datei [config.temp.yaml](https://github.com/NiklasJavier/DevOpsToolkit/blob/HEAD/environments/config.temp.yaml) veranschaulicht, welche Optionen während der Ausführung unseres Skripts als Variablen festgelegt werden können. Die eigentliche Konfiguration erfolgt jedoch dynamisch während der Skriptausführung, wobei der Benutzer die Variablen anpassen kann oder automatisch generierte Standardwerte verwendet werden.
 
-### Variablen in `config.temp.yaml`:
+### Variablen in `config.yaml`:
 
 - **`system_name`**:  
-  Der Name des Systems oder Servers, der für die Konfiguration verwendet wird. Wenn der Benutzer keinen Namen eingibt, wird ein Standardname generiert.  
+  Der Name des Systems oder Servers, der für die Konfiguration verwendet wird. Wenn der Benutzer keinen Namen eingibt, wird ein Zufallsname generiert.  
   Beispiel:  
   ```yaml
   system_name: "$SYSTEM_NAME"

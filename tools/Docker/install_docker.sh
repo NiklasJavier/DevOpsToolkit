@@ -4,6 +4,7 @@ GREEN='\033[0;32m'
 NC='\033[0m' # Keine Farbe
 
 # Skript zur Installation von Docker und seinen Abhängigkeiten auf Ubuntu/Debian
+
 # Temporären Ordner erstellen
 echo "${GREEN}Creation of a temporary folder...${NC}"
 TMP_DIR=$(mktemp -d)

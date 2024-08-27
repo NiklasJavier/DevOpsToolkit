@@ -8,34 +8,56 @@ NC='\033[0m' # Keine Farbe
 # Name des Repositories
 REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git"
 
-# Wenn eine Zahl als Argument übergeben wird, nutze diese
-if [ $# -eq 1 ]; then
-    choice=$1
-else
-    # Branch auswählen, wenn keine Zahl übergeben wurde
+# Variable zur Speicherung des Branch-Namens
+BRANCH=""
+
+# Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
+choose_branch() {
     echo -e "${GREEN}Please select the branch to clone:${NC}"
     echo "1) production"
     echo "2) staging"
     echo "3) dev"
     read -p "Enter your choice (1-3): " choice
-fi
 
-# Branch abhängig von der Auswahl festlegen
-case $choice in
-  1)
-    BRANCH="production"
-    ;;
-  2)
-    BRANCH="staging"
-    ;;
-  3)
-    BRANCH="dev"
-    ;;
-  *)
-    echo -e "${RED}Invalid choice. Exiting...${NC}"
-    exit 1
-    ;;
-esac
+    case $choice in
+      1)
+        BRANCH="production"
+        ;;
+      2)
+        BRANCH="staging"
+        ;;
+      3)
+        BRANCH="dev"
+        ;;
+      *)
+        echo -e "${RED}Invalid choice. Exiting...${NC}"
+        exit 1
+        ;;
+    esac
+}
+
+# Prüfen, ob -t Option angegeben wurde und Branch bestimmen bspw. -t production, -t staging oder -t dev
+while getopts ":t:" opt; do
+  case $opt in
+    t)
+      if [[ "$OPTARG" == "production" || "$OPTARG" == "staging" || "$OPTARG" == "dev" ]]; then
+        BRANCH="$OPTARG"
+      else
+        echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
+        exit 1
+      fi
+      ;;
+    \?)
+      echo -e "${RED}Invalid option: -$OPTARG${NC}" >&2
+      exit 1
+      ;;
+  esac
+done
+
+# Falls kein Branch angegeben wurde, den Benutzer fragen
+if [ -z "$BRANCH" ]; then
+    choose_branch
+fi
 
 # Verzeichnisname basierend auf Branch
 CLONE_DIR="/etc/DevOpsToolkit-$BRANCH"

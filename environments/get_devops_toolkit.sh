@@ -173,12 +173,12 @@ if [ -z "$LOG_LEVEL" ]; then
     echo "LOG_LEVEL set to: $LOG_LEVEL"
 fi
 
-# Var Datenverzeichnis festlegen, das auf dem Systemnamen basiert
-if [ -z "$VAR_DATA_DIR" ]; then
-    default_var_data_dir="/var/$SYSTEM_NAME/data"
-    read -r -p "Enter the var data directory (default: $default_var_data_dir): " VAR_DATA_DIR < /dev/tty
-    VAR_DATA_DIR=${VAR_DATA_DIR:-"$default_var_data_dir"}
-    echo "VAR_DATA_DIR set to: $VAR_DATA_DIR"
+# OPT Datenverzeichnis festlegen, das auf dem Systemnamen basiert
+if [ -z "$OPT_DATA_DIR" ]; then
+    default_opt_data_dir="/opt/$SYSTEM_NAME/data"
+    read -r -p "Enter the opt data directory (default: $default_opt_data_dir): " OPT_DATA_DIR < /dev/tty
+    OPT_DATA_DIR=${OPT_DATA_DIR:-"$default_opt_data_dir"}
+    echo "OPT_DATA_DIR set to: $OPT_DATA_DIR"
 fi
 
 # Konfiguration in config.yaml speichern
@@ -199,10 +199,10 @@ ssh_port: "$SSH_PORT"
 # Wenn der Benutzer keinen Wert angibt, wird "info" verwendet.
 log_level: "$LOG_LEVEL"
 
-# var_data_dir: Das Datenverzeichnis, in dem Anwendungsdaten gespeichert werden.
-# Dieses Verzeichnis basiert standardmäßig auf dem system_name (z.B. /var/$SYSTEM_NAME/data),
+# opt: Das Datenverzeichnis, in dem Anwendungsdaten gespeichert werden.
+# Dieses Verzeichnis basiert standardmäßig auf dem system_name (z.B. /opt/$SYSTEM_NAME/data),
 # falls der Benutzer kein anderes Verzeichnis angibt.
-var_data_dir: "$VAR_DATA_DIR"
+opt_data_dir: "$OPT_DATA_DIR"
 
 EOL
 
@@ -215,7 +215,7 @@ append_temp_to_config() {
 
     # Überprüfen, ob var.temp.yaml existiert
     if [ -f "$CLONE_DIR/environments/var.temp.yaml" ]; then
-        # Inhalte von var.temp.yaml an config.yaml anhängen
+        # Inhalte von opt.temp.yaml an config.yaml anhängen
         cat "$CLONE_DIR/environments/var.temp.yaml" >> "$SETTINGS_DIR/config.yaml"
         echo -e "${GREEN}Contents of var.temp.yaml successfully appended to config.yaml.${NC}"
     else

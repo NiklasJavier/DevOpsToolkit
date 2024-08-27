@@ -16,19 +16,19 @@ echo -e "${GREEN}Selected tools are: $TOOLS${NC}"
 # Docker Installation
 if [[ "$TOOLS" =~ "docker" ]]; then
     echo -e "${GREEN}Installing Docker...${NC}"
-    if [ -f "$TOOLS_DIR/docker/install_docker.sh" ]; then
-        bash "$TOOLS_DIR/docker/install_docker.sh"
+    if [ -f "$TOOLS_DIR/Docker/install_docker.sh" ]; then
+        bash "$TOOLS_DIR/Docker/install_docker.sh"
     else
-        echo -e "${RED}Docker installation script not found: $TOOLS_DIR/docker/install_docker.sh${NC}"
+        echo -e "${RED}Docker installation script not found: $TOOLS_DIR/Docker/install_docker.sh${NC}"
     fi
 fi
 
 # Ansible Installation
 if [[ "$TOOLS" =~ "ansible" ]]; then
     echo -e "${GREEN}Installing Ansible...${NC}"
-    if [ -f "$TOOLS_DIR/ansible/install_ansible.sh" ]; then
-        bash "$TOOLS_DIR/ansible/install_ansible.sh"
+    if [ -f "$TOOLS_DIR/Ansible/install_ansible.sh" ]; then
+        bash "$TOOLS_DIR/Ansible/install_ansible.sh"
     else
-        echo -e "${RED}Ansible installation script not found: $TOOLS_DIR/ansible/install_ansible.sh${NC}"
+        echo -e "${RED}Ansible installation script not found: $TOOLS_DIR/Ansible/install_ansible.sh${NC}"
     fi
 fi

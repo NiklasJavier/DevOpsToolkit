@@ -203,6 +203,16 @@ if [ -z "$OPT_DATA_DIR" ]; then
     echo "OPT_DATA_DIR set to: $OPT_DATA_DIR"
 fi
 
+# Standardmäßig alle Tools auswählen
+default_tools="docker ansible terraform"
+# Benutzerauswahl der Tools
+if [ "$USE_DEFAULTS" = true ]; then
+    TOOLS=$default_tools
+else
+    read -r -p "Which tools do you want to install? (default: $default_tools): " selected_tools
+    TOOLS=${selected_tools:-$default_tools}
+fi
+
 # Konfiguration in config.yaml speichern
 echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
 
@@ -225,6 +235,18 @@ log_level: "$LOG_LEVEL"
 # Dieses Verzeichnis basiert standardmäßig auf dem system_name (z.B. /opt/$SYSTEM_NAME/data),
 # falls der Benutzer kein anderes Verzeichnis angibt.
 opt_data_dir: "$OPT_DATA_DIR"
+
+# use_defaults: Eine Flag-Variable, die angibt, ob das Skript im "Default-Modus" ausgeführt wird.
+# Wenn use_defaults auf "true" gesetzt ist, werden keine Eingabeaufforderungen an den Benutzer gestellt.
+# Stattdessen werden automatisch die Standardwerte verwendet.
+use_defaults: "$USE_DEFAULTS"
+
+# TOOLS: Diese Variable enthält die Liste der Tools, die installiert werden sollen.
+# Der Benutzer kann die Tools manuell eingeben (z.B. docker ansible terraform) oder, 
+# falls keine Eingabe erfolgt, wird der Standardwert verwendet, der alle Tools umfasst.
+# Wenn die Option USE_DEFAULTS=true gesetzt ist, werden automatisch alle Standardtools
+# ausgewählt, ohne eine Benutzereingabe zu erfordern.
+tools: "$TOOLS"
 
 EOL
 
@@ -249,9 +271,9 @@ append_temp_to_config
 
 # Um get_tools.sh auszuführen
 if [ -f "$CLONE_DIR/environments/get_tools.sh" ]; then
-    echo "Switching to $CLONE_DIR/environments/get_tools.sh"
+    echo "${GREEN}Switching to $CLONE_DIR/environments/get_tools.sh${NC}"
     exec bash "$CLONE_DIR/environments/get_tools.sh"
 else
-    echo "Error: $CLONE_DIR/environments/get_tools.sh not found!"
+    echo "${GREEN}Error: $CLONE_DIR/environments/get_tools.sh not found!${NC}"
     exit 1
 fi

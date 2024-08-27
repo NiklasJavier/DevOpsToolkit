@@ -150,38 +150,28 @@ fi
 
 echo -e "${GREEN}Initializing configuration...${NC}"
 
-# Variablen
-#SYSTEM_NAME=""
-#SSH_PORT=""
-#LOG_LEVEL=""
-#DATA_DIR=""
-
 # System Name festlegen (ehemals Hostname)
-    if [ -z "$SYSTEM_NAME" ]; then
-        random_string=$(pwgen -1 -A 8)
-        default_system_name="SRVID-$random_string"
-        read -p "Enter system name (default: $default_system_name): " SYSTEM_NAME
-        SYSTEM_NAME=${SYSTEM_NAME:-"$default_system_name"}
-    fi
+unset SYSTEM_NAME
+random_string=$(pwgen -1 -A 8)
+default_system_name="SRVID-$random_string"
+read -p "Enter system name (default: $default_system_name): " SYSTEM_NAME
+SYSTEM_NAME=${SYSTEM_NAME:-"$default_system_name"}
 
-    # SSH_PORT festlegen
-    if [ -z "$SSH_PORT" ]; then
-        read -p "Enter the SSH_PORT (default: 282): " SSH_PORT
-        SSH_PORT=${SSH_PORT:-"282"}
-    fi
+# SSH_PORT festlegen
+unset SSH_PORT
+read -p "Enter the SSH_PORT (default: 282): " SSH_PORT
+SSH_PORT=${SSH_PORT:-"282"}
 
-    # Log Level festlegen
-    if [ -z "$LOG_LEVEL" ]; then
-        read -p "Enter the log level (default: info) [debug, info, warn, error]: " LOG_LEVEL
-        LOG_LEVEL=${LOG_LEVEL:-"info"}
-    fi
+# Log Level festlegen
+unset LOG_LEVEL
+read -p "Enter the log level (default: info) [debug, info, warn, error]: " LOG_LEVEL
+LOG_LEVEL=${LOG_LEVEL:-"info"}
 
-    # Datenverzeichnis festlegen, das auf dem Systemnamen basiert
-    if [ -z "$DATA_DIR" ]; then
-        default_data_dir="/var/$SYSTEM_NAME/data"
-        read -p "Enter the data directory (default: $default_data_dir): " DATA_DIR
-        DATA_DIR=${DATA_DIR:-"$default_data_dir"}
-    fi
+# Datenverzeichnis festlegen, das auf dem Systemnamen basiert
+unset DATA_DIR
+default_data_dir="/var/$SYSTEM_NAME/data"
+read -p "Enter the data directory (default: $default_data_dir): " DATA_DIR
+DATA_DIR=${DATA_DIR:-"$default_data_dir"}
 
 # Konfiguration in config.yaml speichern
 echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"

@@ -139,19 +139,22 @@ echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts ar
 # Config file 
 CONFIG_FILE="$SETTINGS_DIR/config.yaml"
 
+
+# Immer die config.temp.yaml nach config.yaml verschieben und überschreiben, falls vorhanden
+if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
+    mv -f "$CLONE_DIR/environments/config.temp.yaml" "$SETTINGS_DIR/config.yaml"
+    echo -e "${GREEN}config.temp.yaml has been moved to config.yaml, overwriting the existing file.${NC}"
+else
+    echo -e "${RED}config.temp.yaml does not exist in $CLONE_DIR/environments.${NC}"
+fi
+
+echo -e "${GREEN}Initializing configuration...${NC}"
+
 # Variablen
 SYSTEM_NAME=""
 SSH_PORT=""
 LOG_LEVEL=""
 DATA_DIR=""
-
-initialize_config() {
-    echo -e "${GREEN}Initializing configuration...${NC}"
-
-    # Verschieben der temporären Konfigurationsdatei, falls nötig
-    if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
-        mv "$CLONE_DIR/environments/config.temp.yaml" "$SETTINGS_DIR/config.yaml"
-    fi
 
     # System Name festlegen (ehemals Hostname)
     if [ -z "$SYSTEM_NAME" ]; then
@@ -180,27 +183,19 @@ initialize_config() {
         DATA_DIR=${DATA_DIR:-"$default_data_dir"}
     fi
 
-    # Konfiguration in config.yaml speichern
-    echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
+# Konfiguration in config.yaml speichern
+echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
 
-    # Speichern der Konfiguration
-    cat <<- EOL > "$CONFIG_FILE"
+# Speichern der Konfiguration
+cat <<- EOL > "$CONFIG_FILE"
 system_name: "$SYSTEM_NAME"
 ssh_port: "$SSH_PORT"
 log_level: "$LOG_LEVEL"
 data_dir: "$DATA_DIR"
 EOL
 
-    echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
-}
+echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 
-# Prüfen, ob die config.yaml existiert, und initialisieren, falls nicht vorhanden
-if [ ! -f "$CONFIG_FILE" ]; then
-    echo -e "${GREEN}$CONFIG_FILE not found. Initializing configuration...${NC}"
-    initialize_config
-else
-    echo -e "${GREEN}Using existing configuration from $CONFIG_FILE.${NC}"
-fi
 
 # Funktion zum Anfügen der Inhalte von var.temp.yaml an config.yaml
 append_temp_to_config() {

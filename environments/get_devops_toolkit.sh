@@ -16,6 +16,8 @@ BRANCH=""
 # Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
 USE_DEFAULTS=false
 
+SSH_KEY_PUBLIC=""
+
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
     echo -e "${GREEN}Please select the branch to clone:${NC}"
@@ -41,17 +43,30 @@ choose_branch() {
     esac
 }
 
-# Prüfen, ob -t Option angegeben wurde und Branch bestimmen
+# Prüfen, ob -t Option und -key Option angegeben wurden
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
     -t)
       shift
-      if [[ "$1" == "production" || "$1" == "staging" || "$1" == "dev" ]]; then
-        USE_DEFAULTS=true # Wenn -t angegeben wird, werden die Standardwerte verwendet
-        BRANCH="$1"
+      case "$1" in
+        production|staging|dev)
+          USE_DEFAULTS=true # Wenn -t angegeben wird, werden die Standardwerte verwendet
+          BRANCH="$1"
+          ;;
+        *)
+          echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
+          exit 1
+          ;;
+      esac
+      ;;
+    -key)
+      shift
+      if [[ -n "$1" ]]; then
+        SSH_KEY_PUBLIC="$1"
+        shift
       else
-        echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
-        exit 1
+        echo -e "${RED}No SSH key provided after -key option.${NC}"
+        SSH_KEY_PUBLIC=""
       fi
       ;;
     *)
@@ -59,12 +74,19 @@ while [[ "$#" -gt 0 ]]; do
       exit 1
       ;;
   esac
-  shift
 done
 
 # Falls kein Branch angegeben wurde, den Benutzer fragen
 if [ -z "$BRANCH" ]; then
     choose_branch
+fi
+
+# Ausgabe der festgelegten Werte
+echo "Using Branch: $BRANCH"
+if [ -n "$SSH_KEY_PUBLIC" ]; then
+  echo "Using SSH Public Key: $SSH_KEY_PUBLIC"
+else
+  echo "No SSH Key provided, SSH key function is disabled."
 fi
 
 # Verzeichnisname basierend auf Branch
@@ -204,7 +226,7 @@ if [ -z "$OPT_DATA_DIR" ]; then
 fi
 
 # Standardmäßig alle Tools auswählen
-default_tools="docker ansible terraform"
+default_tools="docker ansible"
 # Benutzerauswahl der Tools
 if [ "$USE_DEFAULTS" = true ]; then
     TOOLS=$default_tools
@@ -248,6 +270,17 @@ use_defaults: "$USE_DEFAULTS"
 # ausgewählt, ohne eine Benutzereingabe zu erfordern.
 tools: "$TOOLS"
 
+# SSH_KEY_FUNCTION_ENABLED: Diese Variable gibt an, ob die SSH-Key-Funktion aktiviert ist.
+# Sie wird auf "false" gesetzt, wenn kein SSH-Key angegeben wird oder die Funktion
+# standardmäßig deaktiviert ist. Wenn ein gültiger SSH-Schlüssel eingegeben wird,
+# wird sie auf "true" gesetzt und die SSH-Key-Funktion wird aktiviert.
+SSH_KEY_FUNCTION_ENABLED: false
+
+# SSH_KEY_PUBLIC: Diese Variable enthält den öffentlichen SSH-Schlüssel (Public Key),
+# den der Benutzer eingegeben hat. Wenn kein Schlüssel eingegeben wird, bleibt diese
+# Variable leer (""). Wenn ein gültiger SSH-Schlüssel eingegeben wird, wird dieser hier gespeichert.
+SSH_KEY_PUBLIC: ""
+
 EOL
 
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
@@ -271,9 +304,9 @@ append_temp_to_config
 
 # Um get_tools.sh auszuführen
 if [ -f "$CLONE_DIR/environments/get_tools.sh" ]; then
-    echo "${GREEN}Switching to $CLONE_DIR/environments/get_tools.sh${NC}"
+    echo -e "${GREEN}Switching to $CLONE_DIR/environments/get_tools.sh${NC}"
     exec bash "$CLONE_DIR/environments/get_tools.sh"
 else
-    echo "${GREEN}Error: $CLONE_DIR/environments/get_tools.sh not found!${NC}"
+    echo -e "${GREEN}Error: $CLONE_DIR/environments/get_tools.sh not found!${NC}"
     exit 1
 fi

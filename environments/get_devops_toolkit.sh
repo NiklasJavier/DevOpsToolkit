@@ -307,9 +307,12 @@ echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 # Überprüfen, ob get_tools.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/get_tools.sh" ]; then
     echo -e "${GREEN}Switching to $CLONE_DIR/environments/get_tools.sh${NC}"
-    exec bash "$CLONE_DIR/environments/get_tools.sh" "$TOOLS_DIR" "$TOOLS"
+    bash "$CLONE_DIR/environments/get_tools.sh" "$TOOLS_DIR" "$TOOLS"
+    
+    # Weiter im Skript, nachdem get_tools.sh ausgeführt wurde
+    echo -e "${GREEN}Returned from get_tools.sh, continuing...${NC}"
 else
-    echo -e "${GREEN}Error: $CLONE_DIR/environments/get_tools.sh not found!${NC}"
+    echo -e "${RED}Error: $CLONE_DIR/environments/get_tools.sh not found!${NC}"
     exit 1
 fi
 

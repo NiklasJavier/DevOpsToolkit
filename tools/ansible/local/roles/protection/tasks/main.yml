@@ -1,0 +1,19 @@
+---
+- name: Install UFW (Uncomplicated Firewall)
+  apt:
+    name: ufw
+    state: present
+    update_cache: yes
+
+- name: Allow SSH port through UFW
+  ufw:
+    rule: allow
+    port: "{{ ssh_port }}"
+    proto: tcp
+
+- name: Enable UFW
+  become: true  # Erfordert Root-Rechte
+  ufw:
+    state: enabled
+    policy: allow  # Standardrichtlinie "allow"
+    logging: on    # Aktiviert das Logging

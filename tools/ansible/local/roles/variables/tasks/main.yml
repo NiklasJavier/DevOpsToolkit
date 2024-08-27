@@ -25,14 +25,3 @@
 - name: Print the pipelines directory
   debug:
     msg: "Pipelines directory is: {{ pipelines_dir }}"
-
-- name: Set the hostname using system_name from config.yaml
-  hostname:
-    name: "{{ system_name }}"  # Hier wird die system_name-Variable als Hostname gesetzt
-
-- name: Update /etc/hosts with new system_name
-  lineinfile:
-    path: /etc/hosts
-    regexp: '^127\.0\.1\.1\s+.*'
-    line: "127.0.1.1 {{ system_name }}"  # Aktualisiert /etc/hosts mit dem neuen Hostnamen
-    state: present

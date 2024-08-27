@@ -1,9 +1,0 @@
----
-# Handler für die Rolle 'apache'
-# Handler werden nur ausgeführt, wenn sie von einer Aufgabe getriggert werden (z.B. nach einer Paketinstallation).
-# In diesem Fall wird der Apache-Dienst neu gestartet, falls Änderungen an der Konfiguration vorgenommen wurden.
-
-- name: Restart Apache            # Handler zum Neustarten des Apache Webservers
-  service:
-    name: apache2                 # Name des zu verwaltenden Dienstes
-    state: restarted              # Stellt sicher, dass Apache neu gestartet wird.

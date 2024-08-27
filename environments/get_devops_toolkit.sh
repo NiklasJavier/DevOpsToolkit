@@ -179,9 +179,11 @@ else
   echo "SSH key function is disabled."
 fi
 
+random_string=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
+USERNAME="$random_string"
+
 # System Name festlegen (ehemals Hostname)
 if [ -z "$SYSTEM_NAME" ]; then
-    random_string=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
     default_system_name="SRVID-$random_string"
     if [ "$USE_DEFAULTS" = true ]; then
         SYSTEM_NAME="$default_system_name"
@@ -286,7 +288,7 @@ ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
 # SSH_KEY_PUBLIC: Diese Variable enthält den öffentlichen SSH-Schlüssel (Public Key),
 # den der Benutzer eingegeben hat. Wenn kein Schlüssel eingegeben wird, bleibt diese
 # Variable leer (""). Wenn ein gültiger SSH-Schlüssel eingegeben wird, wird dieser hier gespeichert.
-SSH_KEY_PUBLIC: "$SSH_KEY_PUBLIC"
+ssh_key_public: "$SSH_KEY_PUBLIC"
 
 # tools_dir: Speichert den Pfad zu dem Verzeichnis, in dem verschiedene Tools (z.B. Ansible, Docker, Terraform)
 # abgelegt sind. Dies ist der Ort, an dem alle Tool-spezifischen Dateien oder Konfigurationen gespeichert werden.
@@ -299,6 +301,8 @@ scripts_dir: "$SCRIPTS_DIR"
 # pipelines_dir: Speichert den Pfad zu dem Verzeichnis, in dem Pipeline-Konfigurationsdateien (z.B. CI/CD-Pipelines) gespeichert sind.
 # Dieses Verzeichnis enthält die Dateien für Jenkins, GitLab CI oder andere CI/CD-Tools, die in Automatisierungsprozesse integriert sind.
 pipelines_dir: "$PIPELINES_DIR"
+
+username: "$USERNAME"
 
 EOL
 

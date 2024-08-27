@@ -135,3 +135,71 @@ echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
 sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;
 
 echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts are now executable.${NC}"
+
+# Config file 
+CONFIG_FILE="$SETTINGS_DIR/config.yaml"
+
+# Funktion zur Initialisierung der Variablen durch den Benutzer oder Standardwerte
+initialize_config() {
+    echo -e "${GREEN}Initializing configuration...${NC}"
+
+    mv $CLONE_DIR/environments/config.temp.yaml $SETTINGS_DIR/config.yaml
+
+    # Hostname festlegen
+    if [ -z "$HOSTNAME" ]; then
+        random_string=$(pwgen -1 -A 8)
+        sample_hostname="SRVID-$random_string"
+        read -p "Enter Hostname (default: "$sample_hostname"): " HOSTNAME
+        HOSTNAME=${HOSTNAME:-"$sample_hostname"}
+    fi
+
+    # SSH_PORT festlegen
+    if [ -z "$SSH_PORT" ]; then
+        read -p "Enter the SSH_PORT (default: 282): " SSH_PORT
+        SSH_PORT=${SSH_PORT:-282}
+    fi
+
+    # Log Level festlegen
+    if [ -z "$LOG_LEVEL" ]; then
+        read -p "Enter the log level (default: info) [debug, info, warn, error]: " LOG_LEVEL
+        LOG_LEVEL=${LOG_LEVEL:-"info"}
+    fi
+
+    # Datenverzeichnis festlegen
+    if [ -z "$DATA_DIR" ]; then
+        read -p "Enter the data directory (default: /var/$sample_hostname/data): " DATA_DIR
+        DATA_DIR=${DATA_DIR:-"/var/$sample_hostname/data"}
+    fi
+
+    # Konfiguration in config.yaml speichern
+    echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
+
+cat <<- EOL > "$CONFIG_FILE"
+    hostname: "$HOSTNAME"
+    ssh_port: $SSH_PORT"
+    log_level: "$LOG_LEVEL"
+    data_dir: "$DATA_DIR"
+EOL
+
+    echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
+}
+
+# Prüfen, ob die config.yaml existiert, und initialisieren, falls nicht vorhanden
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo -e "${RED}$CONFIG_FILE not found. Initializing configuration...${NC}"
+    initialize_config
+else
+    echo -e "${GREEN}Using existing configuration from $CONFIG_FILE.${NC}"
+fi
+
+# Konfigurationsdatei einlesen (mit yq)
+HOSTNAME=$(yq '.hostname' $CONFIG_FILE)
+SSH_PORT=$(yq '.ssh_port' $CONFIG_FILE)
+LOG_LEVEL=$(yq '.log_level' $CONFIG_FILE)
+DATA_DIR=$(yq '.data_dir' $CONFIG_FILE)
+
+# Beispiel für die Verwendung der Variablen nach der Initialisierung
+echo -e "${GREEN}Application Name: $HOSTNAME${NC}"
+echo -e "${GREEN}Running on Port: $PORT${NC}"
+echo -e "${GREEN}Log Level: $LOG_LEVEL${NC}"
+echo -e "${GREEN}Data Directory: $DATA_DIR${NC}"

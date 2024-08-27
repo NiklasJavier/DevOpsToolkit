@@ -139,12 +139,13 @@ echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts ar
 # Config file 
 CONFIG_FILE="$SETTINGS_DIR/config.yaml"
 
-# Funktion zur Initialisierung der Variablen durch den Benutzer oder Standardwerte
 initialize_config() {
     echo -e "${GREEN}Initializing configuration...${NC}"
 
-    # Verschieben der temporären Konfigurationsdatei
-    mv "$CLONE_DIR/environments/config.temp.yaml" "$SETTINGS_DIR/config.yaml"
+    # Verschieben der temporären Konfigurationsdatei, falls nötig
+    if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
+        mv "$CLONE_DIR/environments/config.temp.yaml" "$SETTINGS_DIR/config.yaml"
+    fi
 
     # System Name festlegen (ehemals Hostname)
     if [ -z "$SYSTEM_NAME" ]; then
@@ -178,7 +179,7 @@ initialize_config() {
 
     # Speichern der Konfiguration
     cat <<- EOL > "$CONFIG_FILE"
-
+    
 system_name: "$SYSTEM_NAME"
 
 ssh_port: "$SSH_PORT"

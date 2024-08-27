@@ -23,7 +23,7 @@ fi
 if [[ "$TOOLS" =~ "ansible" ]]; then
     echo -e "${GREEN}Running Ansible playbook...${NC}"
 
-    ansible-playbook -i $TOOLS_DIR/ansible/local/hosts.ini $TOOLS_DIR/ansible/local/local_setup.yml --extra-vars "SETTINGS_DIR=$SETTINGS_DIR"
+    ansible-playbook -i $TOOLS_DIR/ansible/local/hosts.ini $TOOLS_DIR/ansible/local/local_setup.yml --extra-vars "CONFIG_YAML=$SETTINGS_DIR/config.yaml"
     
 else
     echo -e "${GREEN}Ansible is not listed in the TOOLS variable, skipping playbook execution.${NC}"

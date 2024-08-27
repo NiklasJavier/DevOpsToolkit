@@ -4,6 +4,10 @@
   become: true
 
   tasks:
+    - name: Load config variables from config.yaml
+      include_vars:
+        file: "{{ CONFIG_YAML }}"
+
     - name: Print the tools directory
       debug:
         msg: "Tools directory is: {{ tools_dir }}"

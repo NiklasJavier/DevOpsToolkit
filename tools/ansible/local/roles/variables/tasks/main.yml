@@ -10,6 +10,22 @@
   set_fact:
     loaded_config: "{{ config_vars.ansible_facts }}"  # Alle geladenen Variablen als Fakten setzen
 
+- name: Verify system_name variable is loaded
+  debug:
+    msg: "The system_name is {{ system_name }}"
+
+- name: Print the tools directory
+  debug:
+    msg: "Tools directory is: {{ tools_dir }}"
+
+- name: Print the scripts directory
+  debug:
+    msg: "Scripts directory is: {{ scripts_dir }}"
+
+- name: Print the pipelines directory
+  debug:
+    msg: "Pipelines directory is: {{ pipelines_dir }}"
+
 - name: Set the hostname using system_name from config.yaml
   hostname:
     name: "{{ system_name }}"  # Hier wird die system_name-Variable als Hostname gesetzt

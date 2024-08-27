@@ -4,21 +4,6 @@
   become: true
 
   tasks:
-    - name: Verify system_name variable is loaded
-      debug:
-        msg: "The system_name is {{ system_name }}"
-
-    - name: Print the tools directory
-      debug:
-        msg: "Tools directory is: {{ tools_dir }}"
-
-    - name: Print the scripts directory
-      debug:
-        msg: "Scripts directory is: {{ scripts_dir }}"
-
-    - name: Print the pipelines directory
-      debug:
-        msg: "Pipelines directory is: {{ pipelines_dir }}"
 
   roles:
-    - role: default_settings  # Einbinden der Rolle für die Standardkonfigurationen
+    - role: variables  # Einbinden der Rolle zum Laden der Variablen

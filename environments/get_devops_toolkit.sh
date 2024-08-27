@@ -179,7 +179,7 @@ initialize_config() {
     # Speichern der Konfiguration
     cat <<- EOL > "$CONFIG_FILE"
 system_name: "$SYSTEM_NAME"
-ssh_port: $SSH_PORT
+ssh_port: "$SSH_PORT"
 log_level: "$LOG_LEVEL"
 data_dir: "$DATA_DIR"
 EOL

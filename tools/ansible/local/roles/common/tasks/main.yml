@@ -5,3 +5,35 @@
 - name: Update the package list  # Aufgabe, die die Paketliste aktualisiert
   apt:
     update_cache: yes           # Führt 'apt update' aus, um die Paketquellen zu aktualisieren.
+
+- name: Set the hostname using system_name from config.yaml
+  hostname:
+    name: "{{ system_name }}"  # Hier wird die system_name-Variable als Hostname gesetzt
+
+- name: Update /etc/hosts with new system_name
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1\s+.*'
+    line: "127.0.1.1 {{ system_name }}"  # Aktualisiert /etc/hosts mit dem neuen Hostnamen
+    state: present
+
+- name: Set the SSH port to the value of ssh_port
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?Port.*'
+    line: "Port {{ ssh_port }}"
+    state: present
+  notify: Restart SSHD
+
+- name: Add SSH public key if ssh_key_function_enabled is true
+  authorized_key:
+    user: "{{ ansible_user }}"
+    key: "{{ ssh_key_public }}"
+  when: ssh_key_function_enabled | bool
+
+- name: Create directory in opt_data_dir
+  file:
+    path: "{{ opt_data_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    mode: '0755'

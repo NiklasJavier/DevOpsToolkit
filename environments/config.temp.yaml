@@ -38,7 +38,7 @@ ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
 # SSH_KEY_PUBLIC: Diese Variable enthält den öffentlichen SSH-Schlüssel (Public Key),
 # den der Benutzer eingegeben hat. Wenn kein Schlüssel eingegeben wird, bleibt diese
 # Variable leer (""). Wenn ein gültiger SSH-Schlüssel eingegeben wird, wird dieser hier gespeichert.
-SSH_KEY_PUBLIC: "$SSH_KEY_PUBLIC"
+ssh_key_public: "$SSH_KEY_PUBLIC"
 
 # tools_dir: Speichert den Pfad zu dem Verzeichnis, in dem verschiedene Tools (z.B. Ansible, Docker, Terraform)
 # abgelegt sind. Dies ist der Ort, an dem alle Tool-spezifischen Dateien oder Konfigurationen gespeichert werden.

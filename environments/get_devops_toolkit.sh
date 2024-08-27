@@ -209,8 +209,8 @@ default_tools="docker ansible terraform"
 if [ "$USE_DEFAULTS" = true ]; then
     TOOLS=$default_tools
 else
-    read -r -p "Which tools do you want to install? (default: $default_tools): " selected_tools
-    TOOLS=${selected_tools:-$default_tools}
+    read -r -p "Which tools do you want to install? (default: $default_tools): " selected_tools < /dev/tty
+    TOOLS=${TOOLS:-$default_tools}
 fi
 
 # Konfiguration in config.yaml speichern

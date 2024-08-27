@@ -112,7 +112,7 @@ else
 fi
 
 # Prüfen, ob der branch-spezifische Ordner existiert, und erstellen, wenn nicht
-BRANCH_DIR="$CLONE_DIR/$BRANCH"
+BRANCH_DIR="$CLONE_DIR/environments/$BRANCH"
 SETTINGS_DIR="$BRANCH_DIR/.settings"
 
 if [ ! -d "$BRANCH_DIR" ]; then

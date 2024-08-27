@@ -36,7 +36,7 @@ choose_branch() {
     esac
 }
 
-# Prüfen, ob -t Option angegeben wurde und Branch bestimmen
+# Prüfen, ob -t Option angegeben wurde und Branch bestimmen bspw. -t production, -t staging oder -t dev
 while getopts ":t:" opt; do
   case $opt in
     t)

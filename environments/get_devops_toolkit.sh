@@ -152,7 +152,7 @@ echo -e "${GREEN}Initializing configuration...${NC}"
 
 # System Name festlegen (ehemals Hostname)
 if [ -z "$SYSTEM_NAME" ]; then
-    random_string=$(pwgen -1 -A 8)
+    random_string=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
     default_system_name="SRVID-$random_string"
     read -r -p "Enter system name (default: $default_system_name): " SYSTEM_NAME < /dev/tty
     SYSTEM_NAME=${SYSTEM_NAME:-"$default_system_name"}

@@ -18,3 +18,9 @@ curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/envi
 ```
 curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash -s -- -t dev
 ```
+
+
+### -t dev -key "ssh-pub-key" -> USE_DEFAULTS=true
+```
+curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash -s -- -t dev -key "ssh-pub-key"
+```

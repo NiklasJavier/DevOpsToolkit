@@ -1,13 +1,2 @@
 # Die Variablen werden vom Benutzer eingegeben oder mit Standardwerten gefüllt.
 # Jede Variable wird im Abschnitt config.yaml gespeichert und an die spezifische Umgebung angepasst.
-
-# SSH_KEY_FUNCTION_ENABLED: Diese Variable gibt an, ob die SSH-Key-Funktion aktiviert ist.
-# Sie wird auf "false" gesetzt, wenn kein SSH-Key angegeben wird oder die Funktion
-# standardmäßig deaktiviert ist. Wenn ein gültiger SSH-Schlüssel eingegeben wird,
-# wird sie auf "true" gesetzt und die SSH-Key-Funktion wird aktiviert.
-SSH_KEY_FUNCTION_ENABLED: false
-
-# SSH_KEY_PUBLIC: Diese Variable enthält den öffentlichen SSH-Schlüssel (Public Key),
-# den der Benutzer eingegeben hat. Wenn kein Schlüssel eingegeben wird, bleibt diese
-# Variable leer (""). Wenn ein gültiger SSH-Schlüssel eingegeben wird, wird dieser hier gespeichert.
-SSH_KEY_PUBLIC: ""

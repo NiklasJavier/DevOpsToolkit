@@ -173,12 +173,12 @@ if [ -z "$LOG_LEVEL" ]; then
     echo "LOG_LEVEL set to: $LOG_LEVEL"
 fi
 
-# Datenverzeichnis festlegen, das auf dem Systemnamen basiert
-if [ -z "$DATA_DIR" ]; then
-    default_data_dir="/var/$SYSTEM_NAME/data"
-    read -r -p "Enter the data directory (default: $default_data_dir): " DATA_DIR < /dev/tty
-    DATA_DIR=${DATA_DIR:-"$default_data_dir"}
-    echo "DATA_DIR set to: $DATA_DIR"
+# Var Datenverzeichnis festlegen, das auf dem Systemnamen basiert
+if [ -z "$VAR_DATA_DIR" ]; then
+    default_var_data_dir="/var/$SYSTEM_NAME/data"
+    read -r -p "Enter the var data directory (default: $default_var_data_dir): " VAR_DATA_DIR < /dev/tty
+    VAR_DATA_DIR=${VAR_DATA_DIR:-"$default_var_data_dir"}
+    echo "VAR_DATA_DIR set to: $VAR_DATA_DIR"
 fi
 
 # Konfiguration in config.yaml speichern
@@ -187,9 +187,12 @@ echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
 # Speichern der Konfiguration
 cat <<- EOL > "$CONFIG_FILE"
 system_name: "$SYSTEM_NAME"
+
 ssh_port: "$SSH_PORT"
+
 log_level: "$LOG_LEVEL"
-data_dir: "$DATA_DIR"
+
+var_data_dir: "$VAR_DATA_DIR"
 EOL
 
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"

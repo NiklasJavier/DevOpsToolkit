@@ -157,7 +157,7 @@ initialize_config() {
     # SSH_PORT festlegen
     if [ -z "$SSH_PORT" ]; then
         read -p "Enter the SSH_PORT (default: 282): " SSH_PORT
-        SSH_PORT=${SSH_PORT:-282}
+        SSH_PORT=${SSH_PORT:-"282"}
     fi
 
     # Log Level festlegen
@@ -178,10 +178,15 @@ initialize_config() {
 
     # Speichern der Konfiguration
     cat <<- EOL > "$CONFIG_FILE"
+
 system_name: "$SYSTEM_NAME"
+
 ssh_port: "$SSH_PORT"
+
 log_level: "$LOG_LEVEL"
+
 data_dir: "$DATA_DIR"
+
 EOL
 
     echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
@@ -194,18 +199,3 @@ if [ ! -f "$CONFIG_FILE" ]; then
 else
     echo -e "${GREEN}Using existing configuration from $CONFIG_FILE.${NC}"
 fi
-
-# Konfigurationsdatei einlesen (mit yq)
-if [ ! -f "$CONFIG_FILE" ]; then
-    echo -e "Configuration file not found. Initializing configuration..."
-    # Initialisiere und erstelle config.sh
-else
-    # Lade die Konfiguration
-    source "$CONFIG_FILE"
-fi
-
-# Beispiel für die Verwendung der Variablen nach der Initialisierung
-echo "System Name: $SYSTEM_NAME"
-echo "SSH Port: $SSH_PORT"
-echo "Log Level: $LOG_LEVEL"
-echo "Data Directory: $DATA_DIR"

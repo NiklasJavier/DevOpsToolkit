@@ -29,5 +29,5 @@
       debug:
         msg: "Pipelines directory is: {{ pipelines_dir }}"
 
-#  roles:
-#    - role: default_settings  # Einbinden der Rolle für die Standardkonfigurationen
+  roles:
+    - role: default_settings  # Einbinden der Rolle für die Standardkonfigurationen

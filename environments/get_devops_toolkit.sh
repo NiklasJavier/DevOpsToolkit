@@ -66,7 +66,8 @@ while [[ "$#" -gt 0 ]]; do
       if [[ -n "$1" && "$1" != -* ]]; then
         SSH_KEY_PUBLIC="$1"
       else
-        SSH_KEY_PUBLIC="default-key"  # Wenn leer, setze einen Standard-Schlüssel oder handle es entsprechend
+        SSH_KEY_FUNCTION_ENABLED=false
+        SSH_KEY_PUBLIC=""  # Wenn leer, setze einen Standard-Schlüssel oder handle es entsprechend
       fi
       ;;
     *)

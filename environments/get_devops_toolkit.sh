@@ -162,7 +162,7 @@ CONFIG_FILE="$SETTINGS_DIR/config.yaml"
 
 # Immer die config.temp.yaml nach config.yaml verschieben und überschreiben, falls vorhanden
 if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
-    cp -f "$CLONE_DIR/environments/config.temp.yaml" "$SETTINGS_DIR/config.yaml"
+    touch -f "$SETTINGS_DIR/config.yaml"
     echo -e "${GREEN}config.temp.yaml has been moved to config.yaml, overwriting the existing file.${NC}"
 else
     echo -e "${RED}config.temp.yaml does not exist in $CLONE_DIR/environments.${NC}"
@@ -241,6 +241,10 @@ fi
 # Konfiguration in config.yaml speichern
 echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
 
+TOOLS_DIR="$CLONE_DIR/tools"
+SCRIPTS_DIR="$BRANCH_DIR/scripts"
+PIPELINES_DIR="$BRANCH_DIR/pipelines"
+
 # Speichern der Konfiguration
 cat <<- EOL > "$CONFIG_FILE"
 # system_name: Der Name des Systems oder Servers, der für die Konfiguration verwendet wird.
@@ -277,38 +281,33 @@ tools: "$TOOLS"
 # Sie wird auf "false" gesetzt, wenn kein SSH-Key angegeben wird oder die Funktion
 # standardmäßig deaktiviert ist. Wenn ein gültiger SSH-Schlüssel eingegeben wird,
 # wird sie auf "true" gesetzt und die SSH-Key-Funktion wird aktiviert.
-SSH_KEY_FUNCTION_ENABLED: false
+ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
 
 # SSH_KEY_PUBLIC: Diese Variable enthält den öffentlichen SSH-Schlüssel (Public Key),
 # den der Benutzer eingegeben hat. Wenn kein Schlüssel eingegeben wird, bleibt diese
 # Variable leer (""). Wenn ein gültiger SSH-Schlüssel eingegeben wird, wird dieser hier gespeichert.
-SSH_KEY_PUBLIC: ""
+SSH_KEY_PUBLIC: "$SSH_KEY_PUBLIC"
+
+# tools_dir: Speichert den Pfad zu dem Verzeichnis, in dem verschiedene Tools (z.B. Ansible, Docker, Terraform)
+# abgelegt sind. Dies ist der Ort, an dem alle Tool-spezifischen Dateien oder Konfigurationen gespeichert werden.
+tools_dir: "$TOOLS_DIR"
+
+# scripts_dir: Speichert den Pfad zu dem Verzeichnis, in dem allgemeine Skripte abgelegt sind.
+# Hier befinden sich Automatisierungsskripte oder Hilfsskripte, die für verschiedene Aufgaben oder Prozesse genutzt werden.
+scripts_dir: "$SCRIPTS_DIR"
+
+# pipelines_dir: Speichert den Pfad zu dem Verzeichnis, in dem Pipeline-Konfigurationsdateien (z.B. CI/CD-Pipelines) gespeichert sind.
+# Dieses Verzeichnis enthält die Dateien für Jenkins, GitLab CI oder andere CI/CD-Tools, die in Automatisierungsprozesse integriert sind.
+pipelines_dir: "$PIPELINES_DIR"
 
 EOL
 
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 
-
-# Funktion zum Anfügen der Inhalte von var.temp.yaml an config.yaml
-append_temp_to_config() {
-    echo -e "${GREEN}Appending contents of var.temp.yaml to config.yaml...${NC}"
-
-    # Überprüfen, ob var.temp.yaml existiert
-    if [ -f "$CLONE_DIR/environments/var.temp.yaml" ]; then
-        # Inhalte von opt.temp.yaml an config.yaml anhängen
-        cat "$CLONE_DIR/environments/var.temp.yaml" >> "$SETTINGS_DIR/config.yaml"
-        echo -e "${GREEN}Contents of var.temp.yaml successfully appended to config.yaml.${NC}"
-    else
-        echo -e "${RED}var.temp.yaml not found!${NC}"
-    fi
-}
-
-append_temp_to_config
-
-# Um get_tools.sh auszuführen
+# Überprüfen, ob get_tools.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/get_tools.sh" ]; then
     echo -e "${GREEN}Switching to $CLONE_DIR/environments/get_tools.sh${NC}"
-    exec bash "$CLONE_DIR/environments/get_tools.sh"
+    exec bash "$CLONE_DIR/environments/get_tools.sh" "$TOOLS_DIR" "$TOOLS"
 else
     echo -e "${GREEN}Error: $CLONE_DIR/environments/get_tools.sh not found!${NC}"
     exit 1

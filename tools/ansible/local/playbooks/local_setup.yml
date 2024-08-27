@@ -4,15 +4,6 @@
   become: true
 
   tasks:
-    - name: Load config variables from config.yaml
-      include_vars:
-        file: "{{ CONFIG_YAML }}"
-      register: config_vars  # Alle geladenen Variablen werden in config_vars gespeichert
-
-    - name: Set all config variables as facts
-      set_fact:
-        loaded_config: "{{ config_vars.ansible_facts }}"  # Alle geladenen Variablen als Fakten setzen
-
     - name: Verify system_name variable is loaded
       debug:
         msg: "The system_name is {{ system_name }}"

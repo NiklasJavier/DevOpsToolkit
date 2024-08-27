@@ -3,6 +3,8 @@
 # Farben für die Ausgabe
 GREEN='\033[0;32m'
 RED='\033[0;31m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # Keine Farbe
 
 # Name des Repositories
@@ -14,10 +16,10 @@ BRANCH=""
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
     echo -e "${GREEN}Please select the branch to clone:${NC}"
-    echo "1) production"
-    echo "2) staging"
-    echo "3) dev"
-    read -p "Enter your choice (1-3): " choice < /dev/tty
+    echo "1) ${BLUE}production${NC}"
+    echo "2) ${YELLOW}staging${NC}"
+    echo "3) ${RED}dev${NC}"
+    read -p "${GREEN}Enter your choice (1-3): ${NC}" choice < /dev/tty
 
     case $choice in
       1)

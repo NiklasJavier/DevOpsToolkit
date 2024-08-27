@@ -3,6 +3,8 @@
 # Farben für die Ausgabe
 GREEN='\033[0;32m'
 RED='\033[0;31m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # Keine Farbe
 
 # Name des Repositories
@@ -17,7 +19,7 @@ choose_branch() {
     echo "1) production"
     echo "2) staging"
     echo "3) dev"
-    read -p "Enter your choice (1-3): " choice
+    read -p "Enter your choice (1-3):" choice < /dev/tty
 
     case $choice in
       1)
@@ -36,22 +38,24 @@ choose_branch() {
     esac
 }
 
-# Prüfen, ob -t Option angegeben wurde und Branch bestimmen bspw. -t production, -t staging oder -t dev
-while getopts ":t:" opt; do
-  case $opt in
-    t)
-      if [[ "$OPTARG" == "production" || "$OPTARG" == "staging" || "$OPTARG" == "dev" ]]; then
-        BRANCH="$OPTARG"
+# Prüfen, ob -t Option angegeben wurde und Branch bestimmen
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    -t)
+      shift
+      if [[ "$1" == "production" || "$1" == "staging" || "$1" == "dev" ]]; then
+        BRANCH="$1"
       else
         echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
         exit 1
       fi
       ;;
-    \?)
-      echo -e "${RED}Invalid option: -$OPTARG${NC}" >&2
+    *)
+      echo -e "${RED}Invalid option: $1${NC}" >&2
       exit 1
       ;;
   esac
+  shift
 done
 
 # Falls kein Branch angegeben wurde, den Benutzer fragen

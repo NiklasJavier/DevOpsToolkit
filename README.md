@@ -6,15 +6,15 @@ curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/envi
 
 # -t production
 ```
-curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh -t production | bash
+curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh -t production | bash -s -- -t production
 ```
 
 # -t staging
 ```
-curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh -t staging | bash
+curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh -t staging | bash -s -- -t staging
 ```
 
 # -t dev
 ```
-curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh -t dev | bash
+curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash -s -- -t dev
 ```

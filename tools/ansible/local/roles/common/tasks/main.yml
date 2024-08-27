@@ -25,12 +25,6 @@
     state: present
   notify: Restart-SSH
 
-- name: Add SSH public key if ssh_key_function_enabled is true
-  authorized_key:
-    user: "{{ ansible_user }}"
-    key: "{{ ssh_key_public }}"
-  when: ssh_key_function_enabled | bool
-
 - name: Create a user with the username from variable
   user:
     name: "{{ username }}"
@@ -38,6 +32,18 @@
     shell: /bin/bash         
     create_home: yes         
 
+- name: Add root SSH public key if ssh_key_function_enabled is true
+  authorized_key:
+    user: "root"
+    key: "{{ ssh_key_public }}"
+  when: ssh_key_function_enabled | bool
+
+- name: Add username SSH public key if ssh_key_function_enabled is true
+  authorized_key:
+    user: "{{ username }}"
+    key: "{{ ssh_key_public }}"
+  when: ssh_key_function_enabled | bool
+  
 - name: Create directory in opt_data_dir
   file:
     path: "{{ opt_data_dir }}"

@@ -1,138 +1,138 @@
 # DevOpsToolkit
 
-Das **DevOpsToolkit**-Repository bietet eine Sammlung von Skripten und Konfigurationen, um eine Entwicklungs-, Staging- oder Produktionsumgebung schnell und einfach einzurichten. Es ist flexibel und ermöglicht sowohl die Konfiguration basierend auf benutzerdefinierten Einstellungen als auch die Verwendung von Standardwerten.
+The **DevOpsToolkit** repository provides a collection of scripts and configurations to quickly and easily set up a development, staging, or production environment. It is flexible and allows configuration based on user-defined settings or the use of default values.
 
-## Konfiguration
+## Configuration
 
-Die Datei [config.temp.yaml](https://github.com/NiklasJavier/DevOpsToolkit/blob/HEAD/environments/config.temp.yaml) veranschaulicht, welche Optionen während der Ausführung unseres Skripts als Variablen festgelegt werden können. Die eigentliche Konfiguration erfolgt jedoch dynamisch während der Skriptausführung, wobei der Benutzer die Variablen anpassen kann oder automatisch generierte Standardwerte verwendet werden.
+The file [config.temp.yaml](https://github.com/NiklasJavier/DevOpsToolkit/blob/HEAD/environments/config.temp.yaml) illustrates the options that can be set as variables during the execution of our script. However, the actual configuration takes place dynamically during the script execution, where the user can adjust the variables or use automatically generated default values.
 
-### Variablen in `config.yaml`:
+### Variables in `config.yaml`:
 
 - **`system_name`**:  
-  Der Name des Systems oder Servers, der für die Konfiguration verwendet wird. Wenn der Benutzer keinen Namen eingibt, wird ein Zufallsname generiert.  
-  Beispiel:  
+  The name of the system or server used for configuration. If the user does not provide a name, a random name will be generated.  
+  Example:  
   ```yaml
   system_name: "$SYSTEM_NAME"
   ```
 
 - **`ssh_port`**:  
-  Der SSH-Port, über den die Verbindung zum Server hergestellt wird. Standardmäßig wird Port **282** verwendet, falls der Benutzer keinen Port angibt.  
-  Beispiel:  
+  The SSH port through which the connection to the server is established. By default, port **282** is used if the user does not specify a port.  
+  Example:  
   ```yaml
   ssh_port: "$SSH_PORT"
   ```
 
 - **`log_level`**:  
-  Das gewünschte Log-Level für die Protokollierung der Anwendung. Mögliche Optionen sind `"debug"`, `"info"`, `"warn"`, und `"error"`. Standardwert: **info**.  
-  Beispiel:  
+  The desired log level for the application’s logging. Possible options are `"debug"`, `"info"`, `"warn"`, and `"error"`. Default value: **info**.  
+  Example:  
   ```yaml
   log_level: "$LOG_LEVEL"
   ```
 
 - **`opt_data_dir`**:  
-  Das Datenverzeichnis, in dem Anwendungsdaten gespeichert werden. Es basiert standardmäßig auf dem `system_name` (z.B. `/opt/$SYSTEM_NAME/data`), falls kein anderes Verzeichnis angegeben wird.  
-  Beispiel:  
+  The data directory where application data is stored. It is by default based on `system_name` (e.g., `/opt/$SYSTEM_NAME/data`) unless another directory is specified.  
+  Example:  
   ```yaml
   opt_data_dir: "$OPT_DATA_DIR"
   ```
 
 - **`use_defaults`**:  
-  Eine Flag-Variable, die angibt, ob das Skript im "Default-Modus" ausgeführt wird. Wenn `use_defaults` auf **true** gesetzt ist, werden keine Eingabeaufforderungen an den Benutzer gestellt. Stattdessen werden automatisch die Standardwerte verwendet.  
-  Beispiel:  
+  A flag variable indicating whether the script runs in "default mode." When `use_defaults` is set to **true**, no prompts are given to the user, and default values are used automatically.  
+  Example:  
   ```yaml
   use_defaults: "$USE_DEFAULTS"
   ```
 
 - **`tools`**:  
-  Diese Variable enthält die Liste der Tools, die installiert werden sollen. Der Benutzer kann die Tools manuell angeben (z.B. `docker ansible terraform`). Wenn keine Eingabe erfolgt oder `USE_DEFAULTS=true` ist, werden automatisch alle Standardtools ausgewählt.  
-  Beispiel:  
+  This variable contains the list of tools to be installed. The user can manually specify the tools (e.g., `docker ansible terraform`). If no input is provided or `USE_DEFAULTS=true`, all default tools will be selected automatically.  
+  Example:  
   ```yaml
   tools: "$TOOLS"
   ```
 
 - **`ssh_key_function_enabled`**:  
-  Diese Variable gibt an, ob die SSH-Key-Funktion aktiviert ist. Wenn sie auf **false** gesetzt ist, wird die Funktion deaktiviert, außer es wird ein gültiger SSH-Schlüssel eingegeben.  
-  Beispiel:  
+  This variable indicates whether the SSH key function is enabled. It is set to **false** if no SSH key is provided or the function is disabled by default unless a valid SSH key is entered.  
+  Example:  
   ```yaml
   ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
   ```
 
 - **`ssh_key_public`**:  
-  Enthält den öffentlichen SSH-Schlüssel (Public Key), der vom Benutzer eingegeben wurde. Wenn kein Schlüssel eingegeben wird, bleibt diese Variable leer.  
-  Beispiel:  
+  Contains the public SSH key provided by the user. If no key is entered, this variable remains empty.  
+  Example:  
   ```yaml
   ssh_key_public: "$SSH_KEY_PUBLIC"
   ```
 
 - **`tools_dir`**:  
-  Speichert den Pfad zu dem Verzeichnis, in dem die verschiedenen Tools (z.B. Ansible, Docker, Terraform) abgelegt sind.  
-  Beispiel:  
+  Stores the path to the directory where various tools (e.g., Ansible, Docker, Terraform) are stored.  
+  Example:  
   ```yaml
   tools_dir: "$TOOLS_DIR"
   ```
 
 - **`scripts_dir`**:  
-  Speichert den Pfad zu dem Verzeichnis, in dem allgemeine Skripte abgelegt sind.  
-  Beispiel:  
+  Stores the path to the directory where general scripts are stored.  
+  Example:  
   ```yaml
   scripts_dir: "$SCRIPTS_DIR"
   ```
 
 - **`pipelines_dir`**:  
-  Speichert den Pfad zu dem Verzeichnis, in dem Pipeline-Konfigurationsdateien (z.B. CI/CD-Pipelines) gespeichert sind.  
-  Beispiel:  
+  Stores the path to the directory where pipeline configuration files (e.g., CI/CD pipelines) are stored.  
+  Example:  
   ```yaml
   pipelines_dir: "$PIPELINES_DIR"
   ```
 
 ## Setup
 
-Um das **DevOpsToolkit** zu installieren und zu konfigurieren, kann das folgende Skript verwendet werden. Es stehen mehrere Optionen zur Verfügung, um verschiedene Umgebungen zu konfigurieren.
+To install and configure **DevOpsToolkit**, the following script can be used. Several options are available to configure different environments.
 
-### Standard-Setup
+### Standard Setup
 
-Dieses Setup verwendet die Standardwerte für alle Variablen:
+This setup uses default values for all variables:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash
 ```
 
-### Setup-Optionen:
+### Setup Options:
 
-Die folgenden Befehle verwenden das **`-t`**-Flag, um die Art der Umgebung festzulegen. Das **`-key`**-Flag kann optional hinzugefügt werden, um einen öffentlichen SSH-Schlüssel bereitzustellen.
+The following commands use the **`-t`** flag to specify the type of environment. The **`-key`** flag can optionally be added to provide a public SSH key.
 
 - **`-t production`**:  
-  Setzt **`USE_DEFAULTS=true`** und richtet eine Produktionsumgebung ein.
+  Sets **`USE_DEFAULTS=true`** and sets up a production environment.
 
   ```bash
   curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash -s -- -t production
   ```
 
 - **`-t staging`**:  
-  Setzt **`USE_DEFAULTS=true`** und richtet eine Staging-Umgebung ein.
+  Sets **`USE_DEFAULTS=true`** and sets up a staging environment.
 
   ```bash
   curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash -s -- -t staging
   ```
 
 - **`-t dev`**:  
-  Setzt **`USE_DEFAULTS=true`** und richtet eine Entwicklungsumgebung ein.
+  Sets **`USE_DEFAULTS=true`** and sets up a development environment.
 
   ```bash
   curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash -s -- -t dev
   ```
 
 - **`-t dev -key "ssh-pub-key"`**:  
-  Setzt **`USE_DEFAULTS=true`**, richtet eine Entwicklungsumgebung ein und aktiviert die SSH-Key-Funktion mit dem bereitgestellten öffentlichen Schlüssel.
+  Sets **`USE_DEFAULTS=true`**, sets up a development environment, and enables the SSH key function with the provided public key.
 
   ```bash
   curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash -s -- -t dev -key "ssh-pub-key"
   ```
 
-## Erklärungen der Optionen
+## Option Explanations
 
 - **`-t production / staging / dev`**:  
-  Diese Option legt fest, welche Umgebung eingerichtet wird. Die Option **`USE_DEFAULTS=true`** sorgt dafür, dass keine Benutzereingaben erforderlich sind und die Standardwerte verwendet werden.
+  This option specifies which environment will be set up. The **`USE_DEFAULTS=true`** option ensures that no user input is required, and the default values are applied automatically.
 
 - **`-key "ssh-pub-key"`**:  
-  Über diese Option kann ein öffentlicher SSH-Schlüssel übergeben werden. Wenn ein Schlüssel angegeben wird, wird die SSH-Key-Funktion aktiviert und der Schlüssel dem Server hinzugefügt.
+  This option allows you to provide a public SSH key. When a key is provided, the SSH key function is enabled, and the key is added to the server.

@@ -54,32 +54,38 @@ choose_branch() {
 
 # Prüfen, ob -t Option und -key Option angegeben wurden
 # Prüfen, ob Optionen angegeben wurden
+# Prüfen, ob Optionen angegeben wurden
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
     -t)
       shift
-      case "$1" in
-        production|staging|dev)
-          USE_DEFAULTS=true # Standardwerte verwenden
-          BRANCH="$1"
-          ;;
-        *)
-          echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
-          exit 1
-          ;;
-      esac
+      if [[ -n "$1" && "$1" != -* ]]; then
+        case "$1" in
+          production|staging|dev)
+            USE_DEFAULTS=true
+            BRANCH="$1"
+            ;;
+          *)
+            echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
+            exit 1
+            ;;
+        esac
+      else
+        echo -e "${RED}No branch specified with -t.${NC}" >&2
+        exit 1
+      fi
       ;;
     -key)
       shift
-      SSH_KEY_FUNCTION_ENABLED=true  # SSH-Key-Funktion aktivieren
+      SSH_KEY_FUNCTION_ENABLED=true
       if [[ -n "$1" && "$1" != -* ]]; then
         SSH_KEY_PUBLIC="$1"
       else
         SSH_KEY_FUNCTION_ENABLED=false
-        SSH_KEY_PUBLIC=""  # Wenn leer, setze einen Standard-Schlüssel oder handle es entsprechend
+        SSH_KEY_PUBLIC=""
       fi
       ;;
-    -p) # Port
+    -p)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
         PORT="$1"
@@ -88,7 +94,7 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
-    -u) # Benutzername
+    -u)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
         USERNAME="$1"
@@ -97,14 +103,14 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
-    -s) # Tools
+    -s)
       shift
       while [[ -n "$1" && "$1" != -* ]]; do
         TOOLS+=("$1")
         shift
       done
       ;;
-    -n) # Systemname
+    -n)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
         SYSTEM_NAME="$1"
@@ -113,7 +119,7 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
-    --full) # HostSetup
+    --full)
       FULL=true
       ;;
     *)
@@ -121,7 +127,6 @@ while [[ "$#" -gt 0 ]]; do
       exit 1
       ;;
   esac
-  shift
 done
 
 # Debugging-Ausgabe (kann entfernt werden)
@@ -130,6 +135,9 @@ echo "Benutzername: $USERNAME"
 echo "Verwendete Tools: ${TOOLS[*]}"
 echo "Systemname: $SYSTEM_NAME"
 echo "Full HostSetup: $FULL"
+echo "Branch: $BRANCH"
+echo "SSH Key aktiviert: $SSH_KEY_FUNCTION_ENABLED"
+echo "SSH Key Public: $SSH_KEY_PUBLIC"
 
 
 # Falls kein Branch angegeben wurde, den Benutzer fragen

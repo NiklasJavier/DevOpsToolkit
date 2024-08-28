@@ -19,6 +19,14 @@ USE_DEFAULTS=false
 SSH_KEY_PUBLIC=""
 SSH_KEY_FUNCTION_ENABLED=false
 
+FULL=false
+USERNAME=""
+
+SYSTEM_NAME=""
+PORT=""
+
+TOOLS=()
+
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
     echo -e "${GREEN}Please select the branch to clone:${NC}"
@@ -45,6 +53,7 @@ choose_branch() {
 }
 
 # Prüfen, ob -t Option und -key Option angegeben wurden
+# Prüfen, ob Optionen angegeben wurden
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
     -t)
@@ -70,6 +79,43 @@ while [[ "$#" -gt 0 ]]; do
         SSH_KEY_PUBLIC=""  # Wenn leer, setze einen Standard-Schlüssel oder handle es entsprechend
       fi
       ;;
+    -p) # Port
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        PORT="$1"
+      else
+        echo -e "${RED}No port specified with -p.${NC}" >&2
+        exit 1
+      fi
+      ;;
+    -u) # Benutzername
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        USERNAME="$1"
+      else
+        echo -e "${RED}No username specified with -u.${NC}" >&2
+        exit 1
+      fi
+      ;;
+    -s) # Tools
+      shift
+      while [[ -n "$1" && "$1" != -* ]]; do
+        TOOLS+=("$1")
+        shift
+      done
+      ;;
+    -n) # Systemname
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        SYSTEM_NAME="$1"
+      else
+        echo -e "${RED}No system name specified with -n.${NC}" >&2
+        exit 1
+      fi
+      ;;
+    --full) # HostSetup
+      FULL=true
+      ;;
     *)
       echo -e "${RED}Invalid option: $1${NC}" >&2
       exit 1
@@ -77,6 +123,14 @@ while [[ "$#" -gt 0 ]]; do
   esac
   shift
 done
+
+# Debugging-Ausgabe (kann entfernt werden)
+echo "Port: $PORT"
+echo "Benutzername: $USERNAME"
+echo "Verwendete Tools: ${TOOLS[*]}"
+echo "Systemname: $SYSTEM_NAME"
+echo "Full HostSetup: $FULL"
+
 
 # Falls kein Branch angegeben wurde, den Benutzer fragen
 if [ -z "$BRANCH" ]; then

@@ -55,23 +55,16 @@ choose_branch() {
 # Prüfen, ob -t Option und -key Option angegeben wurden
 # Prüfen, ob Optionen angegeben wurden
 # Prüfen, ob Optionen angegeben wurden
+# Prüfen, ob Optionen angegeben wurden
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
     -t)
       shift
-      if [[ -n "$1" && "$1" != -* ]]; then
-        case "$1" in
-          production|staging|dev)
-            USE_DEFAULTS=true
-            BRANCH="$1"
-            ;;
-          *)
-            echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
-            exit 1
-            ;;
-        esac
+      if [[ "$1" == "production" || "$1" == "staging" || "$1" == "dev" ]]; then
+        USE_DEFAULTS=true
+        BRANCH="$1"
       else
-        echo -e "${RED}No branch specified with -t.${NC}" >&2
+        echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
         exit 1
       fi
       ;;
@@ -127,6 +120,7 @@ while [[ "$#" -gt 0 ]]; do
       exit 1
       ;;
   esac
+  shift
 done
 
 # Debugging-Ausgabe (kann entfernt werden)

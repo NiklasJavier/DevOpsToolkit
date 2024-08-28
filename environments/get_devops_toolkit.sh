@@ -56,64 +56,31 @@ choose_branch() {
 # Prüfen, ob Optionen angegeben wurden
 # Prüfen, ob Optionen angegeben wurden
 # Prüfen, ob Optionen angegeben wurden
+# Prüfen, ob -t Option und -key Option angegeben wurden
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
     -t)
       shift
-      if [[ "$1" == "production" || "$1" == "staging" || "$1" == "dev" ]]; then
-        USE_DEFAULTS=true
-        BRANCH="$1"
-      else
-        echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
-        exit 1
-      fi
+      case "$1" in
+        production|staging|dev)
+          USE_DEFAULTS=true # Standardwerte verwenden
+          BRANCH="$1"
+          ;;
+        *)
+          echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
+          exit 1
+          ;;
+      esac
       ;;
     -key)
       shift
-      SSH_KEY_FUNCTION_ENABLED=true
+      SSH_KEY_FUNCTION_ENABLED=true  # SSH-Key-Funktion aktivieren
       if [[ -n "$1" && "$1" != -* ]]; then
         SSH_KEY_PUBLIC="$1"
       else
         SSH_KEY_FUNCTION_ENABLED=false
-        SSH_KEY_PUBLIC=""
+        SSH_KEY_PUBLIC=""  # Wenn leer, setze einen Standard-Schlüssel oder handle es entsprechend
       fi
-      ;;
-    -p)
-      shift
-      if [[ -n "$1" && "$1" != -* ]]; then
-        PORT="$1"
-      else
-        echo -e "${RED}No port specified with -p.${NC}" >&2
-        exit 1
-      fi
-      ;;
-    -u)
-      shift
-      if [[ -n "$1" && "$1" != -* ]]; then
-        USERNAME="$1"
-      else
-        echo -e "${RED}No username specified with -u.${NC}" >&2
-        exit 1
-      fi
-      ;;
-    -s)
-      shift
-      while [[ -n "$1" && "$1" != -* ]]; do
-        TOOLS+=("$1")
-        shift
-      done
-      ;;
-    -n)
-      shift
-      if [[ -n "$1" && "$1" != -* ]]; then
-        SYSTEM_NAME="$1"
-      else
-        echo -e "${RED}No system name specified with -n.${NC}" >&2
-        exit 1
-      fi
-      ;;
-    --full)
-      FULL=true
       ;;
     *)
       echo -e "${RED}Invalid option: $1${NC}" >&2

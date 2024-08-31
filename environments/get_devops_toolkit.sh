@@ -30,87 +30,7 @@ ENV_DIR="$CLONE_DIR/environments"
 TOOLS_DIR="$CLONE_DIR/tools"
 SETTINGS_DIR="" 
 SCRIPTS_DIR="" 
-PIPELINES_DIR=""
-
-# Überprüfen, ob das Skript als Root ausgeführt wird
-if [ "$EUID" -ne 0 ]; then
-    echo -e "${RED}Please run as root.${NC}"
-    exit 1
-fi
-
-echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
-
-# Funktion zum Parsen der Argumente
-parse_args() {
-  while [[ "$#" -gt 0 ]]; do
-    case "$1" in
-      -branch)
-        shift
-        case "$1" in
-          production|staging|dev)
-            USE_DEFAULTS=true # Immer mit Standardwerten arbeiten
-            BRANCH="$1"
-            ;;
-          *)
-            echo -e "${RED}Invalid branch specified with -branch. Please use 'production', 'staging', or 'dev'.${NC}"
-            exit 1
-            ;;
-        esac
-        ;;
-      -full) 
-        shift
-        if [[ "$1" == "true" || "$1" == "false" ]]; then
-          FULL="$1"
-        else
-          echo -e "${RED}Invalid value for FULL. Please use 'true' or 'false'.${NC}"
-          exit 1
-        fi
-        ;;
-      -systemname) 
-        shift
-        if [[ -n "$1" && "$1" != -* ]]; then
-          SYSTEM_NAME="$1"
-        else
-          echo -e "${RED}No systemname specified with -systemname.${NC}"
-          exit 1
-        fi
-        ;;
-      -key)
-        shift
-        SSH_KEY_FUNCTION_ENABLED=true  # SSH-Key-Funktion aktivieren
-        if [[ -n "$1" && "$1" != -* ]]; then
-          SSH_KEY_PUBLIC="$1"
-        else
-          SSH_KEY_FUNCTION_ENABLED=false
-          SSH_KEY_PUBLIC=""  # Wenn leer, setze einen Standard-Schlüssel oder handle es entsprechend
-        fi
-        ;;
-      -port)
-        shift
-        if [[ -n "$1" && "$1" != -* ]]; then
-          PORT="$1"
-        else
-          echo -e "${RED}No port specified with -port.${NC}"
-          exit 1
-        fi
-        ;;
-      -tools)
-        shift
-        if [[ -n "$1" && "$1" != -* ]]; then
-          TOOLS="$1"
-        else
-          echo -e "${RED}No tools specified with -tools.${NC}"
-          exit 1
-        fi
-        ;;
-      *)
-        echo -e "${RED}Invalid option: $1${NC}" >&2
-        exit 1
-        ;;
-    esac
-    shift
-  done
-}
+PIPELINES_DIR="" 
 
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
@@ -137,9 +57,79 @@ choose_branch() {
     esac
 }
 
-# Initialisierung der Argumente
-parse_args "$@"
-if [ -z "$BRANCH" ]; then choose_branch fi
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    -branch)
+      shift
+      case "$1" in
+        production|staging|dev)
+          USE_DEFAULTS=true # Immer mit Standardwerten arbeiten
+          BRANCH="$1"
+          ;;
+        *)
+          echo -e "${RED}Invalid branch specified with -t. Please use 'production', 'staging', or 'dev'.${NC}"
+          exit 1
+          ;;
+      esac
+      ;;
+    -full) 
+      shift
+      if [[ "$1" == "true" || "$1" == "false" ]]; then
+        FULL="$1"
+      else
+        echo -e "${RED}Invalid value for FULL. Please use 'true' or 'false'.${NC}"
+        exit 1
+      fi
+      ;;
+    -systemname) 
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        SYSTEM_NAME="$1"
+      else
+        echo -e "${RED}No systemname specified with -username.${NC}"
+        exit 1
+      fi
+      ;;
+    -key)
+      shift
+      SSH_KEY_FUNCTION_ENABLED=true  # SSH-Key-Funktion aktivieren
+      if [[ -n "$1" && "$1" != -* ]]; then
+        SSH_KEY_PUBLIC="$1"
+      else
+        SSH_KEY_FUNCTION_ENABLED=false
+        SSH_KEY_PUBLIC=""  # Wenn leer, setze einen Standard-Schlüssel oder handle es entsprechend
+      fi
+      ;;
+    -port)
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        PORT="$1"
+      else
+        echo -e "${RED}No port specified with -p.${NC}"
+        exit 1
+      fi
+      ;;
+    -tools)
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        TOOLS="$1"
+      else
+        echo -e "${RED}No tools specified with -tools.${NC}"
+        exit 1
+      fi
+      ;;
+    *)
+      echo -e "${RED}Invalid option: $1${NC}" >&2
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+# Falls kein Branch angegeben wurde, den Benutzer fragen
+if [ -z "$BRANCH" ]; then
+    choose_branch
+fi
 
 BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
 SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
@@ -172,6 +162,15 @@ echo -e "${PINK}Konfigurationsdatei: $CONFIG_FILE ${NC}"
 echo -e "${PINK}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
 echo -e "${PINK}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
 echo -e "${PINK}---${NC}"
+
+
+# Überprüfen, ob das Skript als Root ausgeführt wird
+if [ "$EUID" -ne 0 ]; then
+    echo -e "${RED}Please run as root.${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
 
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then

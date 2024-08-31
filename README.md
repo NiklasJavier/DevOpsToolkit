@@ -94,7 +94,7 @@ To install and configure **DevOpsToolkit**, the following script can be used. Se
 This setup uses default values for all variables:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash
+curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash
 ```
 
 ### Setup Options:
@@ -105,28 +105,28 @@ The following commands use the **`-t`** flag to specify the type of environment.
   Sets **`USE_DEFAULTS=true`** and sets up a production environment.
 
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/init_devops_toolkit.sh | bash -s -- -branch production
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch production
   ```
 
 - **`-t staging`**:  
   Sets **`USE_DEFAULTS=true`** and sets up a staging environment.
 
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/init_devops_toolkit.sh | bash -s -- -branch staging 
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch staging 
   ```
 
 - **`-t dev`**:  
   Sets **`USE_DEFAULTS=true`** and sets up a development environment.
 
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/init_devops_toolkit.sh | bash -s -- -branch dev
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev
   ```
 
 - **`-t dev -key "ssh-pub-key"`**:  
   Sets **`USE_DEFAULTS=true`**, sets up a development environment, and enables the SSH key function with the provided public key.
 
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/init_devops_toolkit.sh | bash -s -- -branch dev -key "ssh-pub-key"
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev -key "ssh-pub-key"
   ```
 
 ## Option Explanations

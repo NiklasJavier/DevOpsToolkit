@@ -33,7 +33,8 @@ SETTINGS_DIR=""
 CONFIG_FILE="" # Konfigurationsdatei für das Setup in Settings-Verzeichnis
 DEVOPS_CLI_FILE="$ENV_DIR/devops_cli.sh"
 
-SYMLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
+SYSLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
+LOG_FILE="/var/log/devops_commands.log"
 
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
@@ -244,18 +245,18 @@ echo "Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt."
 
 echo -e "${PINK}--- create cli-wrapper sbin link ---${NC}"
 # Überprüfen, ob der Symlink bereits existiert
-if [ -L "$SYMLINK_PATH" ]; then
+if [ -L "$SYSLINK_PATH" ]; then
     # Wenn der Symlink existiert, überprüfen, ob er auf die richtige Datei zeigt
-    if [ "$(readlink "$SYMLINK_PATH")" != "$DEVOPS_CLI_FILE" ]; then
-        echo "Symlink $SYMLINK_PATH existiert und zeigt auf einen anderen Pfad. Aktualisierung..."
-        sudo ln -sf "$DEVOPS_CLI_FILE" "$SYMLINK_PATH"
+    if [ "$(readlink "$SYSLINK_PATH")" != "$DEVOPS_CLI_FILE" ]; then
+        echo "Symlink $SYSLINK_PATH existiert und zeigt auf einen anderen Pfad. Aktualisierung..."
+        sudo ln -sf "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
     else
-        echo "Symlink $SYMLINK_PATH existiert bereits und zeigt auf das richtige Ziel."
+        echo "Symlink $SYSLINK_PATH existiert bereits und zeigt auf das richtige Ziel."
     fi
 else
     # Wenn der Symlink nicht existiert, erstelle ihn
-    echo "Symlink $SYMLINK_PATH existiert nicht. Erstellen..."
-    sudo ln -s "$DEVOPS_CLI_FILE" "$SYMLINK_PATH"
+    echo "Symlink $SYSLINK_PATH existiert nicht. Erstellen..."
+    sudo ln -s "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
 fi
 
 
@@ -386,9 +387,9 @@ pipelines_dir: "$PIPELINES_DIR"
 
 username: "$USERNAME"
 
-log_file: "/var/log/devops_commands.log"
+log_file: "$LOG_FILE"
 
-
+systemlink_path: "$SYSLINK_PATH"
 
 EOL
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"

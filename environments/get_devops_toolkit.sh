@@ -136,17 +136,13 @@ CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
 SCRIPTS_DIR="$BRANCH_DIR/scripts" # Skriptverzeichnis festlegen
 PIPELINES_DIR="$BRANCH_DIR/pipelines" # Pipeline-Verzeichnis festlegen
 
-echo "    ____            ____            ______          ";
-echo "   / __ \___ _   __/ __ \____  ____/_  __/___  ____ ";
-echo "  / / / / _ \ | / / / / / __ \/ ___// / / __ \/ __ \";
-echo " / /_/ /  __/ |/ / /_/ / /_/ (__  )/ / / /_/ / /_/ /";
-echo "/_____/\___/|___/\____/ .___/____//_/  \____/\____/ ";
-echo "   / / /__(_) /_     /_/                            ";
-echo "  / / //_/ / __/                                    ";
-echo " / / ,< / / /_                                      ";
-echo "/_/_/|_/_/\__/                                      ";
-echo "                                                    ";
-echo "---------------------------------------------------"
+echo "    ____            ____                ____  ______";
+echo "   / __ \___ _   __/ __ \____  _____   / __ \/ ____/";
+echo "  / / / / _ \ | / / / / / __ \/ ___/  / /_/ / /     ";
+echo " / /_/ /  __/ |/ / /_/ / /_/ (__  )  / _, _/ /___   ";
+echo "/_____/\___/|___/\____/ .___/____/  /_/ |_|\____/   ";
+echo "                     /_/                            ";
+echo "----"
 # Debugging-Ausgabe (kann entfernt werden)
 echo -e "${PINK}Branch: $BRANCH ${NC}"
 echo -e "${PINK}Full HostSetup: $FULL ${NC}"

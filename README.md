@@ -105,28 +105,28 @@ The following commands use the **`-t`** flag to specify the type of environment.
   Sets **`USE_DEFAULTS=true`** and sets up a production environment.
 
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash -s -- -t production
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/init_devops_toolkit.sh | bash -s -- -branch production
   ```
 
 - **`-t staging`**:  
   Sets **`USE_DEFAULTS=true`** and sets up a staging environment.
 
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash -s -- -t staging
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/init_devops_toolkit.sh | bash -s -- -branch staging 
   ```
 
 - **`-t dev`**:  
   Sets **`USE_DEFAULTS=true`** and sets up a development environment.
 
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash -s -- -t dev
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/init_devops_toolkit.sh | bash -s -- -branch dev
   ```
 
 - **`-t dev -key "ssh-pub-key"`**:  
   Sets **`USE_DEFAULTS=true`**, sets up a development environment, and enables the SSH key function with the provided public key.
 
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/get_devops_toolkit.sh | bash -s -- -t dev -key "ssh-pub-key"
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/init_devops_toolkit.sh | bash -s -- -branch dev -key "ssh-pub-key"
   ```
 
 ## Option Explanations

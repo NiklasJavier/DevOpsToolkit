@@ -3,21 +3,38 @@
 # Farben für die Ausgabe
 GREEN='\033[0;32m'
 RED='\033[0;31m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
+YELLOW='\033[1;33m' 
+BLUE='\033[0;34m' 
+PINK='\033[0;35m'
+BOLD='\033[1m'
 NC='\033[0m' # Keine Farbe
 
-# Name des Repositories
-REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git"
+REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git" # Name des Repositories
+BRANCH="" # Variable zur Speicherung des Branch-Namens
+BRANCH_DIR="" # Variable zur Speicherung des Branch-Verzeichnisses wird dynamisch festgelegt
 
-# Variable zur Speicherung des Branch-Namens
-BRANCH=""
+FULL=false # Vollständige Installation (true) oder nicht (false)
+USE_DEFAULTS=false # Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
+TOOLS="" # Liste der Tools, die installiert werden sollen
 
-# Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
-USE_DEFAULTS=false
+USERNAME="$(< /dev/urandom tr -dc 'A-Z' | head -c 11)" # Benutzername (zufällig generiert)
+SYSTEM_NAME="SRV-$USERNAME" # Systemname (ehemals Hostname)
+PORT="282" # Port für SSH-Verbindung
+SSH_KEY_FUNCTION_ENABLED=false # SSH-Key-Funktion aktivieren
+SSH_KEY_PUBLIC="none" # Öffentlicher SSH-Schlüssel
 
-SSH_KEY_PUBLIC=""
-SSH_KEY_FUNCTION_ENABLED=false
+CLONE_DIR="/etc/DevOpsToolkit"
+ENV_DIR="$CLONE_DIR/environments"
+TOOLS_DIR="$CLONE_DIR/tools"
+SCRIPTS_DIR="$CLONE_DIR/scripts" 
+PIPELINES_DIR="$CLONE_DIR/pipelines" 
+
+SETTINGS_DIR="" 
+CONFIG_FILE="" # Konfigurationsdatei für das Setup in Settings-Verzeichnis
+DEVOPS_CLI_FILE="$ENV_DIR/devops_cli.sh"
+
+SYSLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
+LOG_FILE="/var/log/devops_commands.log"
 
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
@@ -44,14 +61,13 @@ choose_branch() {
     esac
 }
 
-# Prüfen, ob -t Option und -key Option angegeben wurden
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
-    -t)
+    -branch)
       shift
       case "$1" in
         production|staging|dev)
-          USE_DEFAULTS=true # Standardwerte verwenden
+          USE_DEFAULTS=true # Immer mit Standardwerten arbeiten
           BRANCH="$1"
           ;;
         *)
@@ -59,6 +75,24 @@ while [[ "$#" -gt 0 ]]; do
           exit 1
           ;;
       esac
+      ;;
+    -full) 
+      shift
+      if [[ "$1" == "true" || "$1" == "false" ]]; then
+        FULL="$1"
+      else
+        echo -e "${RED}Invalid value for FULL. Please use 'true' or 'false'.${NC}"
+        exit 1
+      fi
+      ;;
+    -systemname) 
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        SYSTEM_NAME="$1"
+      else
+        echo -e "${RED}No systemname specified with -username.${NC}"
+        exit 1
+      fi
       ;;
     -key)
       shift
@@ -68,6 +102,24 @@ while [[ "$#" -gt 0 ]]; do
       else
         SSH_KEY_FUNCTION_ENABLED=false
         SSH_KEY_PUBLIC=""  # Wenn leer, setze einen Standard-Schlüssel oder handle es entsprechend
+      fi
+      ;;
+    -port)
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        PORT="$1"
+      else
+        echo -e "${RED}No port specified with -p.${NC}"
+        exit 1
+      fi
+      ;;
+    -tools)
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        TOOLS="$1"
+      else
+        echo -e "${RED}No tools specified with -tools.${NC}"
+        exit 1
       fi
       ;;
     *)
@@ -83,8 +135,33 @@ if [ -z "$BRANCH" ]; then
     choose_branch
 fi
 
-# Verzeichnisname basierend auf Branch
-CLONE_DIR="/etc/DevOpsToolkit"
+BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
+SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
+CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
+
+echo -e "${PINK}    ____            ____            ";
+echo -e "${PINK}   / __ \___ _   __/ __ \____  _____";
+echo -e "${PINK}  / / / / _ \ | / / / / / __ \/ ___/";
+echo -e "${PINK} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
+echo -e "${PINK}/_____/\___/|___/\____/ .___/____/  ";
+echo -e "${PINK}                     /_/            ";
+echo -e "${PINK}                                    ";
+echo -e "${PINK}                                    ";
+echo -e "${PINK}--- parameter ---${NC}"
+# Debugging-Ausgabe (kann entfernt werden) 
+echo -e "${GREEN}Branch: $BRANCH ${NC}"
+echo -e "${GREEN}Full HostSetup: $FULL ${NC}"
+echo -e "${GREEN}Verwendete Tools: ${TOOLS[*]} ${NC}"
+echo -e "${GREEN}Port: $PORT ${NC}"
+echo -e "${GREEN}Benutzername: $USERNAME ${NC}"
+echo -e "${GREEN}Systemname: $SYSTEM_NAME ${NC}"
+echo -e "${GREEN}SSH Key aktiviert: $SSH_KEY_FUNCTION_ENABLED ${NC}"
+echo -e "${GREEN}SSH Key Public: $SSH_KEY_PUBLIC ${NC}"
+echo -e "${GREEN}Branch-Verzeichnis: $BRANCH_DIR ${NC}"
+echo -e "${GREEN}Einstellungsverzeichnis: $SETTINGS_DIR ${NC}"
+echo -e "${GREEN}Konfigurationsdatei: $CONFIG_FILE ${NC}"
+echo -e "${GREEN}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
+echo -e "${GREEN}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
 
 # Überprüfen, ob das Skript als Root ausgeführt wird
 if [ "$EUID" -ne 0 ]; then
@@ -92,13 +169,14 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
-
+echo -e "${PINK}--- copy of the git repository ---${NC}"
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
     echo -e "${RED}Git is not installed. Installing Git...${NC}"
+    echo -e "${GREEN}"
     sudo apt-get update
     sudo apt-get install -y git
+    echo -e "${NC}"
 
     # Überprüfen, ob die Installation erfolgreich war
     if ! command -v git &> /dev/null; then
@@ -124,7 +202,9 @@ if [ -d "$CLONE_DIR/.git" ]; then
     sudo git pull
 else
     echo -e "${GREEN}Cloning the repository into $CLONE_DIR with branch $BRANCH...${NC}"
+    echo -e "${YELLOW}"
     sudo git clone -b "$BRANCH" --single-branch "$REPO_URL" "$CLONE_DIR"
+    echo -e "${NC}"
     if [ $? -ne 0 ]; then
         echo -e "${RED}Failed to clone the repository. Aborting...${NC}"
         exit 1
@@ -132,8 +212,6 @@ else
 fi
 
 # Prüfen, ob der branch-spezifische Ordner existiert, und erstellen, wenn nicht
-BRANCH_DIR="$CLONE_DIR/environments/$BRANCH"
-SETTINGS_DIR="$BRANCH_DIR/.settings"
 
 if [ ! -d "$BRANCH_DIR" ]; then
     echo -e "${GREEN}Creating branch-specific folder: $BRANCH_DIR...${NC}"
@@ -150,17 +228,7 @@ else
     echo -e "${GREEN}.settings folder already exists in $BRANCH_DIR...${NC}"
 fi
 
-# Alle Skripte ausführbar machen
-echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
-sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;
-
-echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts are now executable.${NC}"
-
-# Config file 
-CONFIG_FILE="$SETTINGS_DIR/config.yaml"
-
-
-# Immer die config.temp.yaml nach config.yaml verschieben und überschreiben, falls vorhanden
+echo -e "${PINK}--- create the config.yml ---${NC}" # Config anlegen
 if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
     touch -f "$SETTINGS_DIR/config.yaml"
     echo -e "${GREEN}config.temp.yaml has been moved to config.yaml, overwriting the existing file.${NC}"
@@ -168,30 +236,48 @@ else
     echo -e "${RED}config.temp.yaml does not exist in $CLONE_DIR/environments.${NC}"
 fi
 
-echo -e "${GREEN}Initializing configuration...${NC}"
+echo -e "${PINK}--- change the cli-wrapper confline ---${NC}"
+# Konfigurationsdatei für das Setup in devops_cli.sh einfügen
+CLI_CONFIG_MODLINE="CONFIG_FILE="
+CLI_CONFIG_MODLINE+="\"$CONFIG_FILE\""
+sed -i "5i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
+echo "Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt."
 
-
-# Check Public SSH Key Option -key
-if [ "$SSH_KEY_FUNCTION_ENABLED" = true ]; then
-  echo "SSH key function is enabled."
-  echo "Public SSH Key: $SSH_KEY_PUBLIC"
+echo -e "${PINK}--- create cli-wrapper sbin link ---${NC}"
+# Überprüfen, ob der Symlink bereits existiert
+if [ -L "$SYSLINK_PATH" ]; then
+    # Wenn der Symlink existiert, überprüfen, ob er auf die richtige Datei zeigt
+    if [ "$(readlink "$SYSLINK_PATH")" != "$DEVOPS_CLI_FILE" ]; then
+        echo "Symlink $SYSLINK_PATH existiert und zeigt auf einen anderen Pfad. Aktualisierung..."
+        sudo ln -sf "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
+    else
+        echo "Symlink $SYSLINK_PATH existiert bereits und zeigt auf das richtige Ziel."
+    fi
 else
-  echo "SSH key function is disabled."
+    # Wenn der Symlink nicht existiert, erstelle ihn
+    echo "Symlink $SYSLINK_PATH existiert nicht. Erstellen..."
+    sudo ln -s "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
 fi
 
-random_string=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
-USERNAME="$random_string"
+
+# Alle Skripte ausführbar machen
+echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
+sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;
+
+echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts are now executable.${NC}"
+
+echo -e "${PINK}--- adjusting the parameters ---${NC}"
 
 # System Name festlegen (ehemals Hostname)
 if [ -z "$SYSTEM_NAME" ]; then
-    default_system_name="SRVID-$random_string"
+    default_system_name="$SYSTEM_NAME"
     if [ "$USE_DEFAULTS" = true ]; then
         SYSTEM_NAME="$default_system_name"
     else
         read -r -p "Enter system name (default: $default_system_name): " SYSTEM_NAME < /dev/tty
         SYSTEM_NAME=${SYSTEM_NAME:-"$default_system_name"}
     fi
-    echo "SYSTEM_NAME set to: $SYSTEM_NAME"
+    echo -e "${GREEN}SYSTEM_NAME set to: $SYSTEM_NAME${NC}"
 fi
 
 # SSH_PORT festlegen
@@ -203,7 +289,7 @@ if [ -z "$SSH_PORT" ]; then
         read -r -p "Enter the SSH_PORT (default: $default_ssh_port): " SSH_PORT < /dev/tty
         SSH_PORT=${SSH_PORT:-"$default_ssh_port"}
     fi
-    echo "SSH_PORT set to: $SSH_PORT"
+    echo -e "${GREEN}SSH_PORT set to: $SSH_PORT${NC}"
 fi
 
 # Log Level festlegen
@@ -215,7 +301,7 @@ if [ -z "$LOG_LEVEL" ]; then
         read -r -p "Enter the log level (default: $default_log_level) [debug, info, warn, error]: " LOG_LEVEL < /dev/tty
         LOG_LEVEL=${LOG_LEVEL:-"$default_log_level"}
     fi
-    echo "LOG_LEVEL set to: $LOG_LEVEL"
+    echo -e "${GREEN}LOG_LEVEL set to: $LOG_LEVEL${NC}"
 fi
 
 # OPT Datenverzeichnis festlegen, das auf dem Systemnamen basiert
@@ -227,7 +313,7 @@ if [ -z "$OPT_DATA_DIR" ]; then
         read -r -p "Enter the opt data directory (default: $default_opt_data_dir): " OPT_DATA_DIR < /dev/tty
         OPT_DATA_DIR=${OPT_DATA_DIR:-"$default_opt_data_dir"}
     fi
-    echo "OPT_DATA_DIR set to: $OPT_DATA_DIR"
+    echo -e "${GREEN}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
 fi
 
 # Standardmäßig alle Tools auswählen
@@ -241,11 +327,8 @@ else
 fi
 
 # Konfiguration in config.yaml speichern
-echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
-
-TOOLS_DIR="$CLONE_DIR/tools"
-SCRIPTS_DIR="$BRANCH_DIR/scripts"
-PIPELINES_DIR="$BRANCH_DIR/pipelines"
+echo -e "${PINK}--- saving the configuration ---${NC}"
+echo -e "${GREEN}To $CONFIG_FILE...${NC}"
 
 # Speichern der Konfiguration
 cat <<- EOL > "$CONFIG_FILE"
@@ -304,10 +387,15 @@ pipelines_dir: "$PIPELINES_DIR"
 
 username: "$USERNAME"
 
-EOL
+log_file: "$LOG_FILE"
 
+systemlink_path: "$SYSLINK_PATH"
+
+EOL
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 
+
+echo -e "${PINK}--- installation of the tools ---${NC}"
 # Überprüfen, ob get_tools.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/get_tools.sh" ]; then
     echo -e "${GREEN}Switching to $CLONE_DIR/environments/get_tools.sh${NC}"
@@ -320,6 +408,7 @@ else
     exit 1
 fi
 
+echo -e "${PINK}--- setting up the host ---${NC}"
 # Überprüfen, ob start_ansible_setup.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/start_ansible_setup.sh" ]; then
     echo -e "${GREEN}Switching to $CLONE_DIR/environments/start_ansible_setup.sh${NC}"

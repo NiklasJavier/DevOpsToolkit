@@ -6,9 +6,21 @@
 default_command="help"
 
 # Konfigurationsdatei laden, falls vorhanden
-if [ -f "$CONFIG_FILE" ]; then
-    source "$CONFIG_FILE"
-fi
+while IFS= read -r line
+do
+    # Nur Zeilen verarbeiten, die ein ":" enthalten
+    if [[ "$line" == *:* ]]; then
+        # Den Namen und den Wert extrahieren
+        var_name=$(echo "$line" | cut -d ':' -f 1 | xargs)
+        var_value=$(echo "$line" | cut -d ':' -f 2- | xargs)
+
+        # Entferne die Anführungszeichen, wenn sie vorhanden sind
+        var_value=$(echo "$var_value" | sed 's/^"\(.*\)"$/\1/')
+
+        # Die Variable setzen
+        eval "$var_name=\"$var_value\""
+    fi
+done < "$CONFIG_FILE"
 
 echo "debug"
 echo "$scripts_dir"

@@ -119,7 +119,7 @@ while [[ "$#" -gt 0 ]]; do
     -tools)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
-        TOOLS="$1"
+        TOOLS="$1 "
       else
         echo -e "${RED}No tools specified with -tools.${NC}"
         exit 1
@@ -316,7 +316,7 @@ fi
 
 # Benutzerauswahl der Tools
 if [ "$USE_DEFAULTS" = true ]; then
-    TOOLS+=" $DEFAULT_TOOLS"
+    TOOLS+="$DEFAULT_TOOLS"
 else
     read -r -p "Which tools do you want to install? (default: $AVAILABLE_TOOLS): " selected_tools < /dev/tty
     TOOLS=${TOOLS:-$AVAILABLE_TOOLS}

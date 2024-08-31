@@ -169,8 +169,6 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
-
 echo -e "${PINK}--- copy of the git repository ---${NC}"
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
@@ -255,7 +253,7 @@ if [ -z "$SYSTEM_NAME" ]; then
         read -r -p "Enter system name (default: $default_system_name): " SYSTEM_NAME < /dev/tty
         SYSTEM_NAME=${SYSTEM_NAME:-"$default_system_name"}
     fi
-    echo "SYSTEM_NAME set to: $SYSTEM_NAME"
+    echo -e "${YELLOW}SYSTEM_NAME set to: $SYSTEM_NAME${NC}"
 fi
 
 # SSH_PORT festlegen
@@ -267,7 +265,7 @@ if [ -z "$SSH_PORT" ]; then
         read -r -p "Enter the SSH_PORT (default: $default_ssh_port): " SSH_PORT < /dev/tty
         SSH_PORT=${SSH_PORT:-"$default_ssh_port"}
     fi
-    echo "SSH_PORT set to: $SSH_PORT"
+    echo -e "${YELLOW}SSH_PORT set to: $SSH_PORT${NC}"
 fi
 
 # Log Level festlegen
@@ -279,7 +277,7 @@ if [ -z "$LOG_LEVEL" ]; then
         read -r -p "Enter the log level (default: $default_log_level) [debug, info, warn, error]: " LOG_LEVEL < /dev/tty
         LOG_LEVEL=${LOG_LEVEL:-"$default_log_level"}
     fi
-    echo "LOG_LEVEL set to: $LOG_LEVEL"
+    echo -e "${YELLOW}LOG_LEVEL set to: $LOG_LEVEL${NC}"
 fi
 
 # OPT Datenverzeichnis festlegen, das auf dem Systemnamen basiert
@@ -291,7 +289,7 @@ if [ -z "$OPT_DATA_DIR" ]; then
         read -r -p "Enter the opt data directory (default: $default_opt_data_dir): " OPT_DATA_DIR < /dev/tty
         OPT_DATA_DIR=${OPT_DATA_DIR:-"$default_opt_data_dir"}
     fi
-    echo "OPT_DATA_DIR set to: $OPT_DATA_DIR"
+    echo -e "${YELLOW}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
 fi
 
 # Standardmäßig alle Tools auswählen

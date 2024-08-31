@@ -58,7 +58,7 @@ choose_branch() {
 
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
-    -brach)
+    -branch)
       shift
       case "$1" in
         production|staging|dev)

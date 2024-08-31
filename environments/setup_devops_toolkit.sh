@@ -239,21 +239,21 @@ echo -e "${PINK}--- change the cli-wrapper confline ---${NC}"
 CLI_CONFIG_MODLINE="CONFIG_FILE="
 CLI_CONFIG_MODLINE+="\"$CONFIG_FILE\""
 sed -i "5i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
-echo "Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt."
+echo -e "${GREEN}Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt.${NC}"
 
 echo -e "${PINK}--- create cli-wrapper sbin link ---${NC}"
 # Überprüfen, ob der Symlink bereits existiert
 if [ -L "$SYSLINK_PATH" ]; then
     # Wenn der Symlink existiert, überprüfen, ob er auf die richtige Datei zeigt
     if [ "$(readlink "$SYSLINK_PATH")" != "$DEVOPS_CLI_FILE" ]; then
-        echo "Symlink $SYSLINK_PATH existiert und zeigt auf einen anderen Pfad. Aktualisierung..."
+        echo -e "${GREEN}Symlink $SYSLINK_PATH existiert und zeigt auf einen anderen Pfad. Aktualisierung...${NC}"
         sudo ln -sf "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
     else
-        echo "Symlink $SYSLINK_PATH existiert bereits und zeigt auf das richtige Ziel."
+        echo -e "${GREEN}Symlink $SYSLINK_PATH existiert bereits und zeigt auf das richtige Ziel.${NC}"
     fi
 else
     # Wenn der Symlink nicht existiert, erstelle ihn
-    echo "Symlink $SYSLINK_PATH existiert nicht. Erstellen..."
+    echo -e "${GREEN}Symlink $SYSLINK_PATH existiert nicht. Erstellen...${NC}"
     sudo ln -s "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
 fi
 

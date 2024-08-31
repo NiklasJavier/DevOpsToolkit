@@ -136,13 +136,14 @@ CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
 SCRIPTS_DIR="$BRANCH_DIR/scripts" # Skriptverzeichnis festlegen
 PIPELINES_DIR="$BRANCH_DIR/pipelines" # Pipeline-Verzeichnis festlegen
 
-echo "    ____            ____                ____  ______";
-echo "   / __ \___ _   __/ __ \____  _____   / __ \/ ____/";
-echo "  / / / / _ \ | / / / / / __ \/ ___/  / /_/ / /     ";
-echo " / /_/ /  __/ |/ / /_/ / /_/ (__  )  / _, _/ /___   ";
-echo "/_____/\___/|___/\____/ .___/____/  /_/ |_|\____/   ";
-echo "                     /_/                            ";
-echo "----"
+echo -e "${GREEN}    ____            ____            ";
+echo -e "${GREEN}   / __ \___ _   __/ __ \____  _____";
+echo -e "${GREEN}  / / / / _ \ | / / / / / __ \/ ___/";
+echo -e "${GREEN} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
+echo -e "${GREEN}/_____/\___/|___/\____/ .___/____/  ";
+echo -e "${GREEN}                     /_/            ";
+echo -e "${GREEN}--- DevOps Toolkit Setup Script ---"
+echo -e "${PINK}---${NC}"
 # Debugging-Ausgabe (kann entfernt werden)
 echo -e "${PINK}Branch: $BRANCH ${NC}"
 echo -e "${PINK}Full HostSetup: $FULL ${NC}"
@@ -157,6 +158,7 @@ echo -e "${PINK}Einstellungsverzeichnis: $SETTINGS_DIR ${NC}"
 echo -e "${PINK}Konfigurationsdatei: $CONFIG_FILE ${NC}"
 echo -e "${PINK}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
 echo -e "${PINK}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
+echo -e "${PINK}---${NC}"
 
 
 # Überprüfen, ob das Skript als Root ausgeführt wird

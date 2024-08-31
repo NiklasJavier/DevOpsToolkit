@@ -36,6 +36,9 @@ DEVOPS_CLI_FILE="$ENV_DIR/devops_cli.sh"
 SYSLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
 LOG_FILE="/var/log/devops_commands.log"
 
+DEFAULT_TOOLS="ansible"
+AVAILABLE_TOOLS="docker"
+
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
     echo -e "${GREEN}Please select the branch to clone:${NC}"
@@ -116,7 +119,7 @@ while [[ "$#" -gt 0 ]]; do
     -tools)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
-        TOOLS="$1"
+        TOOLS="$1 "
       else
         echo -e "${RED}No tools specified with -tools.${NC}"
         exit 1
@@ -228,34 +231,28 @@ else
     echo -e "${GREEN}.settings folder already exists in $BRANCH_DIR...${NC}"
 fi
 
-echo -e "${PINK}--- create the config.yml ---${NC}" # Config anlegen
-if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
-    touch -f "$SETTINGS_DIR/config.yaml"
-    echo -e "${GREEN}config.temp.yaml has been moved to config.yaml, overwriting the existing file.${NC}"
-else
-    echo -e "${RED}config.temp.yaml does not exist in $CLONE_DIR/environments.${NC}"
-fi
+touch -f "$SETTINGS_DIR/config.yaml"
 
 echo -e "${PINK}--- change the cli-wrapper confline ---${NC}"
 # Konfigurationsdatei für das Setup in devops_cli.sh einfügen
 CLI_CONFIG_MODLINE="CONFIG_FILE="
 CLI_CONFIG_MODLINE+="\"$CONFIG_FILE\""
 sed -i "5i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
-echo "Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt."
+echo -e "${GREEN}Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt.${NC}"
 
 echo -e "${PINK}--- create cli-wrapper sbin link ---${NC}"
 # Überprüfen, ob der Symlink bereits existiert
 if [ -L "$SYSLINK_PATH" ]; then
     # Wenn der Symlink existiert, überprüfen, ob er auf die richtige Datei zeigt
     if [ "$(readlink "$SYSLINK_PATH")" != "$DEVOPS_CLI_FILE" ]; then
-        echo "Symlink $SYSLINK_PATH existiert und zeigt auf einen anderen Pfad. Aktualisierung..."
+        echo -e "${GREEN}Symlink $SYSLINK_PATH existiert und zeigt auf einen anderen Pfad. Aktualisierung...${NC}"
         sudo ln -sf "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
     else
-        echo "Symlink $SYSLINK_PATH existiert bereits und zeigt auf das richtige Ziel."
+        echo -e "${GREEN}Symlink $SYSLINK_PATH existiert bereits und zeigt auf das richtige Ziel.${NC}"
     fi
 else
     # Wenn der Symlink nicht existiert, erstelle ihn
-    echo "Symlink $SYSLINK_PATH existiert nicht. Erstellen..."
+    echo -e "${GREEN}Symlink $SYSLINK_PATH existiert nicht. Erstellen...${NC}"
     sudo ln -s "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
 fi
 
@@ -316,14 +313,12 @@ if [ -z "$OPT_DATA_DIR" ]; then
     echo -e "${GREEN}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
 fi
 
-# Standardmäßig alle Tools auswählen
-default_tools="docker ansible"
 # Benutzerauswahl der Tools
 if [ "$USE_DEFAULTS" = true ]; then
-    TOOLS=$default_tools
+    TOOLS+="$DEFAULT_TOOLS"
 else
-    read -r -p "Which tools do you want to install? (default: $default_tools): " selected_tools < /dev/tty
-    TOOLS=${TOOLS:-$default_tools}
+    read -r -p "Which tools do you want to install? (default: $AVAILABLE_TOOLS): " selected_tools < /dev/tty
+    TOOLS=${TOOLS:-$AVAILABLE_TOOLS}
 fi
 
 # Konfiguration in config.yaml speichern
@@ -385,10 +380,16 @@ scripts_dir: "$SCRIPTS_DIR"
 # Dieses Verzeichnis enthält die Dateien für Jenkins, GitLab CI oder andere CI/CD-Tools, die in Automatisierungsprozesse integriert sind.
 pipelines_dir: "$PIPELINES_DIR"
 
+# Diese Variable wird verwendet, um den aktuellen Benutzer im System zu identifizieren.
+# Der Wert von $USERNAME wird zur Laufzeit aus der Umgebung übernommen, sodass keine manuelle Eingabe erforderlich ist.
 username: "$USERNAME"
 
+# Der Pfad zur Logdatei, in die alle Protokollmeldungen geschrieben werden, wird durch die Umgebungsvariable $LOG_FILE bestimmt.
+# Der Pfad kann z.B. auf "/var/log/myapp.log" oder einen anderen gewünschten Ort gesetzt werden.
 log_file: "$LOG_FILE"
 
+# Der Pfad zum System-Symlink, der auf eine bestimmte Datei oder ein Verzeichnis verweist, wird durch die Umgebungsvariable festgelegt.
+# Der Wert kann z.B. auf "/usr/local/sbin/myapp" gesetzt sein, um auf eine ausführbare Datei zu verweisen.
 systemlink_path: "$SYSLINK_PATH"
 
 EOL
@@ -408,12 +409,16 @@ else
     exit 1
 fi
 
-echo -e "${PINK}--- setting up the host ---${NC}"
-# Überprüfen, ob run_ansible_setup.sh existiert und ausführen
-if [ -f "$CLONE_DIR/environments/run_ansible_setup.sh" ]; then
-    echo -e "${GREEN}Switching to $CLONE_DIR/environments/run_ansible_setup.sh${NC}"
-    exec bash "$CLONE_DIR/environments/run_ansible_setup.sh" "$TOOLS_DIR" "$TOOLS" "$SETTINGS_DIR"
-else
-    echo -e "${RED}Error: $CLONE_DIR/environments/run_ansible_setup.sh not found!${NC}"
-    exit 1
+# Überprüfen, ob die Variable FULL auf true gesetzt ist
+if [ "$FULL" = true ]; then
+    # Ausgabe einer Nachricht
+    echo -e "${PINK}--- setting up the host ---${NC}"
+    # Überprüfen, ob das Skript run_ansible_setup.sh existiert und es ausführen
+    if [ -f "$CLONE_DIR/environments/run_ansible_setup.sh" ]; then
+        echo -e "${GREEN}Switching to $CLONE_DIR/environments/run_ansible_setup.sh${NC}"
+        exec bash "$CLONE_DIR/environments/run_ansible_setup.sh" "$TOOLS_DIR" "$TOOLS" "$SETTINGS_DIR"
+    else
+        echo -e "${RED}Error: $CLONE_DIR/environments/run_ansible_setup.sh not found!${NC}"
+        exit 1
+    fi
 fi

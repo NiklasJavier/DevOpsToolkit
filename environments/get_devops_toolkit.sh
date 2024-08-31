@@ -137,14 +137,14 @@ CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
 SCRIPTS_DIR="$BRANCH_DIR/scripts" # Skriptverzeichnis festlegen
 PIPELINES_DIR="$BRANCH_DIR/pipelines" # Pipeline-Verzeichnis festlegen
 
-echo -e "${GREEN}    ____            ____            ";
-echo -e "${GREEN}   / __ \___ _   __/ __ \____  _____";
-echo -e "${GREEN}  / / / / _ \ | / / / / / __ \/ ___/";
-echo -e "${GREEN} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
-echo -e "${GREEN}/_____/\___/|___/\____/ .___/____/  ";
-echo -e "${GREEN}                     /_/            ";
-echo -e "${GREEN}                                    ";
-echo -e "${GREEN}                                    ";
+echo -e "${PINK}    ____            ____            ";
+echo -e "${PINK}   / __ \___ _   __/ __ \____  _____";
+echo -e "${PINK}  / / / / _ \ | / / / / / __ \/ ___/";
+echo -e "${PINK} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
+echo -e "${PINK}/_____/\___/|___/\____/ .___/____/  ";
+echo -e "${PINK}                     /_/            ";
+echo -e "${PINK}                                    ";
+echo -e "${PINK}                                    ";
 echo -e "${PINK}--- Parameter ---${NC}"
 # Debugging-Ausgabe (kann entfernt werden) 
 echo -e "${GREEN}Branch: $BRANCH ${NC}"
@@ -252,7 +252,7 @@ if [ -z "$SYSTEM_NAME" ]; then
         read -r -p "Enter system name (default: $default_system_name): " SYSTEM_NAME < /dev/tty
         SYSTEM_NAME=${SYSTEM_NAME:-"$default_system_name"}
     fi
-    echo -e "${YELLOW}SYSTEM_NAME set to: $SYSTEM_NAME${NC}"
+    echo -e "${GREEN}SYSTEM_NAME set to: $SYSTEM_NAME${NC}"
 fi
 
 # SSH_PORT festlegen
@@ -264,7 +264,7 @@ if [ -z "$SSH_PORT" ]; then
         read -r -p "Enter the SSH_PORT (default: $default_ssh_port): " SSH_PORT < /dev/tty
         SSH_PORT=${SSH_PORT:-"$default_ssh_port"}
     fi
-    echo -e "${YELLOW}SSH_PORT set to: $SSH_PORT${NC}"
+    echo -e "${GREEN}SSH_PORT set to: $SSH_PORT${NC}"
 fi
 
 # Log Level festlegen
@@ -276,7 +276,7 @@ if [ -z "$LOG_LEVEL" ]; then
         read -r -p "Enter the log level (default: $default_log_level) [debug, info, warn, error]: " LOG_LEVEL < /dev/tty
         LOG_LEVEL=${LOG_LEVEL:-"$default_log_level"}
     fi
-    echo -e "${YELLOW}LOG_LEVEL set to: $LOG_LEVEL${NC}"
+    echo -e "${GREEN}LOG_LEVEL set to: $LOG_LEVEL${NC}"
 fi
 
 # OPT Datenverzeichnis festlegen, das auf dem Systemnamen basiert
@@ -288,7 +288,7 @@ if [ -z "$OPT_DATA_DIR" ]; then
         read -r -p "Enter the opt data directory (default: $default_opt_data_dir): " OPT_DATA_DIR < /dev/tty
         OPT_DATA_DIR=${OPT_DATA_DIR:-"$default_opt_data_dir"}
     fi
-    echo -e "${YELLOW}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
+    echo -e "${GREEN}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
 fi
 
 # Standardmäßig alle Tools auswählen

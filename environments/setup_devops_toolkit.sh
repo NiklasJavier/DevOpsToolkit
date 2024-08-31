@@ -396,24 +396,24 @@ echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 
 
 echo -e "${PINK}--- installation of the tools ---${NC}"
-# Überprüfen, ob get_tools.sh existiert und ausführen
-if [ -f "$CLONE_DIR/environments/get_tools.sh" ]; then
-    echo -e "${GREEN}Switching to $CLONE_DIR/environments/get_tools.sh${NC}"
-    bash "$CLONE_DIR/environments/get_tools.sh" "$TOOLS_DIR" "$TOOLS"
+# Überprüfen, ob install_tools.sh existiert und ausführen
+if [ -f "$CLONE_DIR/environments/install_tools.sh" ]; then
+    echo -e "${GREEN}Switching to $CLONE_DIR/environments/install_tools.sh${NC}"
+    bash "$CLONE_DIR/environments/install_tools.sh" "$TOOLS_DIR" "$TOOLS"
     
-    # Weiter im Skript, nachdem get_tools.sh ausgeführt wurde
-    echo -e "${GREEN}Returned from get_tools.sh, continuing...${NC}"
+    # Weiter im Skript, nachdem install_tools.sh ausgeführt wurde
+    echo -e "${GREEN}Returned from install_tools.sh, continuing...${NC}"
 else
-    echo -e "${RED}Error: $CLONE_DIR/environments/get_tools.sh not found!${NC}"
+    echo -e "${RED}Error: $CLONE_DIR/environments/install_tools.sh not found!${NC}"
     exit 1
 fi
 
 echo -e "${PINK}--- setting up the host ---${NC}"
-# Überprüfen, ob start_ansible_setup.sh existiert und ausführen
-if [ -f "$CLONE_DIR/environments/start_ansible_setup.sh" ]; then
-    echo -e "${GREEN}Switching to $CLONE_DIR/environments/start_ansible_setup.sh${NC}"
-    exec bash "$CLONE_DIR/environments/start_ansible_setup.sh" "$TOOLS_DIR" "$TOOLS" "$SETTINGS_DIR"
+# Überprüfen, ob run_ansible_setup.sh existiert und ausführen
+if [ -f "$CLONE_DIR/environments/run_ansible_setup.sh" ]; then
+    echo -e "${GREEN}Switching to $CLONE_DIR/environments/run_ansible_setup.sh${NC}"
+    exec bash "$CLONE_DIR/environments/run_ansible_setup.sh" "$TOOLS_DIR" "$TOOLS" "$SETTINGS_DIR"
 else
-    echo -e "${RED}Error: $CLONE_DIR/environments/start_ansible_setup.sh not found!${NC}"
+    echo -e "${RED}Error: $CLONE_DIR/environments/run_ansible_setup.sh not found!${NC}"
     exit 1
 fi

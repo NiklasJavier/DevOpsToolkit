@@ -1,4 +1,19 @@
 #!/bin/bash
+
+function ProgressBar {
+# Process data
+    let _progress=(${1}*100/${2}*100)/100
+    let _done=(${_progress}*4)/10
+    let _left=40-$_done
+# Build progressbar string lengths
+    _fill=$(printf "%${_done}s")
+    _empty=$(printf "%${_left}s")
+
+printf "\rProgress : [${_fill// /#}${_empty// /-}] ${_progress}%%"
+}
+
+_start=1
+
 # Farben für die Ausgabe
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -419,3 +434,5 @@ if [ "$FULL" = true ]; then
         exit 1
     fi
 fi
+
+_end=100

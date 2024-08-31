@@ -362,6 +362,10 @@ pipelines_dir: "$PIPELINES_DIR"
 
 username: "$USERNAME"
 
+log_file: "/var/log/devops_commands.log"
+
+
+
 EOL
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 

@@ -3,11 +3,7 @@
 # Standardkonfigurationsdatei (kann angepasst werden)
 # bspw. CONFIG_FILE=""
 
-
-# Standardwerte
-SCRIPT_DIR="/usr/local/devops_commands"
-LOG_FILE="/var/log/devops_commands.log"
-DEFAULT_COMMAND="help"
+default_command="help"
 
 # Konfigurationsdatei laden, falls vorhanden
 if [ -f "$CONFIG_FILE" ]; then
@@ -16,7 +12,7 @@ fi
 
 # Funktion zum Logging
 log_command() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $USER - $@" >> "$LOG_FILE"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $USER - $@" >> "$log_file"
 }
 
 # Funktion zur Anzeige der Hilfe
@@ -24,7 +20,7 @@ show_help() {
     echo "Usage: devops [foldername] <command> [args]"
     echo ""
     echo "Available commands:"
-    find "$SCRIPT_DIR" -type f -name "*.sh" | sed "s|^$SCRIPT_DIR/||" | sed "s|/| |g" | sed "s|.sh$||"
+    find "$scripts_dir" -type f -name "*.sh" | sed "s|^$scripts_dir/||" | sed "s|/| |g" | sed "s|.sh$||"
     echo ""
     echo "Use 'devops help <command>' for more information on a specific command."
 }
@@ -67,10 +63,10 @@ if [ "$1" == "help" ]; then
         show_help
         exit 0
     else
-        if [ -f "$SCRIPT_DIR/$2.sh" ]; then
-            show_command_help "$SCRIPT_DIR/$2.sh"
-        elif [ -f "$SCRIPT_DIR/$2/$3.sh" ]; then
-            show_command_help "$SCRIPT_DIR/$2/$3.sh"
+        if [ -f "$scripts_dir/$2.sh" ]; then
+            show_command_help "$scripts_dir/$2.sh"
+        elif [ -f "$scripts_dir/$2/$3.sh" ]; then
+            show_command_help "$scripts_dir/$2/$3.sh"
         else
             echo "No help available for the command '$2'."
             exit 1
@@ -80,11 +76,11 @@ if [ "$1" == "help" ]; then
 fi
 
 # Aufbau des Befehls (Ordner/Skriptstruktur unterstützen)
-if [ -f "$SCRIPT_DIR/$1.sh" ]; then
-    COMMAND_PATH="$SCRIPT_DIR/$1.sh"
+if [ -f "$scripts_dir/$1.sh" ]; then
+    COMMAND_PATH="$scripts_dir/$1.sh"
     shift
-elif [ -f "$SCRIPT_DIR/$1/$2.sh" ]; then
-    COMMAND_PATH="$SCRIPT_DIR/$1/$2.sh"
+elif [ -f "$scripts_dir/$1/$2.sh" ]; then
+    COMMAND_PATH="$scripts_dir/$1/$2.sh"
     shift 2
 else
     COMMAND_PATH=""
@@ -103,9 +99,9 @@ fi
 
 # Fallback-Option, wenn der Befehl nicht gefunden wird
 if [ $RESULT -ne 0 ]; then
-    if [ -n "$DEFAULT_COMMAND" ] && [ "$DEFAULT_COMMAND" != "$1" ]; then
+    if [ -n "$default_command" ] && [ "$default_command" != "$1" ]; then
         echo "Command not found. Executing default command."
-        execute_command "$SCRIPT_DIR/$DEFAULT_COMMAND.sh" "$COMMAND_PATH" "$@"
+        execute_command "$scripts_dir/$default_command.sh" "$COMMAND_PATH" "$@"
     else
         echo "Error: Command not found."
         show_help

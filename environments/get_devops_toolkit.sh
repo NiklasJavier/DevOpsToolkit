@@ -145,7 +145,7 @@ echo -e "${PINK}/_____/\___/|___/\____/ .___/____/  ";
 echo -e "${PINK}                     /_/            ";
 echo -e "${PINK}                                    ";
 echo -e "${PINK}                                    ";
-echo -e "${PINK}--- Parameter ---${NC}"
+echo -e "${PINK}--- parameter ---${NC}"
 # Debugging-Ausgabe (kann entfernt werden) 
 echo -e "${GREEN}Branch: $BRANCH ${NC}"
 echo -e "${GREEN}Full HostSetup: $FULL ${NC}"
@@ -160,7 +160,6 @@ echo -e "${GREEN}Einstellungsverzeichnis: $SETTINGS_DIR ${NC}"
 echo -e "${GREEN}Konfigurationsdatei: $CONFIG_FILE ${NC}"
 echo -e "${GREEN}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
 echo -e "${GREEN}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
-
 
 # Überprüfen, ob das Skript als Root ausgeführt wird
 if [ "$EUID" -ne 0 ]; then

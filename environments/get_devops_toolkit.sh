@@ -136,6 +136,17 @@ CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
 SCRIPTS_DIR="$BRANCH_DIR/scripts" # Skriptverzeichnis festlegen
 PIPELINES_DIR="$BRANCH_DIR/pipelines" # Pipeline-Verzeichnis festlegen
 
+echo "    ____            ____            ______          ";
+echo "   / __ \___ _   __/ __ \____  ____/_  __/___  ____ ";
+echo "  / / / / _ \ | / / / / / __ \/ ___// / / __ \/ __ \";
+echo " / /_/ /  __/ |/ / /_/ / /_/ (__  )/ / / /_/ / /_/ /";
+echo "/_____/\___/|___/\____/ .___/____//_/  \____/\____/ ";
+echo "   / / /__(_) /_     /_/                            ";
+echo "  / / //_/ / __/                                    ";
+echo " / / ,< / / /_                                      ";
+echo "/_/_/|_/_/\__/                                      ";
+echo "                                                    ";
+echo "---------------------------------------------------"
 # Debugging-Ausgabe (kann entfernt werden)
 echo -e "${PINK}Branch: $BRANCH ${NC}"
 echo -e "${PINK}Full HostSetup: $FULL ${NC}"
@@ -164,10 +175,10 @@ echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
     echo -e "${RED}Git is not installed. Installing Git...${NC}"
-    echo -e "---------------------------------------------------${YELLOW}"
+    echo -e "${YELLOW}"
     sudo apt-get update
     sudo apt-get install -y git
-    echo -e "${NC}---------------------------------------------------"
+    echo -e "${NC}"
 
     # Überprüfen, ob die Installation erfolgreich war
     if ! command -v git &> /dev/null; then

@@ -148,20 +148,19 @@ echo -e "${GREEN}                                    ";
 echo -e "${GREEN}--- DevOps Toolkit Setup Script ---"
 echo -e "${PINK}--- Parameter ---${NC}"
 # Debugging-Ausgabe (kann entfernt werden) 
-echo -e "${PINK}Branch: $BRANCH ${NC}"
-echo -e "${PINK}Full HostSetup: $FULL ${NC}"
-echo -e "${PINK}Verwendete Tools: ${TOOLS[*]} ${NC}"
-echo -e "${PINK}Port: $PORT ${NC}"
-echo -e "${PINK}Benutzername: $USERNAME ${NC}"
-echo -e "${PINK}Systemname: $SYSTEM_NAME ${NC}"
-echo -e "${PINK}SSH Key aktiviert: $SSH_KEY_FUNCTION_ENABLED ${NC}"
-echo -e "${PINK}SSH Key Public: $SSH_KEY_PUBLIC ${NC}"
-echo -e "${PINK}Branch-Verzeichnis: $BRANCH_DIR ${NC}"
-echo -e "${PINK}Einstellungsverzeichnis: $SETTINGS_DIR ${NC}"
-echo -e "${PINK}Konfigurationsdatei: $CONFIG_FILE ${NC}"
-echo -e "${PINK}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
-echo -e "${PINK}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
-echo -e "${PINK}---${NC}"
+echo -e "${GREEN}Branch: $BRANCH ${NC}"
+echo -e "${GREEN}Full HostSetup: $FULL ${NC}"
+echo -e "${GREEN}Verwendete Tools: ${TOOLS[*]} ${NC}"
+echo -e "${GREEN}Port: $PORT ${NC}"
+echo -e "${GREEN}Benutzername: $USERNAME ${NC}"
+echo -e "${GREEN}Systemname: $SYSTEM_NAME ${NC}"
+echo -e "${GREEN}SSH Key aktiviert: $SSH_KEY_FUNCTION_ENABLED ${NC}"
+echo -e "${GREEN}SSH Key Public: $SSH_KEY_PUBLIC ${NC}"
+echo -e "${GREEN}Branch-Verzeichnis: $BRANCH_DIR ${NC}"
+echo -e "${GREEN}Einstellungsverzeichnis: $SETTINGS_DIR ${NC}"
+echo -e "${GREEN}Konfigurationsdatei: $CONFIG_FILE ${NC}"
+echo -e "${GREEN}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
+echo -e "${GREEN}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
 
 
 # Überprüfen, ob das Skript als Root ausgeführt wird
@@ -172,6 +171,7 @@ fi
 
 echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
 
+echo -e "${PINK}--- copy of the git repository ---${NC}"
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
     echo -e "${RED}Git is not installed. Installing Git...${NC}"
@@ -244,9 +244,8 @@ else
     echo -e "${RED}config.temp.yaml does not exist in $CLONE_DIR/environments.${NC}"
 fi
 
-echo -e "${GREEN}Initializing configuration...${NC}"
+echo -e "${PINK}--- adjusting the parameters ---${NC}"
 
-echo "---------------------------------------------------"
 # System Name festlegen (ehemals Hostname)
 if [ -z "$SYSTEM_NAME" ]; then
     default_system_name="$SYSTEM_NAME"
@@ -294,7 +293,6 @@ if [ -z "$OPT_DATA_DIR" ]; then
     fi
     echo "OPT_DATA_DIR set to: $OPT_DATA_DIR"
 fi
-echo "---------------------------------------------------"
 
 # Standardmäßig alle Tools auswählen
 default_tools="docker ansible"
@@ -306,9 +304,9 @@ else
     TOOLS=${TOOLS:-$default_tools}
 fi
 
-echo "---------------------------------------------------"
 # Konfiguration in config.yaml speichern
-echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
+echo -e "${PINK}--- saving the configuration ---${NC}"
+echo -e "${GREEN}To $CONFIG_FILE...${NC}"
 
 # Speichern der Konfiguration
 cat <<- EOL > "$CONFIG_FILE"
@@ -369,8 +367,8 @@ username: "$USERNAME"
 
 EOL
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
-echo "---------------------------------------------------"
 
+echo -e "${PINK}--- installation of the tools ---${NC}"
 # Überprüfen, ob get_tools.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/get_tools.sh" ]; then
     echo -e "${GREEN}Switching to $CLONE_DIR/environments/get_tools.sh${NC}"
@@ -383,6 +381,7 @@ else
     exit 1
 fi
 
+echo -e "${PINK}--- setting up the host ---${NC}"
 # Überprüfen, ob start_ansible_setup.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/start_ansible_setup.sh" ]; then
     echo -e "${GREEN}Switching to $CLONE_DIR/environments/start_ansible_setup.sh${NC}"

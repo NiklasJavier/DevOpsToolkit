@@ -28,11 +28,9 @@ ENV_DIR="$CLONE_DIR/environments"
 TOOLS_DIR="$CLONE_DIR/tools"
 SCRIPTS_DIR="$CLONE_DIR/scripts" 
 PIPELINES_DIR="$CLONE_DIR/pipelines" 
-SETTINGS_DIR="" 
-SCRIPTS_DIR="" 
-PIPELINES_DIR="" 
 
-CONFIG_FILE="" # Konfigurationsdatei für das Setup
+SETTINGS_DIR="" 
+CONFIG_FILE="" # Konfigurationsdatei für das Setup in Settings-Verzeichnis
 DEVOPS_CLI_FILE="$ENV_DIR/devops_cli.sh"
 
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer

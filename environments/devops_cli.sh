@@ -22,7 +22,7 @@ do
     fi
 done < "$CONFIG_FILE"
 
-# Funktion zum Logging
+# Funktion zum Logging von Befehlen
 log_command() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $USER - $@" >> "$log_file"
 }

@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Standardkonfigurationsdatei (kann angepasst werden)
-CONFIG_FILE="/etc/devops_wrapper.conf"
+# bspw. CONFIG_FILE=""
+
 
 # Standardwerte
 SCRIPT_DIR="/usr/local/devops_commands"

@@ -367,9 +367,9 @@ echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 
 echo -e "${PINK}--- change the cli-wrapper confline ---${NC}"
 # Konfigurationsdatei für das Setup in devops_cli.sh einfügen
-CLI_CONFIG_MODLINE="CONFIG_FILE=" + "$CONFIG_FILE"
-sed -i "2i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
-echo "Zeile wurde in $DEVOPS_CLI_FILE an Position 2 eingefügt."
+CLI_CONFIG_MODLINE="CONFIG_FILE=" + ""$CONFIG_FILE""
+sed -i "5i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
+echo "Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt."
 
 echo -e "${PINK}--- installation of the tools ---${NC}"
 # Überprüfen, ob get_tools.sh existiert und ausführen

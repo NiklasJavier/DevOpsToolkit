@@ -380,10 +380,16 @@ scripts_dir: "$SCRIPTS_DIR"
 # Dieses Verzeichnis enthält die Dateien für Jenkins, GitLab CI oder andere CI/CD-Tools, die in Automatisierungsprozesse integriert sind.
 pipelines_dir: "$PIPELINES_DIR"
 
+# Diese Variable wird verwendet, um den aktuellen Benutzer im System zu identifizieren.
+# Der Wert von $USERNAME wird zur Laufzeit aus der Umgebung übernommen, sodass keine manuelle Eingabe erforderlich ist.
 username: "$USERNAME"
 
+# Der Pfad zur Logdatei, in die alle Protokollmeldungen geschrieben werden, wird durch die Umgebungsvariable $LOG_FILE bestimmt.
+# Der Pfad kann z.B. auf "/var/log/myapp.log" oder einen anderen gewünschten Ort gesetzt werden.
 log_file: "$LOG_FILE"
 
+# Der Pfad zum System-Symlink, der auf eine bestimmte Datei oder ein Verzeichnis verweist, wird durch die Umgebungsvariable festgelegt.
+# Der Wert kann z.B. auf "/usr/local/sbin/myapp" gesetzt sein, um auf eine ausführbare Datei zu verweisen.
 systemlink_path: "$SYSLINK_PATH"
 
 EOL

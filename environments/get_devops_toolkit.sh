@@ -225,19 +225,26 @@ else
     echo -e "${GREEN}.settings folder already exists in $BRANCH_DIR...${NC}"
 fi
 
-# Alle Skripte ausführbar machen
-echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
-sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;
-
-echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts are now executable.${NC}"
-
-# Immer die config.temp.yaml nach config.yaml verschieben und überschreiben, falls vorhanden
+echo -e "${PINK}--- create the config.yml ---${NC}" # Config anlegen
 if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
     touch -f "$SETTINGS_DIR/config.yaml"
     echo -e "${GREEN}config.temp.yaml has been moved to config.yaml, overwriting the existing file.${NC}"
 else
     echo -e "${RED}config.temp.yaml does not exist in $CLONE_DIR/environments.${NC}"
 fi
+
+echo -e "${PINK}--- change the cli-wrapper confline ---${NC}"
+# Konfigurationsdatei für das Setup in devops_cli.sh einfügen
+CLI_CONFIG_MODLINE="CONFIG_FILE="
+CLI_CONFIG_MODLINE+="\"$CONFIG_FILE\""
+sed -i "5i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
+echo "Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt."
+
+# Alle Skripte ausführbar machen
+echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
+sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;
+
+echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts are now executable.${NC}"
 
 echo -e "${PINK}--- adjusting the parameters ---${NC}"
 
@@ -367,12 +374,6 @@ log_file: "/var/log/devops_commands.log"
 EOL
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 
-echo -e "${PINK}--- change the cli-wrapper confline ---${NC}"
-# Konfigurationsdatei für das Setup in devops_cli.sh einfügen
-CLI_CONFIG_MODLINE="CONFIG_FILE="
-CLI_CONFIG_MODLINE+="\"$CONFIG_FILE\""
-sed -i "5i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
-echo "Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt."
 
 echo -e "${PINK}--- installation of the tools ---${NC}"
 # Überprüfen, ob get_tools.sh existiert und ausführen

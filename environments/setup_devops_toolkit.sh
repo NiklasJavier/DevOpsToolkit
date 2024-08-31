@@ -1,52 +1,21 @@
 #!/bin/bash
 
-# Colors
-c_green='\033[0;32m'
-c_clear='\033[0m'
+# Funktion zum Anzeigen eines Ladebalkens
+loading_bar() {
+    local duration=$1  # Gesamtdauer des Ladebalkens in Sekunden
+    local interval=0.1 # Aktualisierungsintervall in Sekunden
+    local total_steps=$(echo "$duration / $interval" | bc)
+    local bar=""
 
-# Progress bar symbols
-bar_symbols=(
-  '\uEE00\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE02'
-  '\uEE03\uEE04\uEE04\uEE04\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE02'
-  '\uEE03\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE02'
-  '\uEE03\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE02'
-  '\uEE03\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE02'
-  '\uEE03\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE02'
-  '\uEE03\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE02'
-  '\uEE03\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE02'
-  '\uEE03\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE01\uEE02'
-  '\uEE03\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE01\uEE01\uEE01\uEE02'
-  '\uEE03\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE04\uEE05' # Add more progress bar symbols here...
-)
+    for ((i=0; i<total_steps; i++)); do
+        sleep $interval
+        bar="#${bar}"
+        printf "\r[%-50s] %d%%" "$bar" "$(( (i+1) * 100 / total_steps ))"
+    done
+    printf "\n"
+}
 
-# Progress bar percentages
-percentages=("0%" "10%" "20%" "30%" "40%" "50%" "60%" "70%" "80%" "90%" "100%")
-
-# Display progress bar
-printf "\n\n"
-for ((i = 0; i < ${#bar_symbols[@]}; i++)); do
-  printf "\r     %b%b%b (%4s)" "$c_green" "${bar_symbols[$i]}" "$c_clear" "${percentages[$i]}"
-  sleep 0.50
-done
-printf "\r%100s\n\n" ""
-
-# Loading icon symbols
-loading_symbols=(
-  '\uEE06' '\uEE07' '\uEE08' '\uEE09' '\uEE0A' '\uEE0B'
-)
-loading_symbols_alt=(
-  '\uEE10' '\uEE11' '\uEE12' '\uEE13' '\uEE14' '\uEE15'
-)
-
-# Display loading animation
-printf "\n\n"
-for ((i = 0; i < 3; i++)); do
-  for ((j = 0; j < ${#loading_symbols[@]}; j++)); do
-    printf "\r     %b%b     %b     %b" "$c_green" "${loading_symbols[$j]}" "${loading_symbols_alt[$j]}" "$c_clear"
-    sleep 0.25
-  done
-done
-printf "\r%100s\n\n" ""
+echo "Loading, please wait..." && loading_bar 0 && echo "Done!"
 
 # Farben für die Ausgabe
 GREEN='\033[0;32m'
@@ -111,6 +80,8 @@ choose_branch() {
         ;;
     esac
 }
+
+echo "Loading, please wait..." && loading_bar 1 && echo "Done!"
 
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
@@ -214,6 +185,8 @@ echo -e "${GREEN}Konfigurationsdatei: $CONFIG_FILE ${NC}"
 echo -e "${GREEN}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
 echo -e "${GREEN}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
 
+echo "Loading, please wait..." && loading_bar 2 && echo "Done!"
+
 # Überprüfen, ob das Skript als Root ausgeführt wird
 if [ "$EUID" -ne 0 ]; then
     echo -e "${RED}Please run as root.${NC}"
@@ -304,6 +277,7 @@ else
     sudo ln -s "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
 fi
 
+echo "Loading, please wait..." && loading_bar 3 && echo "Done!"
 
 # Alle Skripte ausführbar machen
 echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
@@ -360,6 +334,8 @@ if [ -z "$OPT_DATA_DIR" ]; then
     fi
     echo -e "${GREEN}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
 fi
+
+echo "Loading, please wait..." && loading_bar 4 && echo "Done!"
 
 # Benutzerauswahl der Tools
 if [ "$USE_DEFAULTS" = true ]; then
@@ -437,12 +413,13 @@ username: "$USERNAME"
 log_file: "$LOG_FILE"
 
 # Der Pfad zum System-Symlink, der auf eine bestimmte Datei oder ein Verzeichnis verweist, wird durch die Umgebungsvariable festgelegt.
-# Der Wert kann z.B. auf "/usr/local/sbin/myapp" gesetzt sein, um auf eine ausführbare Datei zu verweisen.
+# Der Wert kann z.B. auf "/usr/local/bin/myapp" gesetzt sein, um auf eine ausführbare Datei zu verweisen.
 systemlink_path: "$SYSLINK_PATH"
 
 EOL
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 
+echo "Loading, please wait..." && loading_bar 5 && echo "Done!"
 
 echo -e "${PINK}--- installation of the tools ---${NC}"
 # Überprüfen, ob install_tools.sh existiert und ausführen
@@ -457,6 +434,8 @@ else
     exit 1
 fi
 
+echo "Loading, please wait..." && loading_bar 10 && echo "Done!"
+
 # Überprüfen, ob die Variable FULL auf true gesetzt ist
 if [ "$FULL" = true ]; then
     # Ausgabe einer Nachricht
@@ -470,3 +449,5 @@ if [ "$FULL" = true ]; then
         exit 1
     fi
 fi
+
+echo "Loading, please wait..." && loading_bar 20 && echo "Done!"

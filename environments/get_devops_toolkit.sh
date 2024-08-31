@@ -55,6 +55,7 @@ choose_branch() {
         ;;
     esac
 }
+
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
     -t)
@@ -80,6 +81,33 @@ while [[ "$#" -gt 0 ]]; do
         SSH_KEY_PUBLIC=""  # Wenn leer, setze einen Standard-Schlüssel oder handle es entsprechend
       fi
       ;;
+    -p)
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        PORT="$1"
+      else
+        echo -e "${RED}No port specified with -p.${NC}"
+        exit 1
+      fi
+      ;;
+    -full)
+      shift
+      if [[ "$1" == "true" || "$1" == "false" ]]; then
+        FULL="$1"
+      else
+        echo -e "${RED}Invalid value for FULL. Please use 'true' or 'false'.${NC}"
+        exit 1
+      fi
+      ;;
+    -tools)
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        IFS=',' read -r -a TOOLS <<< "$1"
+      else
+        echo -e "${RED}No tools specified with -tools.${NC}"
+        exit 1
+      fi
+      ;;
     *)
       echo -e "${RED}Invalid option: $1${NC}" >&2
       exit 1
@@ -87,6 +115,7 @@ while [[ "$#" -gt 0 ]]; do
   esac
   shift
 done
+
 
 BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
 SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen

@@ -23,14 +23,15 @@ PORT="282" # Port für SSH-Verbindung
 SSH_KEY_FUNCTION_ENABLED=false # SSH-Key-Funktion aktivieren
 SSH_KEY_PUBLIC="none" # Öffentlicher SSH-Schlüssel
 
-CONFIG_FILE="" # Konfigurationsdatei für das Setup
-
 CLONE_DIR="/etc/DevOpsToolkit"
 ENV_DIR="$CLONE_DIR/environments"
 TOOLS_DIR="$CLONE_DIR/tools"
 SETTINGS_DIR="" 
 SCRIPTS_DIR="" 
 PIPELINES_DIR="" 
+
+CONFIG_FILE="" # Konfigurationsdatei für das Setup
+DEVOPS_CLI_FILE="$ENV_DIR/devops_cli.sh"
 
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
@@ -363,6 +364,12 @@ username: "$USERNAME"
 
 EOL
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
+
+echo -e "${PINK}--- change the CLI-Wrapper modline ---${NC}"
+# Konfigurationsdatei für das Setup in devops_cli.sh einfügen
+CLI_CONFIG_MODLINE='CONFIG_FILE="$CONFIG_FILE"'
+sed -i "2i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
+echo "Zeile wurde in $DEVOPS_CLI_FILE an Position 2 eingefügt."
 
 echo -e "${PINK}--- installation of the tools ---${NC}"
 # Überprüfen, ob get_tools.sh existiert und ausführen

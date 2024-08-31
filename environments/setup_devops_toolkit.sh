@@ -1,36 +1,4 @@
 #!/bin/bash
-
-# Funktion zum Anzeigen eines dynamischen Ladebalkens
-loading_bar() {
-    local pid=$1  # PID des Prozesses, den wir überwachen wollen
-    local delay=0.1  # Aktualisierungsintervall des Ladebalkens
-    local spinstr='|/-\'  # Animationselemente
-    local bar=""
-
-    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-        local temp=${spinstr#?}
-        printf " [%c]  " "$spinstr"
-        spinstr=$temp${spinstr%"$temp"}
-        sleep $delay
-        printf "\b\b\b\b\b\b"
-    done
-    printf "    \b\b\b\b"
-}
-
-# Beispiel-Prozess (hier simuliert durch sleep)
-long_running_task() {
-    echo "Starting a long-running task..."
-    sleep 5 
-    echo "Task finished!"
-}
-
-# Starte den Prozess im Hintergrund
-long_running_task &
-task_pid=$!
-
-# Starte den Ladebalken und überwache den Prozess
-loading_bar $task_pid
-
 # Farben für die Ausgabe
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -451,6 +419,3 @@ if [ "$FULL" = true ]; then
         exit 1
     fi
 fi
-
-wait $task_pid  # Warte, bis der Prozess abgeschlossen ist
-echo "Done!"

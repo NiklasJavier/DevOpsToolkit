@@ -36,6 +36,9 @@ DEVOPS_CLI_FILE="$ENV_DIR/devops_cli.sh"
 SYSLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
 LOG_FILE="/var/log/devops_commands.log"
 
+DEFAULT_TOOLS="ansible"
+AVAILABLE_TOOLS="docker"
+
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
     echo -e "${GREEN}Please select the branch to clone:${NC}"
@@ -311,15 +314,12 @@ if [ -z "$OPT_DATA_DIR" ]; then
     echo -e "${GREEN}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
 fi
 
-# Standardmäßig alle Tools auswählen
-default_tools="ansible"
-available_tools="docker"
 # Benutzerauswahl der Tools
 if [ "$USE_DEFAULTS" = true ]; then
-    TOOLS+=" $default_tools"
+    TOOLS+=" $DEFAULT_TOOLS"
 else
-    read -r -p "Which tools do you want to install? (default: $available_tools): " selected_tools < /dev/tty
-    TOOLS=${TOOLS:-$available_tools}
+    read -r -p "Which tools do you want to install? (default: $AVAILABLE_TOOLS): " selected_tools < /dev/tty
+    TOOLS=${TOOLS:-$AVAILABLE_TOOLS}
 fi
 
 # Konfiguration in config.yaml speichern

@@ -14,13 +14,13 @@ BRANCH_DIR="" # Variable zur Speicherung des Branch-Verzeichnisses wird dynamisc
 
 FULL=false # Vollständige Installation (true) oder nicht (false)
 USE_DEFAULTS=false # Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
-TOOLS=() # Liste der Tools, die installiert werden sollen
+TOOLS="" # Liste der Tools, die installiert werden sollen
 
 USERNAME="$(< /dev/urandom tr -dc 'A-Z' | head -c 11)" # Benutzername (zufällig generiert)
 SYSTEM_NAME="SRV-$USERNAME" # Systemname (ehemals Hostname)
-PORT="" # Port für SSH-Verbindung
+PORT="282" # Port für SSH-Verbindung
 SSH_KEY_FUNCTION_ENABLED=false # SSH-Key-Funktion aktivieren
-SSH_KEY_PUBLIC="" # Öffentlicher SSH-Schlüssel
+SSH_KEY_PUBLIC="none" # Öffentlicher SSH-Schlüssel
 
 CONFIG_FILE="" # Konfigurationsdatei für das Setup
 
@@ -62,7 +62,7 @@ while [[ "$#" -gt 0 ]]; do
       shift
       case "$1" in
         production|staging|dev)
-          USE_DEFAULTS=true # Standardwerte verwenden
+          USE_DEFAULTS=true # Immer mit Standardwerten arbeiten
           BRANCH="$1"
           ;;
         *)
@@ -71,7 +71,7 @@ while [[ "$#" -gt 0 ]]; do
           ;;
       esac
       ;;
-    -full)
+    -full) 
       shift
       if [[ "$1" == "true" || "$1" == "false" ]]; then
         FULL="$1"
@@ -80,7 +80,7 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
-    -systemname)
+    -systemname) 
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
         SYSTEM_NAME="$1"
@@ -111,7 +111,7 @@ while [[ "$#" -gt 0 ]]; do
     -tools)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
-        IFS=',' read -r -a TOOLS <<< "$1"
+        TOOLS=',' read -r -a TOOLS <<< "$1"
       else
         echo -e "${RED}No tools specified with -tools.${NC}"
         exit 1

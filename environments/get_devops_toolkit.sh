@@ -172,7 +172,7 @@ echo -e "${PINK}--- copy of the git repository ---${NC}"
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
     echo -e "${RED}Git is not installed. Installing Git...${NC}"
-    echo -e "${YELLOW}"
+    echo -e "${GREEN}"
     sudo apt-get update
     sudo apt-get install -y git
     echo -e "${NC}"

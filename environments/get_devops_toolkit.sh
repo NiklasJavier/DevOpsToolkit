@@ -145,7 +145,6 @@ echo -e "${GREEN}/_____/\___/|___/\____/ .___/____/  ";
 echo -e "${GREEN}                     /_/            ";
 echo -e "${GREEN}                                    ";
 echo -e "${GREEN}                                    ";
-echo -e "${GREEN}--- DevOps Toolkit Setup Script ---"
 echo -e "${PINK}--- Parameter ---${NC}"
 # Debugging-Ausgabe (kann entfernt werden) 
 echo -e "${GREEN}Branch: $BRANCH ${NC}"

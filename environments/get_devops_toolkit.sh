@@ -14,7 +14,7 @@ FULL=false
 USE_DEFAULTS=false # Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
 TOOLS=()
 
-USERNAME=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
+USERNAME="$(< /dev/urandom tr -dc 'A-Z' | head -c 11)"
 SYSTEM_NAME="SRV-$USERNAME"
 PORT=""
 SSH_KEY_FUNCTION_ENABLED=false

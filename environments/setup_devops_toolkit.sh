@@ -13,15 +13,13 @@ printf "\rProgress : [${_fill// /#}${_empty// /-}] ${_progress}%%"
 }
 
 _start=1
-_end=100
+_end=15
 
 # Proof of concept
 for number in $(seq ${_start} ${_end})
 do
     sleep 0.1
     ProgressBar ${number} ${_end}
-done
-printf '\nFinished!\n'
 
 # Farben für die Ausgabe
 GREEN='\033[0;32m'
@@ -440,3 +438,6 @@ if [ "$FULL" = true ]; then
         exit 1
     fi
 fi
+
+done
+printf '\nFinished!\n'

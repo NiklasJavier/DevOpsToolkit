@@ -14,8 +14,8 @@ FULL=false
 USE_DEFAULTS=false # Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
 TOOLS=()
 
-SYSTEM_NAME=""
 USERNAME=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
+SYSTEM_NAME="SRV-$USERNAME"
 PORT=""
 SSH_KEY_FUNCTION_ENABLED=false
 SSH_KEY_PUBLIC=""
@@ -197,7 +197,7 @@ fi
 
 # System Name festlegen (ehemals Hostname)
 if [ -z "$SYSTEM_NAME" ]; then
-    default_system_name="SRVID-$random_string"
+    default_system_name="$SYSTEM_NAME"
     if [ "$USE_DEFAULTS" = true ]; then
         SYSTEM_NAME="$default_system_name"
     else

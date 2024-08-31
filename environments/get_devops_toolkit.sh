@@ -3,31 +3,32 @@
 # Farben für die Ausgabe
 GREEN='\033[0;32m'
 RED='\033[0;31m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
+YELLOW='\033[1;33m' 
+BLUE='\033[0;34m' 
 NC='\033[0m' # Keine Farbe
 
 REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git" # Name des Repositories
 BRANCH="" # Variable zur Speicherung des Branch-Namens
+BRANCH_DIR="" # Variable zur Speicherung des Branch-Verzeichnisses wird dynamisch festgelegt
 
-FULL=false
+FULL=false # Vollständige Installation (true) oder nicht (false)
 USE_DEFAULTS=false # Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
-TOOLS=()
+TOOLS=() # Liste der Tools, die installiert werden sollen
 
-USERNAME="$(< /dev/urandom tr -dc 'A-Z' | head -c 11)"
-SYSTEM_NAME="SRV-$USERNAME"
-PORT=""
-SSH_KEY_FUNCTION_ENABLED=false
-SSH_KEY_PUBLIC=""
+USERNAME="$(< /dev/urandom tr -dc 'A-Z' | head -c 11)" # Benutzername (zufällig generiert)
+SYSTEM_NAME="SRV-$USERNAME" # Systemname (ehemals Hostname)
+PORT="" # Port für SSH-Verbindung
+SSH_KEY_FUNCTION_ENABLED=false # SSH-Key-Funktion aktivieren
+SSH_KEY_PUBLIC="" # Öffentlicher SSH-Schlüssel
 
-CONFIG_FILE="$SETTINGS_DIR/config.yaml"
+CONFIG_FILE="" # Konfigurationsdatei für das Setup
 
 CLONE_DIR="/etc/DevOpsToolkit"
-BRANCH_DIR="$CLONE_DIR/environments/$BRANCH"
-SETTINGS_DIR="$BRANCH_DIR/.settings"
+ENV_DIR="$CLONE_DIR/environments"
 TOOLS_DIR="$CLONE_DIR/tools"
-SCRIPTS_DIR="$BRANCH_DIR/scripts"
-PIPELINES_DIR="$BRANCH_DIR/pipelines"
+SETTINGS_DIR="" 
+SCRIPTS_DIR="" 
+PIPELINES_DIR="" 
 
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
@@ -53,12 +54,6 @@ choose_branch() {
         ;;
     esac
 }
-
-# Prüfen, ob -t Option und -key Option angegeben wurden
-# Prüfen, ob Optionen angegeben wurden
-# Prüfen, ob Optionen angegeben wurden
-# Prüfen, ob Optionen angegeben wurden
-# Prüfen, ob -t Option und -key Option angegeben wurden
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
     -t)
@@ -91,6 +86,12 @@ while [[ "$#" -gt 0 ]]; do
   esac
   shift
 done
+
+BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
+SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
+CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
+SCRIPTS_DIR="$BRANCH_DIR/scripts" # Skriptverzeichnis festlegen
+PIPELINES_DIR="$BRANCH_DIR/pipelines" # Pipeline-Verzeichnis festlegen
 
 # Debugging-Ausgabe (kann entfernt werden)
 echo "Port: $PORT"

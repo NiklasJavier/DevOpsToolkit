@@ -111,7 +111,7 @@ while [[ "$#" -gt 0 ]]; do
     -tools)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
-        TOOLS=',' read -r -a TOOLS <<< "$1"
+        TOOLS="$1"
       else
         echo -e "${RED}No tools specified with -tools.${NC}"
         exit 1

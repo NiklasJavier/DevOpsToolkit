@@ -70,7 +70,7 @@ if [ -z "$1" ]; then
 fi
 
 # Wenn "help" als erstes Argument übergeben wurde
-if [ "$1" == "help" ]; then
+if [ "$1" = "help" ]; then
     if [ -z "$2" ]; then
         show_help
         exit 0

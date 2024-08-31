@@ -7,25 +7,27 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # Keine Farbe
 
-# Name des Repositories
-REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git"
-
-# Variable zur Speicherung des Branch-Namens
-BRANCH=""
-
-# Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
-USE_DEFAULTS=false
-
-SSH_KEY_PUBLIC=""
-SSH_KEY_FUNCTION_ENABLED=false
+REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git" # Name des Repositories
+BRANCH="" # Variable zur Speicherung des Branch-Namens
 
 FULL=false
-USERNAME=""
+USE_DEFAULTS=false # Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
+TOOLS=()
 
 SYSTEM_NAME=""
+USERNAME=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
 PORT=""
+SSH_KEY_FUNCTION_ENABLED=false
+SSH_KEY_PUBLIC=""
 
-TOOLS=()
+CONFIG_FILE="$SETTINGS_DIR/config.yaml"
+
+CLONE_DIR="/etc/DevOpsToolkit"
+BRANCH_DIR="$CLONE_DIR/environments/$BRANCH"
+SETTINGS_DIR="$BRANCH_DIR/.settings"
+TOOLS_DIR="$CLONE_DIR/tools"
+SCRIPTS_DIR="$BRANCH_DIR/scripts"
+PIPELINES_DIR="$BRANCH_DIR/pipelines"
 
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
@@ -106,9 +108,6 @@ if [ -z "$BRANCH" ]; then
     choose_branch
 fi
 
-# Verzeichnisname basierend auf Branch
-CLONE_DIR="/etc/DevOpsToolkit"
-
 # Überprüfen, ob das Skript als Root ausgeführt wird
 if [ "$EUID" -ne 0 ]; then
     echo -e "${RED}Please run as root.${NC}"
@@ -155,8 +154,6 @@ else
 fi
 
 # Prüfen, ob der branch-spezifische Ordner existiert, und erstellen, wenn nicht
-BRANCH_DIR="$CLONE_DIR/environments/$BRANCH"
-SETTINGS_DIR="$BRANCH_DIR/.settings"
 
 if [ ! -d "$BRANCH_DIR" ]; then
     echo -e "${GREEN}Creating branch-specific folder: $BRANCH_DIR...${NC}"
@@ -179,10 +176,6 @@ sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;
 
 echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts are now executable.${NC}"
 
-# Config file 
-CONFIG_FILE="$SETTINGS_DIR/config.yaml"
-
-
 # Immer die config.temp.yaml nach config.yaml verschieben und überschreiben, falls vorhanden
 if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
     touch -f "$SETTINGS_DIR/config.yaml"
@@ -201,9 +194,6 @@ if [ "$SSH_KEY_FUNCTION_ENABLED" = true ]; then
 else
   echo "SSH key function is disabled."
 fi
-
-random_string=$(< /dev/urandom tr -dc 'A-Z' | head -c 11)
-USERNAME="$random_string"
 
 # System Name festlegen (ehemals Hostname)
 if [ -z "$SYSTEM_NAME" ]; then
@@ -265,10 +255,6 @@ fi
 
 # Konfiguration in config.yaml speichern
 echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
-
-TOOLS_DIR="$CLONE_DIR/tools"
-SCRIPTS_DIR="$BRANCH_DIR/scripts"
-PIPELINES_DIR="$BRANCH_DIR/pipelines"
 
 # Speichern der Konfiguration
 cat <<- EOL > "$CONFIG_FILE"

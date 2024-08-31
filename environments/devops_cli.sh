@@ -22,9 +22,6 @@ do
     fi
 done < "$CONFIG_FILE"
 
-echo "debug"
-echo "$scripts_dir"
-
 # Funktion zum Logging
 log_command() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $USER - $@" >> "$log_file"

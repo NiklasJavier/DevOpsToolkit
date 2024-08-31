@@ -94,14 +94,19 @@ SCRIPTS_DIR="$BRANCH_DIR/scripts" # Skriptverzeichnis festlegen
 PIPELINES_DIR="$BRANCH_DIR/pipelines" # Pipeline-Verzeichnis festlegen
 
 # Debugging-Ausgabe (kann entfernt werden)
-echo "Port: $PORT"
-echo "Benutzername: $USERNAME"
-echo "Verwendete Tools: ${TOOLS[*]}"
-echo "Systemname: $SYSTEM_NAME"
-echo "Full HostSetup: $FULL"
-echo "Branch: $BRANCH"
-echo "SSH Key aktiviert: $SSH_KEY_FUNCTION_ENABLED"
-echo "SSH Key Public: $SSH_KEY_PUBLIC"
+echo -e "${YELLOW}Branch: $BRANCH ${NC}"
+echo -e "${YELLOW}Full HostSetup: $FULL ${NC}"
+echo -e "${YELLOW}Verwendete Tools: ${TOOLS[*]} ${NC}"
+echo -e "${YELLOW}Port: $PORT ${NC}"
+echo -e "${YELLOW}Benutzername: $USERNAME ${NC}"
+echo -e "${YELLOW}Systemname: $SYSTEM_NAME ${NC}"
+echo -e "${YELLOW}SSH Key aktiviert: $SSH_KEY_FUNCTION_ENABLED ${NC}"
+echo -e "${YELLOW}SSH Key Public: $SSH_KEY_PUBLIC ${NC}"
+echo -e "${YELLOW}Branch-Verzeichnis: $BRANCH_DIR ${NC}"
+echo -e "${YELLOW}Einstellungsverzeichnis: $SETTINGS_DIR ${NC}"
+echo -e "${YELLOW}Konfigurationsdatei: $CONFIG_FILE ${NC}"
+echo -e "${YELLOW}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
+echo -e "${YELLOW}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
 
 
 # Falls kein Branch angegeben wurde, den Benutzer fragen

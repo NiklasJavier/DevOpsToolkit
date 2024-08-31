@@ -9,7 +9,7 @@ default_command="help"
 while IFS= read -r line
 do
     # Nur Zeilen verarbeiten, die ein ":" enthalten
-    if [[ "$line" == *:* ]]; then
+    if echo "$line" | grep -q ":"; then
         # Den Namen und den Wert extrahieren
         var_name=$(echo "$line" | cut -d ':' -f 1 | xargs | tr ' ' '_')
         var_value=$(echo "$line" | cut -d ':' -f 2- | xargs)

@@ -412,7 +412,6 @@ fi
 if [ "$FULL" = true ]; then
     # Ausgabe einer Nachricht
     echo -e "${PINK}--- setting up the host ---${NC}"
-    
     # Überprüfen, ob das Skript run_ansible_setup.sh existiert und es ausführen
     if [ -f "$CLONE_DIR/environments/run_ansible_setup.sh" ]; then
         echo -e "${GREEN}Switching to $CLONE_DIR/environments/run_ansible_setup.sh${NC}"

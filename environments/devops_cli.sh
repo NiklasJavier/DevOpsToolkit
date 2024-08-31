@@ -22,8 +22,6 @@ do
     fi
 done < "$CONFIG_FILE"
 
-declare -p > /tmp/devops-cli-vars.tmp
-
 # Funktion zum Logging
 log_command() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $USER - $@" >> "$log_file"

@@ -408,12 +408,17 @@ else
     exit 1
 fi
 
-echo -e "${PINK}--- setting up the host ---${NC}"
-# Überprüfen, ob run_ansible_setup.sh existiert und ausführen
-if [ -f "$CLONE_DIR/environments/run_ansible_setup.sh" ]; then
-    echo -e "${GREEN}Switching to $CLONE_DIR/environments/run_ansible_setup.sh${NC}"
-    exec bash "$CLONE_DIR/environments/run_ansible_setup.sh" "$TOOLS_DIR" "$TOOLS" "$SETTINGS_DIR"
-else
-    echo -e "${RED}Error: $CLONE_DIR/environments/run_ansible_setup.sh not found!${NC}"
-    exit 1
+# Überprüfen, ob die Variable FULL auf true gesetzt ist
+if [ "$FULL" = true ]; then
+    # Ausgabe einer Nachricht
+    echo -e "${PINK}--- setting up the host ---${NC}"
+    
+    # Überprüfen, ob das Skript run_ansible_setup.sh existiert und es ausführen
+    if [ -f "$CLONE_DIR/environments/run_ansible_setup.sh" ]; then
+        echo -e "${GREEN}Switching to $CLONE_DIR/environments/run_ansible_setup.sh${NC}"
+        exec bash "$CLONE_DIR/environments/run_ansible_setup.sh" "$TOOLS_DIR" "$TOOLS" "$SETTINGS_DIR"
+    else
+        echo -e "${RED}Error: $CLONE_DIR/environments/run_ansible_setup.sh not found!${NC}"
+        exit 1
+    fi
 fi

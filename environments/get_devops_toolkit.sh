@@ -158,15 +158,16 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+echo "---------------------------------------------------"
 echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
 
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
     echo -e "${RED}Git is not installed. Installing Git...${NC}"
-    echo -e "${YELLOW}"
+    echo -e "---------------------------------------------------${YELLOW}"
     sudo apt-get update
     sudo apt-get install -y git
-    echo -e "${NC}"
+    echo -e "${NC}---------------------------------------------------"
 
     # Überprüfen, ob die Installation erfolgreich war
     if ! command -v git &> /dev/null; then
@@ -234,15 +235,7 @@ fi
 
 echo -e "${GREEN}Initializing configuration...${NC}"
 
-
-# Check Public SSH Key Option -key
-if [ "$SSH_KEY_FUNCTION_ENABLED" = true ]; then
-  echo "SSH key function is enabled."
-  echo "Public SSH Key: $SSH_KEY_PUBLIC"
-else
-  echo "SSH key function is disabled."
-fi
-
+echo "---------------------------------------------------"
 # System Name festlegen (ehemals Hostname)
 if [ -z "$SYSTEM_NAME" ]; then
     default_system_name="$SYSTEM_NAME"
@@ -290,6 +283,7 @@ if [ -z "$OPT_DATA_DIR" ]; then
     fi
     echo "OPT_DATA_DIR set to: $OPT_DATA_DIR"
 fi
+echo "---------------------------------------------------"
 
 # Standardmäßig alle Tools auswählen
 default_tools="docker ansible"
@@ -301,6 +295,7 @@ else
     TOOLS=${TOOLS:-$default_tools}
 fi
 
+echo "---------------------------------------------------"
 # Konfiguration in config.yaml speichern
 echo -e "${GREEN}Saving configuration to $CONFIG_FILE...${NC}"
 
@@ -362,8 +357,8 @@ pipelines_dir: "$PIPELINES_DIR"
 username: "$USERNAME"
 
 EOL
-
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
+echo "---------------------------------------------------"
 
 # Überprüfen, ob get_tools.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/get_tools.sh" ]; then

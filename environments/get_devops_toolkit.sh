@@ -33,6 +33,8 @@ SETTINGS_DIR=""
 CONFIG_FILE="" # Konfigurationsdatei für das Setup in Settings-Verzeichnis
 DEVOPS_CLI_FILE="$ENV_DIR/devops_cli.sh"
 
+SYMLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
+
 # Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
 choose_branch() {
     echo -e "${GREEN}Please select the branch to clone:${NC}"
@@ -241,7 +243,21 @@ sed -i "5i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
 echo "Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt."
 
 echo -e "${PINK}--- create cli-wrapper sbin link ---${NC}"
-sudo ln -s "$DEVOPS_CLI_FILE" /usr/sbin/devops
+# Überprüfen, ob der Symlink bereits existiert
+if [ -L "$SYMLINK_PATH" ]; then
+    # Wenn der Symlink existiert, überprüfen, ob er auf die richtige Datei zeigt
+    if [ "$(readlink "$SYMLINK_PATH")" != "$DEVOPS_CLI_FILE" ]; then
+        echo "Symlink $SYMLINK_PATH existiert und zeigt auf einen anderen Pfad. Aktualisierung..."
+        sudo ln -sf "$DEVOPS_CLI_FILE" "$SYMLINK_PATH"
+    else
+        echo "Symlink $SYMLINK_PATH existiert bereits und zeigt auf das richtige Ziel."
+    fi
+else
+    # Wenn der Symlink nicht existiert, erstelle ihn
+    echo "Symlink $SYMLINK_PATH existiert nicht. Erstellen..."
+    sudo ln -s "$DEVOPS_CLI_FILE" "$SYMLINK_PATH"
+fi
+
 
 # Alle Skripte ausführbar machen
 echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"

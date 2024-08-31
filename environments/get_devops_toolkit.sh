@@ -5,6 +5,7 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m' 
 BLUE='\033[0;34m' 
+PINK='\033[0;35m'
 NC='\033[0m' # Keine Farbe
 
 REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git" # Name des Repositories
@@ -94,19 +95,19 @@ SCRIPTS_DIR="$BRANCH_DIR/scripts" # Skriptverzeichnis festlegen
 PIPELINES_DIR="$BRANCH_DIR/pipelines" # Pipeline-Verzeichnis festlegen
 
 # Debugging-Ausgabe (kann entfernt werden)
-echo -e "${YELLOW}Branch: $BRANCH ${NC}"
-echo -e "${YELLOW}Full HostSetup: $FULL ${NC}"
-echo -e "${YELLOW}Verwendete Tools: ${TOOLS[*]} ${NC}"
-echo -e "${YELLOW}Port: $PORT ${NC}"
-echo -e "${YELLOW}Benutzername: $USERNAME ${NC}"
-echo -e "${YELLOW}Systemname: $SYSTEM_NAME ${NC}"
-echo -e "${YELLOW}SSH Key aktiviert: $SSH_KEY_FUNCTION_ENABLED ${NC}"
-echo -e "${YELLOW}SSH Key Public: $SSH_KEY_PUBLIC ${NC}"
-echo -e "${YELLOW}Branch-Verzeichnis: $BRANCH_DIR ${NC}"
-echo -e "${YELLOW}Einstellungsverzeichnis: $SETTINGS_DIR ${NC}"
-echo -e "${YELLOW}Konfigurationsdatei: $CONFIG_FILE ${NC}"
-echo -e "${YELLOW}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
-echo -e "${YELLOW}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
+echo -e "${YELLOW}Branch:${PINK} $BRANCH ${NC}"
+echo -e "${YELLOW}Full HostSetup:${PINK} $FULL ${NC}"
+echo -e "${YELLOW}Verwendete Tools:${PINK} ${TOOLS[*]} ${NC}"
+echo -e "${YELLOW}Port:${PINK} $PORT ${NC}"
+echo -e "${YELLOW}Benutzername:${PINK} $USERNAME ${NC}"
+echo -e "${YELLOW}Systemname:${PINK} $SYSTEM_NAME ${NC}"
+echo -e "${YELLOW}SSH Key aktiviert:${PINK} $SSH_KEY_FUNCTION_ENABLED ${NC}"
+echo -e "${YELLOW}SSH Key Public:${PINK} $SSH_KEY_PUBLIC ${NC}"
+echo -e "${YELLOW}Branch-Verzeichnis:${PINK} $BRANCH_DIR ${NC}"
+echo -e "${YELLOW}Einstellungsverzeichnis:${PINK} $SETTINGS_DIR ${NC}"
+echo -e "${YELLOW}Konfigurationsdatei:${PINK} $CONFIG_FILE ${NC}"
+echo -e "${YELLOW}Skriptverzeichnis:${PINK} $SCRIPTS_DIR ${NC}"
+echo -e "${YELLOW}Pipeline-Verzeichnis:${PINK} $PIPELINES_DIR ${NC}"
 
 
 # Falls kein Branch angegeben wurde, den Benutzer fragen

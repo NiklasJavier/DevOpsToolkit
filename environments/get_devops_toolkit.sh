@@ -32,41 +32,13 @@ SETTINGS_DIR=""
 SCRIPTS_DIR="" 
 PIPELINES_DIR=""
 
-# Initialisierung der Argumente
-parse_args "$@"
-if [ -z "$BRANCH" ]; then choose_branch fi
+# Überprüfen, ob das Skript als Root ausgeführt wird
+if [ "$EUID" -ne 0 ]; then
+    echo -e "${RED}Please run as root.${NC}"
+    exit 1
+fi
 
-BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
-SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
-CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
-SCRIPTS_DIR="$BRANCH_DIR/scripts" # Skriptverzeichnis festlegen
-PIPELINES_DIR="$BRANCH_DIR/pipelines" # Pipeline-Verzeichnis festlegen
-
-echo -e "${GREEN}    ____            ____            ";
-echo -e "${GREEN}   / __ \___ _   __/ __ \____  _____";
-echo -e "${GREEN}  / / / / _ \ | / / / / / __ \/ ___/";
-echo -e "${GREEN} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
-echo -e "${GREEN}/_____/\___/|___/\____/ .___/____/  ";
-echo -e "${GREEN}                     /_/            ";
-echo -e "${GREEN}                                    ";
-echo -e "${GREEN}                                    ";
-echo -e "${GREEN}--- DevOps Toolkit Setup Script ---"
-echo -e "${PINK}--- Parameter ---${NC}"
-# Debugging-Ausgabe (kann entfernt werden) 
-echo -e "${PINK}Branch: $BRANCH ${NC}"
-echo -e "${PINK}Full HostSetup: $FULL ${NC}"
-echo -e "${PINK}Verwendete Tools: ${TOOLS[*]} ${NC}"
-echo -e "${PINK}Port: $PORT ${NC}"
-echo -e "${PINK}Benutzername: $USERNAME ${NC}"
-echo -e "${PINK}Systemname: $SYSTEM_NAME ${NC}"
-echo -e "${PINK}SSH Key aktiviert: $SSH_KEY_FUNCTION_ENABLED ${NC}"
-echo -e "${PINK}SSH Key Public: $SSH_KEY_PUBLIC ${NC}"
-echo -e "${PINK}Branch-Verzeichnis: $BRANCH_DIR ${NC}"
-echo -e "${PINK}Einstellungsverzeichnis: $SETTINGS_DIR ${NC}"
-echo -e "${PINK}Konfigurationsdatei: $CONFIG_FILE ${NC}"
-echo -e "${PINK}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
-echo -e "${PINK}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
-echo -e "${PINK}---${NC}"
+echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
 
 # Funktion zum Parsen der Argumente
 parse_args() {
@@ -165,13 +137,41 @@ choose_branch() {
     esac
 }
 
-# Überprüfen, ob das Skript als Root ausgeführt wird
-if [ "$EUID" -ne 0 ]; then
-    echo -e "${RED}Please run as root.${NC}"
-    exit 1
-fi
+# Initialisierung der Argumente
+parse_args "$@"
+if [ -z "$BRANCH" ]; then choose_branch fi
 
-echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
+BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
+SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
+CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
+SCRIPTS_DIR="$BRANCH_DIR/scripts" # Skriptverzeichnis festlegen
+PIPELINES_DIR="$BRANCH_DIR/pipelines" # Pipeline-Verzeichnis festlegen
+
+echo -e "${GREEN}    ____            ____            ";
+echo -e "${GREEN}   / __ \___ _   __/ __ \____  _____";
+echo -e "${GREEN}  / / / / _ \ | / / / / / __ \/ ___/";
+echo -e "${GREEN} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
+echo -e "${GREEN}/_____/\___/|___/\____/ .___/____/  ";
+echo -e "${GREEN}                     /_/            ";
+echo -e "${GREEN}                                    ";
+echo -e "${GREEN}                                    ";
+echo -e "${GREEN}--- DevOps Toolkit Setup Script ---"
+echo -e "${PINK}--- Parameter ---${NC}"
+# Debugging-Ausgabe (kann entfernt werden) 
+echo -e "${PINK}Branch: $BRANCH ${NC}"
+echo -e "${PINK}Full HostSetup: $FULL ${NC}"
+echo -e "${PINK}Verwendete Tools: ${TOOLS[*]} ${NC}"
+echo -e "${PINK}Port: $PORT ${NC}"
+echo -e "${PINK}Benutzername: $USERNAME ${NC}"
+echo -e "${PINK}Systemname: $SYSTEM_NAME ${NC}"
+echo -e "${PINK}SSH Key aktiviert: $SSH_KEY_FUNCTION_ENABLED ${NC}"
+echo -e "${PINK}SSH Key Public: $SSH_KEY_PUBLIC ${NC}"
+echo -e "${PINK}Branch-Verzeichnis: $BRANCH_DIR ${NC}"
+echo -e "${PINK}Einstellungsverzeichnis: $SETTINGS_DIR ${NC}"
+echo -e "${PINK}Konfigurationsdatei: $CONFIG_FILE ${NC}"
+echo -e "${PINK}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
+echo -e "${PINK}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
+echo -e "${PINK}---${NC}"
 
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then

@@ -11,7 +11,7 @@ do
     # Nur Zeilen verarbeiten, die ein ":" enthalten
     if [[ "$line" == *:* ]]; then
         # Den Namen und den Wert extrahieren
-        var_name=$(echo "$line" | cut -d ':' -f 1 | xargs)
+        var_name=$(echo "$line" | cut -d ':' -f 1 | xargs | tr ' ' '_')
         var_value=$(echo "$line" | cut -d ':' -f 2- | xargs)
 
         # Entferne die Anführungszeichen, wenn sie vorhanden sind

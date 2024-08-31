@@ -240,6 +240,9 @@ CLI_CONFIG_MODLINE+="\"$CONFIG_FILE\""
 sed -i "5i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
 echo "Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt."
 
+echo -e "${PINK}--- create cli-wrapper sbin link ---${NC}"
+sudo ln -s "$DEVOPS_CLI_FILE" /usr/sbin/devops
+
 # Alle Skripte ausführbar machen
 echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
 sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;

@@ -229,12 +229,7 @@ else
 fi
 
 echo -e "${PINK}--- create the config.yml ---${NC}" # Config anlegen
-if [ -f "$CLONE_DIR/environments/config.temp.yaml" ]; then
-    touch -f "$SETTINGS_DIR/config.yaml"
-    echo -e "${GREEN}config.temp.yaml has been moved to config.yaml, overwriting the existing file.${NC}"
-else
-    echo -e "${RED}config.temp.yaml does not exist in $CLONE_DIR/environments.${NC}"
-fi
+touch -f "$SETTINGS_DIR/config.yaml"
 
 echo -e "${PINK}--- change the cli-wrapper confline ---${NC}"
 # Konfigurationsdatei für das Setup in devops_cli.sh einfügen
@@ -317,13 +312,14 @@ if [ -z "$OPT_DATA_DIR" ]; then
 fi
 
 # Standardmäßig alle Tools auswählen
-default_tools="docker ansible"
+default_tools="ansible"
+available_tools="docker"
 # Benutzerauswahl der Tools
 if [ "$USE_DEFAULTS" = true ]; then
-    TOOLS=$default_tools
+    TOOLS+=" $default_tools"
 else
-    read -r -p "Which tools do you want to install? (default: $default_tools): " selected_tools < /dev/tty
-    TOOLS=${TOOLS:-$default_tools}
+    read -r -p "Which tools do you want to install? (default: $available_tools): " selected_tools < /dev/tty
+    TOOLS=${TOOLS:-$available_tools}
 fi
 
 # Konfiguration in config.yaml speichern

@@ -58,7 +58,7 @@ choose_branch() {
 
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
-    -env)
+    -brach)
       shift
       case "$1" in
         production|staging|dev)
@@ -70,6 +70,24 @@ while [[ "$#" -gt 0 ]]; do
           exit 1
           ;;
       esac
+      ;;
+    -full)
+      shift
+      if [[ "$1" == "true" || "$1" == "false" ]]; then
+        FULL="$1"
+      else
+        echo -e "${RED}Invalid value for FULL. Please use 'true' or 'false'.${NC}"
+        exit 1
+      fi
+      ;;
+    -systemname)
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        SYSTEM_NAME="$1"
+      else
+        echo -e "${RED}No systemname specified with -username.${NC}"
+        exit 1
+      fi
       ;;
     -key)
       shift
@@ -90,15 +108,6 @@ while [[ "$#" -gt 0 ]]; do
         exit 1
       fi
       ;;
-    -full)
-      shift
-      if [[ "$1" == "true" || "$1" == "false" ]]; then
-        FULL="$1"
-      else
-        echo -e "${RED}Invalid value for FULL. Please use 'true' or 'false'.${NC}"
-        exit 1
-      fi
-      ;;
     -tools)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
@@ -116,6 +125,10 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
+# Falls kein Branch angegeben wurde, den Benutzer fragen
+if [ -z "$BRANCH" ]; then
+    choose_branch
+fi
 
 BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
 SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
@@ -138,11 +151,6 @@ echo -e "${PINK}Konfigurationsdatei: $CONFIG_FILE ${NC}"
 echo -e "${PINK}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
 echo -e "${PINK}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
 
-
-# Falls kein Branch angegeben wurde, den Benutzer fragen
-if [ -z "$BRANCH" ]; then
-    choose_branch
-fi
 
 # Überprüfen, ob das Skript als Root ausgeführt wird
 if [ "$EUID" -ne 0 ]; then

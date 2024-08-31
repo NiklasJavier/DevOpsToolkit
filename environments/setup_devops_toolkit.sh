@@ -1,22 +1,4 @@
 #!/bin/bash
-
-# Funktion zum Anzeigen eines Ladebalkens
-loading_bar() {
-    local duration=$1  # Gesamtdauer des Ladebalkens in Sekunden
-    local interval=0.1 # Aktualisierungsintervall in Sekunden
-    local total_steps=$(echo "$duration / $interval" | bc)
-    local bar=""
-
-    for ((i=0; i<total_steps; i++)); do
-        sleep $interval
-        bar="#${bar}"
-        printf "\r[%-50s] %d%%" "$bar" "$(( (i+1) * 100 / total_steps ))"
-    done
-    printf "\n"
-}
-
-echo "Loading, please wait..." && loading_bar 0 && echo "Done!"
-
 # Farben für die Ausgabe
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -80,8 +62,6 @@ choose_branch() {
         ;;
     esac
 }
-
-echo "Loading, please wait..." && loading_bar 1 && echo "Done!"
 
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
@@ -185,8 +165,6 @@ echo -e "${GREEN}Konfigurationsdatei: $CONFIG_FILE ${NC}"
 echo -e "${GREEN}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
 echo -e "${GREEN}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
 
-echo "Loading, please wait..." && loading_bar 2 && echo "Done!"
-
 # Überprüfen, ob das Skript als Root ausgeführt wird
 if [ "$EUID" -ne 0 ]; then
     echo -e "${RED}Please run as root.${NC}"
@@ -277,8 +255,6 @@ else
     sudo ln -s "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
 fi
 
-echo "Loading, please wait..." && loading_bar 3 && echo "Done!"
-
 # Alle Skripte ausführbar machen
 echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
 sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;
@@ -334,8 +310,6 @@ if [ -z "$OPT_DATA_DIR" ]; then
     fi
     echo -e "${GREEN}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
 fi
-
-echo "Loading, please wait..." && loading_bar 4 && echo "Done!"
 
 # Benutzerauswahl der Tools
 if [ "$USE_DEFAULTS" = true ]; then
@@ -419,8 +393,6 @@ systemlink_path: "$SYSLINK_PATH"
 EOL
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 
-echo "Loading, please wait..." && loading_bar 5 && echo "Done!"
-
 echo -e "${PINK}--- installation of the tools ---${NC}"
 # Überprüfen, ob install_tools.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/install_tools.sh" ]; then
@@ -433,8 +405,6 @@ else
     echo -e "${RED}Error: $CLONE_DIR/environments/install_tools.sh not found!${NC}"
     exit 1
 fi
-
-echo "Loading, please wait..." && loading_bar 10 && echo "Done!"
 
 # Überprüfen, ob die Variable FULL auf true gesetzt ist
 if [ "$FULL" = true ]; then
@@ -449,5 +419,3 @@ if [ "$FULL" = true ]; then
         exit 1
     fi
 fi
-
-echo "Loading, please wait..." && loading_bar 20 && echo "Done!"

@@ -58,7 +58,7 @@ choose_branch() {
 
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
-    -t)
+    -env)
       shift
       case "$1" in
         production|staging|dev)
@@ -81,7 +81,7 @@ while [[ "$#" -gt 0 ]]; do
         SSH_KEY_PUBLIC=""  # Wenn leer, setze einen Standard-Schlüssel oder handle es entsprechend
       fi
       ;;
-    -p)
+    -port)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
         PORT="$1"

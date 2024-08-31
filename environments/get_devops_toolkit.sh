@@ -6,6 +6,7 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m' 
 BLUE='\033[0;34m' 
 PINK='\033[0;35m'
+BOLD='\033[1m'
 NC='\033[0m' # Keine Farbe
 
 REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git" # Name des Repositories
@@ -142,9 +143,11 @@ echo -e "${GREEN}  / / / / _ \ | / / / / / __ \/ ___/";
 echo -e "${GREEN} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
 echo -e "${GREEN}/_____/\___/|___/\____/ .___/____/  ";
 echo -e "${GREEN}                     /_/            ";
+echo -e "${GREEN}                                    ";
+echo -e "${GREEN}                                    ";
 echo -e "${GREEN}--- DevOps Toolkit Setup Script ---"
-echo -e "${PINK}---${NC}"
-# Debugging-Ausgabe (kann entfernt werden)
+echo -e "${PINK}--- Parameter ---${NC}"
+# Debugging-Ausgabe (kann entfernt werden) 
 echo -e "${PINK}Branch: $BRANCH ${NC}"
 echo -e "${PINK}Full HostSetup: $FULL ${NC}"
 echo -e "${PINK}Verwendete Tools: ${TOOLS[*]} ${NC}"
@@ -167,7 +170,6 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-echo "---------------------------------------------------"
 echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
 
 # Überprüfen, ob Git installiert ist

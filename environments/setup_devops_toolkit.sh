@@ -231,7 +231,6 @@ else
     echo -e "${GREEN}.settings folder already exists in $BRANCH_DIR...${NC}"
 fi
 
-echo -e "${PINK}--- create the config.yml ---${NC}" # Config anlegen
 touch -f "$SETTINGS_DIR/config.yaml"
 
 echo -e "${PINK}--- change the cli-wrapper confline ---${NC}"

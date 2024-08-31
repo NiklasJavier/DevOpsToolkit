@@ -163,8 +163,10 @@ echo -e "${GREEN}Starting the setup for branch: $BRANCH...${NC}"
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
     echo -e "${RED}Git is not installed. Installing Git...${NC}"
+    echo -e "${YELLOW}"
     sudo apt-get update
     sudo apt-get install -y git
+    echo -e "${NC}"
 
     # Überprüfen, ob die Installation erfolgreich war
     if ! command -v git &> /dev/null; then
@@ -190,7 +192,9 @@ if [ -d "$CLONE_DIR/.git" ]; then
     sudo git pull
 else
     echo -e "${GREEN}Cloning the repository into $CLONE_DIR with branch $BRANCH...${NC}"
+    echo -e "${YELLOW}"
     sudo git clone -b "$BRANCH" --single-branch "$REPO_URL" "$CLONE_DIR"
+    echo -e "${NC}"
     if [ $? -ne 0 ]; then
         echo -e "${RED}Failed to clone the repository. Aborting...${NC}"
         exit 1

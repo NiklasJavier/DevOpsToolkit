@@ -14,7 +14,7 @@ else
     echo -e "${GREEN}Creation of a temporary folder...${NC}"
     TMP_DIR=$(mktemp -d)
 
-    echo -e "${GREEN}Download dependent packages...${NC}"
+    echo -e "${GREEN}Download dependent packages..."
     # Update der Paketliste und Installation der Voraussetzungen
     sudo apt-get update
     sudo apt-get install -y \
@@ -28,7 +28,7 @@ else
     # Prüfen, ob die Datei heruntergeladen wurde
     if [ -f "$TMP_DIR/get-docker.sh" ]; then
         echo -e "${GREEN}Docker installation script downloaded to: $TMP_DIR/get-docker.sh${NC}"
-        echo -e "${GREEN}Installation of Docker...${NC}"
+        echo -e "${GREEN}Installation of Docker..."
         sh "$TMP_DIR/get-docker.sh"
     else
         echo -e "${RED}Docker installation script does not exist at: $TMP_DIR/get-docker.sh${NC}"
@@ -46,7 +46,7 @@ fi
 if command -v docker-compose &> /dev/null; then
     echo -e "${GREEN}Docker Compose is already installed.${NC}"
 else
-    echo -e "${GREEN}Installing Docker Compose...${NC}"
+    echo -e "${GREEN}Installing Docker Compose..."
     sudo apt-get install -y docker-compose
 fi
 

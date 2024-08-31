@@ -26,6 +26,8 @@ SSH_KEY_PUBLIC="none" # Öffentlicher SSH-Schlüssel
 CLONE_DIR="/etc/DevOpsToolkit"
 ENV_DIR="$CLONE_DIR/environments"
 TOOLS_DIR="$CLONE_DIR/tools"
+SCRIPTS_DIR="$CLONE_DIR/scripts" 
+PIPELINES_DIR="$CLONE_DIR/pipelines" 
 SETTINGS_DIR="" 
 SCRIPTS_DIR="" 
 PIPELINES_DIR="" 
@@ -135,8 +137,6 @@ fi
 BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
 SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
 CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
-SCRIPTS_DIR="$BRANCH_DIR/scripts" # Skriptverzeichnis festlegen
-PIPELINES_DIR="$BRANCH_DIR/pipelines" # Pipeline-Verzeichnis festlegen
 
 echo -e "${PINK}    ____            ____            ";
 echo -e "${PINK}   / __ \___ _   __/ __ \____  _____";

@@ -131,29 +131,28 @@ SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
 CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
 
 startOverview() {
-echo -e "${PINK}    ____            ____            ";
-echo -e "${PINK}   / __ \___ _   __/ __ \____  _____";
-echo -e "${PINK}  / / / / _ \ | / / / / / __ \/ ___/";
-echo -e "${PINK} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
-echo -e "${PINK}/_____/\___/|___/\____/ .___/____/  ";
-echo -e "${PINK}                     /_/            ";
-echo -e "${PINK}                                    ";
-echo -e "${PINK}                                    ";
-echo -e "${PINK}--- parameter ---${NC}"
+echo -e "${GREY}    ____            ____            ";
+echo -e "${GREY}   / __ \___ _   __/ __ \____  _____";
+echo -e "${GREY}  / / / / _ \ | / / / / / __ \/ ___/";
+echo -e "${GREY} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
+echo -e "${GREY}/_____/\___/|___/\____/ .___/____/  ";
+echo -e "${GREY}                     /_/            ";
+echo -e "${GREY}                                    ";
+echo -e "${GREY}                                    ";
 # Debugging-Ausgabe (kann entfernt werden) 
-echo -e "${GREEN}Branch: $BRANCH ${NC}"
-echo -e "${GREEN}Full HostSetup: $FULL ${NC}"
-echo -e "${GREEN}Verwendete Tools: ${TOOLS[*]} ${NC}"
-echo -e "${GREEN}Port: $PORT ${NC}"
-echo -e "${GREEN}Benutzername: $USERNAME ${NC}"
-echo -e "${GREEN}Systemname: $SYSTEM_NAME ${NC}"
-echo -e "${GREEN}SSH Key aktiviert: $SSH_KEY_FUNCTION_ENABLED ${NC}"
-echo -e "${GREEN}SSH Key Public: $SSH_KEY_PUBLIC ${NC}"
-echo -e "${GREEN}Branch-Verzeichnis: $BRANCH_DIR ${NC}"
-echo -e "${GREEN}Einstellungsverzeichnis: $SETTINGS_DIR ${NC}"
-echo -e "${GREEN}Konfigurationsdatei: $CONFIG_FILE ${NC}"
-echo -e "${GREEN}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
-echo -e "${GREEN}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
+echo -e "${GREY}Branch: ${YELLOW}$BRANCH ${NC}"
+echo -e "${GREY}Full HostSetup: ${YELLOW}$FULL ${NC}"
+echo -e "${GREY}Verwendete Tools: ${YELLOW}${TOOLS[*]} ${NC}"
+echo -e "${GREY}Port: ${YELLOW}$PORT ${NC}"
+echo -e "${GREY}Benutzername: ${YELLOW}$USERNAME ${NC}"
+echo -e "${GREY}Systemname: ${YELLOW}$SYSTEM_NAME ${NC}"
+echo -e "${GREY}SSH Key aktiviert: ${YELLOW}$SSH_KEY_FUNCTION_ENABLED ${NC}"
+echo -e "${GREY}SSH Key Public: ${YELLOW}$SSH_KEY_PUBLIC ${NC}"
+echo -e "${GREY}Branch-Verzeichnis: ${YELLOW}$BRANCH_DIR ${NC}"
+echo -e "${GREY}Einstellungsverzeichnis: ${YELLOW}$SETTINGS_DIR ${NC}"
+echo -e "${GREY}Konfigurationsdatei: ${YELLOW}$CONFIG_FILE ${NC}"
+echo -e "${GREY}Skriptverzeichnis: ${YELLOW}$SCRIPTS_DIR ${NC}"
+echo -e "${GREY}Pipeline-Verzeichnis: ${YELLOW}$PIPELINES_DIR ${NC}"
 }
 
 checkRootPermissions() {

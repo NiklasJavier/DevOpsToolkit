@@ -14,6 +14,7 @@ find /home -regextype posix-extended -maxdepth 1 -mindepth 1 -type d -regex '.*/
   # Füge den Benutzernamen zur Liste hinzu, falls er nicht der currentUsername ist
   if [ "$username" != "$currentUsername" ]; then
     user_list+=("$username")
+    echo "$username wurde der Liste hinzugefügt."
   else
     echo "Benutzer $username wird nicht zur Liste hinzugefügt, da er der aktuelle Benutzer ist."
   fi

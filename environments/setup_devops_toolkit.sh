@@ -419,7 +419,7 @@ if [ "$FULL" = true ]; then
 fi
 
 cat <<EOF
-
+${YELLOW}#
 ======================== DEVOPS TOOLKIT PARAMETER =========================
 
 The initialization of the repo was successful. 
@@ -447,5 +447,5 @@ log_file: "$LOG_FILE" log_level: "$LOG_LEVEL"
 
 
 *** Playbooks can be started via commands ***
->>> To do this, use 'devops' to see a list of all possible actions. 
+>>> To do this, use 'devops' to see a list of all possible actions. ${NC}
 EOF

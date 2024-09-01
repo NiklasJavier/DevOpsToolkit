@@ -37,7 +37,7 @@ SYSLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
 LOG_FILE="/var/log/devops_commands.log"
 
 TOOLS="" # Liste der Tools, die installiert werden sollen
-DEFAULT_TOOLS="ansible ansible" # Standard-Tools, die installiert werden sollen
+DEFAULT_TOOLS="ansible docker" # Standard-Tools, die installiert werden sollen
 AVAILABLE_TOOLS="" # optional: Liste der verfügbaren Tools
 
 while [[ "$#" -gt 0 ]]; do
@@ -408,7 +408,7 @@ fi
 echo -e "\n${GREY}======================== DEVOPS TOOLKIT PARAMETER =========================${NC}\n"
 
 echo -e "${GREY}The initialization of the repo was successful.${NC}"
-echo -e "${GREY}The following parameters have been set, but can still be adjusted under ${YELLOW}CONFIG_FILE${GREY}.${NC}"
+echo -e "${GREY}The following parameters have been set, but can still be adjusted under ${YELLOW}$CONFIG_FILE${GREY}.${NC}"
 echo -e "${YELLOW}Nutze Standardwerte: \"$USE_DEFAULTS\" tools: \"$TOOLS\"${NC}\n"
 
 echo -e "${GREY}# system_name: System-/Servername (Standard: generiert) + username: Aktueller Benutzer${NC}"

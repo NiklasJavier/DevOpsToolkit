@@ -10,6 +10,21 @@ BOLD='\033[1m'
 GREY='\033[1;90m'
 NC='\033[0m' # Keine Farbe
 
+show_loading() {
+    local pid=$1
+    local delay=0.01
+    local spinstr='|/-\'
+    local nc='\033[0m'
+
+    while kill -0 $pid 2>/dev/null; do
+        for i in `seq 0 3`; do
+            printf "\r ${GREEN}[%c]${GREY} " "${spinstr:i:1}"
+            sleep $delay
+        done
+    done
+    printf "\r    \r"  # Zeile leeren 01
+}
+
 ############# PARAMETER VOR FLAGS ##############
 REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git" # Name des Repositories
 BRANCH="" # Variable zur Speicherung des Branch-Namens
@@ -437,21 +452,6 @@ writeConfigFile
 installAvailableTools
 initalScriptOverview
 )
-
-show_loading() {
-    local pid=$1
-    local delay=0.01
-    local spinstr='|/-\'
-    local nc='\033[0m'
-
-    while kill -0 $pid 2>/dev/null; do
-        for i in `seq 0 3`; do
-            printf "\r ${GREEN}[%c]${GREY} " "${spinstr:i:1}"
-            sleep $delay
-        done
-    done
-    printf "\r    \r"  # Zeile leeren 01
-}
 
 for method in "${methods[@]}"; do
 echo -e "\n${GREY}======= ${GREEN}Running: ${PINK}[$method] ${GREY}=======${NC}"

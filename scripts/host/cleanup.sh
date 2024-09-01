@@ -22,8 +22,8 @@ done
 
 # Debug-Ausgabe der Liste der zu löschenden Benutzer
 echo "Benutzer, die gelöscht werden sollen:"
-for username in "${user_list[@]}"; do
-  echo "$username"
+for user in "${user_list[@]}"; do
+  echo "Benutzer in der Liste: $user"
 done
 
 # Benutzer und ihre Verzeichnisse löschen

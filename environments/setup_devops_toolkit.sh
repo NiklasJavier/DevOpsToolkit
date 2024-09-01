@@ -443,25 +443,23 @@ show_loading() {
     local pid=$1
     local delay=0.1
     local spinstr='|/-\'
-    echo -ne "${GREEN} "
-    while [ "$(ps a | awk '{print $1}' | grep "$pid")" ]; do
-        local temp=${spinstr#?}
-        printf " [%c]  " "$spinstr"
-        local spinstr=$temp${spinstr%"$temp"}
-        sleep $delay
-        printf "\b\b\b\b\b\b"
+    while kill -0 $pid 2>/dev/null; do
+        for i in `seq 0 3`; do
+            printf "\r [%c] " "${spinstr:i:1}"
+            sleep $delay
+        done
     done
-    printf "    \b\b\b\b"
-    echo "${NC}"
+    printf "\r    \r"  # Zeile leeren
 }
 
 # Methoden ausführen mit Ladebalken
 for method in "${methods[@]}"; do
-echo -e "\n${GREY}======= Running: ${PINK}[$method] ${GREY}=======${NC}"
-$method &  # Startet die Methode im Hintergrund
-pid=$!     # PID der Methode speichern
-show_loading $pid  # Ladeanimation anzeigen, solange die Methode läuft
+echo -e "\n${GREY}======= ${GREEN}Running: ${PINK}[$method] ${GREY}=======${NC}"
+$method &
+pid=$!
+show_loading $pid
 wait $pid  # Warten, bis die Methode abgeschlossen ist
+echo -e "\n${GREY}======= ${RED}Completed: ${PINK}[$method] ${GREY}=======${NC}"
 done
 
 echo -e "${GREY}All tasks completed!${NC}"

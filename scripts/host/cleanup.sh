@@ -3,6 +3,23 @@
 # Aktuellen Benutzernamen definieren, der nicht gelöscht werden soll
 currentUsername="$3"
 
+# Farben definieren
+RED='\033[0;31m'
+NC='\033[0m' # Keine Farbe
+
+# Warnung anzeigen
+echo -e "${RED}WARNUNG: Dieses Skript wird alle Ports, die nicht in der SSH-Konfiguration enthalten sind, und alle Ordner, die nicht in der config.yml enthalten sind, löschen.${NC}"
+echo -e "${RED}Stellen Sie sicher, dass der aktuelle Ordner in der config.yml vorhanden ist, sonst werden diese Dateien für immer gelöscht.${NC}"
+
+# Bestätigung anfordern
+read -p "Möchten Sie fortfahren? (ja/nein): " confirmation
+
+# Überprüfen, ob der Benutzer fortfahren möchte
+if [[ "$confirmation" != "ja" ]]; then
+  echo "Abgebrochen. Keine Änderungen vorgenommen."
+  exit 1
+fi
+
 # Finde alle Verzeichnisse in /home mit genau 11 Großbuchstaben
 find /home -regextype posix-extended -maxdepth 1 -mindepth 1 -type d -regex '.*/[A-Z]{11}' | while read -r dir; do
   username=$(basename "$dir")

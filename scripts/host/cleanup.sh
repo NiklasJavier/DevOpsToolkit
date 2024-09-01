@@ -18,6 +18,7 @@ find /home -maxdepth 1 -mindepth 1 -type d -regex ".*/[A-Z]{11}" | while read -r
   fi
 done
 
+echo "Current Username: $currentUsername"
 # Debug-Ausgabe der Liste der zu löschenden Benutzer
 echo "Benutzer, die gelöscht werden sollen:"
 for username in "${user_list[@]}"; do

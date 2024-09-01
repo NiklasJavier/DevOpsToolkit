@@ -172,24 +172,23 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-echo -e "${PINK}--- copy of the git repository ---${NC}"
+echo -e "${PINK}--- copy of the git repository ---"
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
-    echo -e "${RED}Git is not installed. Installing Git...${NC}"
+    echo -e "${RED}Git is not installed. Installing Git..."
     echo -e "${GREEN}"
     sudo apt-get update
     sudo apt-get install -y git
-    echo -e "${NC}"
 
     # Überprüfen, ob die Installation erfolgreich war
     if ! command -v git &> /dev/null; then
-        echo -e "${RED}Git installation failed. Aborting...${NC}"
+        echo -e "${RED}Git installation failed. Aborting..."
         exit 1
     else
-        echo -e "${GREEN}Git installed successfully.${NC}"
+        echo -e "${GREEN}Git installed successfully."
     fi
 else
-    echo -e "${GREEN}Git is already installed.${NC}"
+    echo -e "${GREEN}Git is already installed."
 fi
 
 # Verzeichnis erstellen, wenn es nicht existiert
@@ -204,10 +203,8 @@ if [ -d "$CLONE_DIR/.git" ]; then
     cd "$CLONE_DIR"
     sudo git pull
 else
-    echo -e "${GREEN}Cloning the repository into $CLONE_DIR with branch $BRANCH...${NC}"
-    echo -e "${YELLOW}"
+    echo -e "${GREEN}Cloning the repository into $CLONE_DIR with branch $BRANCH..."
     sudo git clone -b "$BRANCH" --single-branch "$REPO_URL" "$CLONE_DIR"
-    echo -e "${NC}"
     if [ $? -ne 0 ]; then
         echo -e "${RED}Failed to clone the repository. Aborting...${NC}"
         exit 1
@@ -255,7 +252,6 @@ else
     echo -e "${GREEN}Symlink $SYSLINK_PATH existiert nicht. Erstellen...${NC}"
     sudo ln -s "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
 fi
-
 
 # Alle Skripte ausführbar machen
 echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
@@ -389,12 +385,11 @@ username: "$USERNAME"
 log_file: "$LOG_FILE"
 
 # Der Pfad zum System-Symlink, der auf eine bestimmte Datei oder ein Verzeichnis verweist, wird durch die Umgebungsvariable festgelegt.
-# Der Wert kann z.B. auf "/usr/local/sbin/myapp" gesetzt sein, um auf eine ausführbare Datei zu verweisen.
+# Der Wert kann z.B. auf "/usr/local/bin/myapp" gesetzt sein, um auf eine ausführbare Datei zu verweisen.
 systemlink_path: "$SYSLINK_PATH"
 
 EOL
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
-
 
 echo -e "${PINK}--- installation of the tools ---${NC}"
 # Überprüfen, ob install_tools.sh existiert und ausführen

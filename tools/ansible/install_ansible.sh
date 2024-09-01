@@ -10,17 +10,17 @@ NC='\033[0m' # Keine Farbe
 if command -v ansible &> /dev/null; then
     echo -e "${GREEN}Ansible is already installed.${NC}"
 else
-    echo -e "${GREEN}Update the package list and install dependencies...${NC}"
+    echo -e "${GREEN}Update the package list and install dependencies..."
     # Update der Paketliste und Installation der Voraussetzungen
     sudo apt-get update
     sudo apt-get install -y \
         software-properties-common 
 
     # Hinzufügen des Ansible PPA und Installation von Ansible
-    echo -e "${GREEN}Adding Ansible PPA...${NC}"
+    echo -e "${GREEN}Adding Ansible PPA..."
     sudo apt-add-repository --yes --update ppa:ansible/ansible
 
-    echo -e "${GREEN}Installing Ansible...${NC}"
+    echo -e "${GREEN}Installing Ansible..."
     sudo apt-get install -y ansible
 
     # Prüfen, ob Ansible installiert wurde

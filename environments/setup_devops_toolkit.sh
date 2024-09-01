@@ -431,5 +431,5 @@ echo -e "${GREY}# log_file: Pfad zur Logdatei + log_level: Log-Level${NC}"
 echo -e "${YELLOW}log_file: \"$LOG_FILE\" log_level: \"$LOG_LEVEL\"${NC}\n"
 
 echo -e "${GREY}*** Playbooks can be started via commands ***${NC}"
-echo -e "${GREY}>>> To do this, use 'devops' to see a list of all possible actions.${NC}\n"
+echo -e "${GREY}>>> To do this, use '${RED}devops${GREY}' to see a list of all possible actions.${NC}\n"
 

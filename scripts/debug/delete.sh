@@ -17,3 +17,9 @@ if [ -d /var/log/devops_commands.log ]; then
 else
     echo "Der Pfad /var/log/devops_commands.log existiert nicht."
 fi
+
+if [ -d /var/log/devops_commands.log ]; then
+    rm -r /var/log/devops_commands.log
+else
+    echo "Der Pfad /var/log/devops_commands.log existiert nicht."
+fi

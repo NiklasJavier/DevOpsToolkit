@@ -441,7 +441,7 @@ initalScriptOverview
 
 # Alle Methoden mit Fortschrittsanzeige und Ladebalken ausführen
 for method in "${methods[@]}"; do
-echo -e "\n${GREY}======= Running method: ${YELLOW}$method ${GREY}=======${NC}"
+echo -e "\n${GREY}======= Running method: ${YELLOW}[${$method^^}] ${GREY}=======${NC}"
 $method
 done
 

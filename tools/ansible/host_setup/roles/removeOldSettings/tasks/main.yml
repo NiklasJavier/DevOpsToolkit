@@ -10,17 +10,12 @@
   debug:
     var: home_dirs.files
 
-- name: Filter directories with exactly 11 characters
-  set_fact:
-    dirs_with_11_chars: "{{ home_dirs.files | map(attribute='path') | select('match', '/home/.{11}$') | list }}"
-
-- name: Debug output of directories with 11 characters
-  debug:
-    var: dirs_with_11_chars
-
-- name: Filter directories containing uppercase letters
+- name: Filter directories containing uppercase letters manually
   set_fact:
     dirs_with_uppercase: "{{ dirs_with_11_chars | select('regex_search', '[A-Z]') | list }}"
+  loop: "{{ home_dirs.files | map(attribute='path') | list }}"
+  when: item | search("[A-Z]")
+  register: dirs_with_uppercase
 
 - name: Debug output of directories with uppercase letters
   debug:

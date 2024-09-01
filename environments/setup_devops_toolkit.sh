@@ -424,7 +424,6 @@ echo -e "${GREY}*** Playbooks can be started via commands ***${NC}"
 echo -e "${GREY}>>> To do this, use '${RED}devops${GREY}' to see a list of all possible actions.${NC}\n"
 }
 
-# Liste der Methoden
 methods=(
 startOverview
 checkRootPermissions
@@ -439,7 +438,6 @@ installAvailableTools
 initalScriptOverview
 )
 
-# Alle Methoden mit Fortschrittsanzeige und Ladebalken ausführen
 for method in "${methods[@]}"; do
 echo -e "\n${GREY}======= Running: ${PINK}[$method^^] ${GREY}=======${NC}"
 $method

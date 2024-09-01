@@ -10,23 +10,6 @@ BOLD='\033[1m'
 GREY='\033[1;90m'
 NC='\033[0m' # Keine Farbe
 
-# Funktion, um einen Ladebalken anzuzeigen
-show_loading() {
-    local pid=$1
-    local delay=0.1
-    local spinstr='|/-\'
-    echo -n " "
-    while [ "$(ps a | awk '{print $1}' | grep "$pid")" ]; do
-        local temp=${spinstr#?}
-        printf " [%c]  " "$spinstr"
-        local spinstr=$temp${spinstr%"$temp"}
-        sleep $delay
-        printf "\b\b\b\b\b\b"
-    done
-    printf "    \b\b\b\b"
-    echo ""
-}
-
 ############# PARAMETER VOR FLAGS ##############
 REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git" # Name des Repositories
 BRANCH="" # Variable zur Speicherung des Branch-Namens
@@ -448,16 +431,6 @@ echo -e "${GREY}*** Playbooks can be started via commands ***${NC}"
 echo -e "${GREY}>>> To do this, use '${RED}devops${GREY}' to see a list of all possible actions.${NC}\n"
 }
 
-# Funktionen mit Fortschrittsanzeige und Ladebalken ausführen
-run_with_progress() {
-    local method_name=$1
-    echo -e "\nRunning: ${method_name}..."
-    $method_name &  # Funktion im Hintergrund ausführen
-    local pid=$!    # PID des letzten Hintergrundprozesses erhalten
-    show_loading $pid  # Ladebalken anzeigen, während die Funktion läuft
-    echo "Completed: ${method_name}"
-}
-
 # Liste der Methoden
 methods=(
     startOverview
@@ -475,7 +448,7 @@ methods=(
 
 # Alle Methoden mit Fortschrittsanzeige und Ladebalken ausführen
 for method in "${methods[@]}"; do
-    run_with_progress $method
+    $method
 done
 
 echo -e "${GREY}All tasks completed!${NC}"

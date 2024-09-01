@@ -146,14 +146,14 @@ SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
 CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
 
 startOverview() {
-echo -e "${GREY}    ____            ____            ";
-echo -e "${GREY}   / __ \___ _   __/ __ \____  _____";
-echo -e "${GREY}  / / / / _ \ | / / / / / __ \/ ___/";
-echo -e "${GREY} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
-echo -e "${GREY}/_____/\___/|___/\____/ .___/____/  ";
-echo -e "${GREY}                     /_/            ";
-echo -e "${GREY}                                    ";
-echo -e "${GREY}                                    ";
+echo -e "${PINK}    ____            ____            ";
+echo -e "${PINK}   / __ \___ _   __/ __ \____  _____";
+echo -e "${PINK}  / / / / _ \ | / / / / / __ \/ ___/";
+echo -e "${PINK} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
+echo -e "${PINK}/_____/\___/|___/\____/ .___/____/  ";
+echo -e "${PINK}                     /_/            ";
+echo -e "${PINK}                                    ";
+echo -e "${PINK}                                    ";
 # Debugging-Ausgabe (kann entfernt werden) 
 echo -e "${GREY}Branch: ${YELLOW}$BRANCH ${NC}"
 echo -e "${GREY}Full HostSetup: ${YELLOW}$FULL ${NC}"

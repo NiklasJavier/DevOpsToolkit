@@ -1,14 +1,41 @@
 #!/bin/bash
 
-# Farben für die Ausgabe
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-NC='\033[0m' # Keine Farbe
+# Aktuellen Benutzernamen definieren, der nicht gelöscht werden soll
+currentUsername="$3"
 
-tools_dir="$1"      # Tools-Verzeichnis
-config_file="$2"    # Konfigurationsdatei
+# Leere Liste zur Speicherung der zu löschenden Benutzer
+user_list=()
 
-ansibleName="host_cleanup" # Name des Ansible Playbooks -> playbookname bspw. (local_setup).yml
-ansibleFolder="host_setup"    # Ordner, in dem das Playbook liegt -> playbookfolder bspw. (local)
+# Finde alle Verzeichnisse in /home mit genau 11 Großbuchstaben
+find /home -maxdepth 1 -mindepth 1 -type d -regex ".*/[A-Z]{11}" | while read -r dir; do
+  username=$(basename "$dir")
+  
+  # Füge den Benutzernamen zur Liste hinzu, falls er nicht der currentUsername ist
+  if [ "$username" != "$currentUsername" ]; then
+    user_list+=("$username")
+  else
+    echo "Benutzer $username wird nicht zur Liste hinzugefügt, da er der aktuelle Benutzer ist."
+  fi
+done
 
-bash "$tools_dir/ansible/trigger_ansible_playbook.sh" "$tools_dir" "$config_file" "$ansibleName" "$ansibleFolder"
+# Benutzer und ihre Verzeichnisse löschen
+for username in "${user_list[@]}"; do
+  echo "Lösche Benutzer: $username"
+  
+  # Benutzer löschen
+  sudo userdel -r "$username"
+  
+  # Verzeichnis in /opt/SRV-* löschen, wenn es existiert
+  srv_dir="/opt/SRV-$username"
+  if [ -d "$srv_dir" ]; then
+    echo "Lösche Verzeichnis: $srv_dir"
+    sudo rm -rf "$srv_dir"
+  fi
+
+  # Verzeichnis in /home/* löschen, wenn es existiert
+  home_dir="/home/$username"
+  if [ -d "$home_dir" ]; then
+    echo "Lösche Verzeichnis: $home_dir"
+    sudo rm -rf "$home_dir"
+  fi
+done

@@ -443,7 +443,7 @@ show_loading() {
     local pid=$1
     local delay=0.1
     local spinstr='|/-\'
-    echo -n " "
+    echo -ne "${GREEN} "
     while [ "$(ps a | awk '{print $1}' | grep "$pid")" ]; do
         local temp=${spinstr#?}
         printf " [%c]  " "$spinstr"
@@ -452,7 +452,7 @@ show_loading() {
         printf "\b\b\b\b\b\b"
     done
     printf "    \b\b\b\b"
-    echo ""
+    echo "${NC}"
 }
 
 # Methoden ausführen mit Ladebalken

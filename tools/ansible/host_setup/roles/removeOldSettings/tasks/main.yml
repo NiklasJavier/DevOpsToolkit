@@ -6,13 +6,25 @@
     recurse: no
   register: home_dirs
 
+- name: Debug output of found directories
+  debug:
+    var: home_dirs
+
 - name: Filter directories with exactly 11 characters and uppercase letters, excluding specific pattern
   set_fact:
     dirs_to_delete: "{{ home_dirs.files | map(attribute='path') | select('match', '/home/[A-Za-z0-9]{11}$') | select('regex_search', '[A-Z]') | select('search', '/opt/SRV-*', invert=True) | list }}"
 
+- name: Debug output of directories to delete
+  debug:
+    var: dirs_to_delete
+
 - name: Extract usernames from directories to delete
   set_fact:
     users_to_delete: "{{ dirs_to_delete | map('regex_replace', '^/home/', '') | list }}"
+
+- name: Debug output of users to delete
+  debug:
+    var: users_to_delete
 
 - name: Delete users with specific home directories
   user:

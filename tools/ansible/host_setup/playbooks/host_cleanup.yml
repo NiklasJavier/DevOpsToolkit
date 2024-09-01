@@ -1,0 +1,10 @@
+---
+- name: CleanUp localhost
+  hosts: local
+  become: true
+
+  tasks:
+
+  roles:
+    - role: variables  # Einbinden der Rolle zum Laden der Variablen
+    - role: removeOldSettings # Einbinden der Rolle zum Entfernen alter Einstellungen

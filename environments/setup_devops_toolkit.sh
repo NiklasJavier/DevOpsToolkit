@@ -42,7 +42,6 @@ TOOLS="" # Liste der Tools, die installiert werden sollen
 TOOLS+="ansible docker" # Standard-Tools, die installiert werden sollen
 AVAILABLE_TOOLS="" # optional: Liste der verfügbaren Tools
 
-
 ############# ANFANG DER PARAMETER FLAGS #############
 while [[ "$#" -gt 0 ]]; do
   case "$1" in

@@ -1,0 +1,23 @@
+---
+- name: Find home directories with 11 characters containing uppercase letters
+  find:
+    paths: /home
+    file_type: directory
+    recurse: no
+  register: home_dirs
+
+- name: Filter directories with exactly 11 characters and uppercase letters, excluding specific pattern
+  set_fact:
+    dirs_to_delete: "{{ home_dirs.files | map(attribute='path') | select('match', '/home/[A-Za-z0-9]{11}$') | select('regex_search', '[A-Z]') | select('search', '/opt/SRV-*', invert=True) | list }}"
+
+- name: Extract usernames from directories to delete
+  set_fact:
+    users_to_delete: "{{ dirs_to_delete | map('regex_replace', '^/home/', '') | list }}"
+
+- name: Delete users with specific home directories
+  user:
+    name: "{{ item }}"
+    state: absent
+    remove: yes
+  loop: "{{ users_to_delete }}"
+  when: users_to_delete | length > 0

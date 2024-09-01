@@ -438,9 +438,30 @@ installAvailableTools
 initalScriptOverview
 )
 
+# Ladeanimation anzeigen
+show_loading() {
+    local pid=$1
+    local delay=0.1
+    local spinstr='|/-\'
+    echo -n " "
+    while [ "$(ps a | awk '{print $1}' | grep "$pid")" ]; do
+        local temp=${spinstr#?}
+        printf " [%c]  " "$spinstr"
+        local spinstr=$temp${spinstr%"$temp"}
+        sleep $delay
+        printf "\b\b\b\b\b\b"
+    done
+    printf "    \b\b\b\b"
+    echo ""
+}
+
+# Methoden ausführen mit Ladebalken
 for method in "${methods[@]}"; do
-echo -e "\n${GREY}======= ${GREEN}Running: ${PINK}[$method] ${GREY}=======${NC}"
-$method
+echo -e "\n${GREY}======= Running: ${PINK}[$method] ${GREY}=======${NC}"
+$method &  # Startet die Methode im Hintergrund
+pid=$!     # PID der Methode speichern
+show_loading $pid  # Ladeanimation anzeigen, solange die Methode läuft
+wait $pid  # Warten, bis die Methode abgeschlossen ist
 done
 
 echo -e "${GREY}All tasks completed!${NC}"

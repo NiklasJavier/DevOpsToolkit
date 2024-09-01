@@ -10,11 +10,11 @@ BOLD='\033[1m'
 GREY='\033[1;90m'
 NC='\033[0m' # Keine Farbe
 
+############# PARAMETER VOR FLAGS ##############
 REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git" # Name des Repositories
 BRANCH="" # Variable zur Speicherung des Branch-Namens
 BRANCH_DIR="" # Variable zur Speicherung des Branch-Verzeichnisses wird dynamisch festgelegt
 
-FULL=false # Vollständige Installation (true) oder nicht (false)
 USE_DEFAULTS=false # Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
 
 USERNAME="$(< /dev/urandom tr -dc 'A-Z' | head -c 11)" # Benutzername (zufällig generiert)
@@ -40,6 +40,7 @@ TOOLS="" # Liste der Tools, die installiert werden sollen
 DEFAULT_TOOLS="ansible docker" # Standard-Tools, die installiert werden sollen
 AVAILABLE_TOOLS="" # optional: Liste der verfügbaren Tools
 
+############# ANFANG DER PARAMETER FLAGS #############
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
     -branch)
@@ -118,16 +119,18 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-# Falls kein Branch angegeben wurde, den Benutzer fragen
+############# BRANCH FLAGS WENN NULL #############
 if [ -z "$BRANCH" ]; then
       USE_DEFAULTS=true # Immer mit Standardwerten arbeiten
-      BRANCH="dev"
+      BRANCH="production"
 fi
 
+############# PARAMETER NACH FLAGS ##############
 BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
 SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
 CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
 
+startOverview() {
 echo -e "${PINK}    ____            ____            ";
 echo -e "${PINK}   / __ \___ _   __/ __ \____  _____";
 echo -e "${PINK}  / / / / _ \ | / / / / / __ \/ ___/";
@@ -151,13 +154,17 @@ echo -e "${GREEN}Einstellungsverzeichnis: $SETTINGS_DIR ${NC}"
 echo -e "${GREEN}Konfigurationsdatei: $CONFIG_FILE ${NC}"
 echo -e "${GREEN}Skriptverzeichnis: $SCRIPTS_DIR ${NC}"
 echo -e "${GREEN}Pipeline-Verzeichnis: $PIPELINES_DIR ${NC}"
+}
 
+checkRootPermissions() {
 # Überprüfen, ob das Skript als Root ausgeführt wird
 if [ "$EUID" -ne 0 ]; then
     echo -e "${RED}Please run as root.${NC}"
     exit 1
 fi
+}
 
+copyAndSetTheRepository() {
 echo -e "${PINK}--- copy of the git repository ---"
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
@@ -165,7 +172,6 @@ if ! command -v git &> /dev/null; then
     echo -e "${GREEN}"
     sudo apt-get update
     sudo apt-get install -y git
-
     # Überprüfen, ob die Installation erfolgreich war
     if ! command -v git &> /dev/null; then
         echo -e "${RED}Git installation failed. Aborting..."
@@ -176,13 +182,11 @@ if ! command -v git &> /dev/null; then
 else
     echo -e "${GREEN}Git is already installed."
 fi
-
 # Verzeichnis erstellen, wenn es nicht existiert
 if [ ! -d "$CLONE_DIR" ]; then
     echo -e "${GREEN}Creating directory $CLONE_DIR...${NC}"
     sudo mkdir -p "$CLONE_DIR"
 fi
-
 # Prüfen, ob das Repository bereits geklont wurde
 if [ -d "$CLONE_DIR/.git" ]; then
     echo -e "${GREEN}Repository already exists. Pulling latest changes..."
@@ -196,16 +200,16 @@ else
         exit 1
     fi
 fi
+}
 
+settingsEnvironmentFolder() {
 # Prüfen, ob der branch-spezifische Ordner existiert, und erstellen, wenn nicht
-
 if [ ! -d "$BRANCH_DIR" ]; then
     echo -e "${GREEN}Creating branch-specific folder: $BRANCH_DIR...${NC}"
     mkdir -p "$BRANCH_DIR"
 else
     echo -e "${GREEN}Branch-specific folder already exists: $BRANCH_DIR...${NC}"
 fi
-
 # Prüfen, ob der .settings-Ordner existiert, und erstellen, wenn nicht
 if [ ! -d "$SETTINGS_DIR" ]; then
     echo -e "${GREEN}Creating .settings folder in $BRANCH_DIR...${NC}"
@@ -213,16 +217,20 @@ if [ ! -d "$SETTINGS_DIR" ]; then
 else
     echo -e "${GREEN}.settings folder already exists in $BRANCH_DIR...${NC}"
 fi
-
+# Konfigurationsdatei erstellen
 touch -f "$SETTINGS_DIR/config.yaml"
+}
 
+editCliWrapperFile() {
 echo -e "${PINK}--- change the cli-wrapper confline ---${NC}"
 # Konfigurationsdatei für das Setup in devops_cli.sh einfügen
 CLI_CONFIG_MODLINE="CONFIG_FILE="
 CLI_CONFIG_MODLINE+="\"$CONFIG_FILE\""
 sed -i "5i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
 echo -e "${GREEN}Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt.${NC}"
+}
 
+createCliWrapperSbinLink() {
 echo -e "${PINK}--- create cli-wrapper sbin link ---${NC}"
 # Überprüfen, ob der Symlink bereits existiert
 if [ -L "$SYSLINK_PATH" ]; then
@@ -238,15 +246,17 @@ else
     echo -e "${GREEN}Symlink $SYSLINK_PATH existiert nicht. Erstellen...${NC}"
     sudo ln -s "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
 fi
+}
 
+makeScriptExecutable() {
 # Alle Skripte ausführbar machen
 echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
 sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;
-
 echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts are now executable.${NC}"
+}
 
+parameterChanges() {
 echo -e "${PINK}--- adjusting the parameters ---${NC}"
-
 # System Name festlegen (ehemals Hostname)
 if [ -z "$SYSTEM_NAME" ]; then
     default_system_name="$SYSTEM_NAME"
@@ -258,7 +268,6 @@ if [ -z "$SYSTEM_NAME" ]; then
     fi
     echo -e "${GREEN}SYSTEM_NAME set to: $SYSTEM_NAME${NC}"
 fi
-
 # SSH_PORT festlegen
 if [ -z "$SSH_PORT" ]; then
     default_ssh_port="282"
@@ -270,7 +279,6 @@ if [ -z "$SSH_PORT" ]; then
     fi
     echo -e "${GREEN}SSH_PORT set to: $SSH_PORT${NC}"
 fi
-
 # Log Level festlegen
 if [ -z "$LOG_LEVEL" ]; then
     default_log_level="info"
@@ -282,7 +290,6 @@ if [ -z "$LOG_LEVEL" ]; then
     fi
     echo -e "${GREEN}LOG_LEVEL set to: $LOG_LEVEL${NC}"
 fi
-
 # OPT Datenverzeichnis festlegen, das auf dem Systemnamen basiert
 if [ -z "$OPT_DATA_DIR" ]; then
     default_opt_data_dir="/opt/$SYSTEM_NAME/data"
@@ -294,7 +301,6 @@ if [ -z "$OPT_DATA_DIR" ]; then
     fi
     echo -e "${GREEN}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
 fi
-
 # Benutzerauswahl der Tools
 if [ "$USE_DEFAULTS" = true ]; then
     TOOLS+="$DEFAULT_TOOLS"
@@ -302,7 +308,9 @@ else
     read -r -p "Which tools do you want to install? (default: $AVAILABLE_TOOLS): " selected_tools < /dev/tty
     TOOLS=${TOOLS:-$AVAILABLE_TOOLS}
 fi
+}
 
+writeConfigFile() {
 # Konfiguration in config.yaml speichern
 echo -e "${PINK}--- saving the configuration ---${NC}"
 echo -e "${GREEN}To $CONFIG_FILE...${NC}"
@@ -376,7 +384,9 @@ systemlink_path: "$SYSLINK_PATH"
 
 EOL
 echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
+}
 
+installAvailableTools() {
 echo -e "${PINK}--- installation of the tools ---${NC}"
 # Überprüfen, ob install_tools.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/install_tools.sh" ]; then
@@ -389,22 +399,9 @@ else
     echo -e "${RED}Error: $CLONE_DIR/environments/install_tools.sh not found!${NC}"
     exit 1
 fi
+}
 
-# Überprüfen, ob die Variable FULL auf true gesetzt ist
-if [ "$FULL" = true ]; then
-    # Ausgabe einer Nachricht
-    echo -e "${PINK}--- setting up the host ---${NC}"
-    # Überprüfen, ob das Skript run_ansible_setup.sh existiert und es ausführen
-    if [ -f "$CLONE_DIR/environments/run_ansible_setup.sh" ]; then
-        echo -e "${GREEN}Switching to $CLONE_DIR/environments/run_ansible_setup.sh${NC}"
-        exec bash "$CLONE_DIR/environments/run_ansible_setup.sh" "$TOOLS_DIR" "$TOOLS" "$SETTINGS_DIR"
-    else
-        echo -e "${RED}Error: $CLONE_DIR/environments/run_ansible_setup.sh not found!${NC}"
-        exit 1
-    fi
-fi
-
-# Ausgabe des Textes mit echo -e
+initalScriptOverview() {
 echo -e "\n${GREY}======================== DEVOPS TOOLKIT PARAMETER =========================${NC}\n"
 
 echo -e "${GREY}The initialization of the repo was successful.${NC}"
@@ -432,4 +429,33 @@ echo -e "${YELLOW}log_file: \"$LOG_FILE\" log_level: \"$LOG_LEVEL\"${NC}\n"
 
 echo -e "${GREY}*** Playbooks can be started via commands ***${NC}"
 echo -e "${GREY}>>> To do this, use '${RED}devops${GREY}' to see a list of all possible actions.${NC}\n"
+}
 
+run_with_loading() {
+    local method_name=$1
+    $method_name &  # Funktion im Hintergrund ausführen
+    local pid=$!    # PID des letzten Hintergrundprozesses erhalten
+    show_loading $pid  # Ladebalken anzeigen, während die Funktion läuft
+}
+
+# Liste der Methoden
+methods=(
+    startOverview
+    checkRootPermissions
+    copyAndSetTheRepository
+    settingsEnvironmentFolder
+    editCliWrapperFile
+    createCliWrapperSbinLink
+    makeScriptExecutable
+    parameterChanges
+    writeConfigFile
+    installAvailableTools
+    initalScriptOverview
+)
+
+# Alle Methoden mit Ladebalken ausführen
+for method in "${methods[@]}"; do
+    run_with_loading $method
+done
+
+echo -e "${GREY}All tasks completed!${NC}"

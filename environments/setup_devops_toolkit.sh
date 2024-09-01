@@ -420,7 +420,7 @@ if [ "$FULL" = true ]; then
 fi
 
 # Ausgabe des Textes mit echo -e
-echo -e "${GREY}======================== DEVOPS TOOLKIT PARAMETER =========================${NC}\n"
+echo -e "\n${GREY}======================== DEVOPS TOOLKIT PARAMETER =========================${NC}\n"
 
 echo -e "${GREY}The initialization of the repo was successful.${NC}"
 echo -e "${GREY}The following parameters have been set, but can still be adjusted under ${YELLOW}\$CONFIG_FILE${NC}.${NC}"

@@ -442,12 +442,11 @@ show_loading() {
     local pid=$1
     local delay=0.1
     local spinstr='|/-\'
-    local green='\033[0;32m'
     local nc='\033[0m'
 
     while kill -0 $pid 2>/dev/null; do
         for i in `seq 0 3`; do
-            printf "\r ${green}[%c]${nc} " "${spinstr:i:1}"
+            printf "\r ${GREEN}[%c]${GREY} " "${spinstr:i:1}"
             sleep $delay
         done
     done

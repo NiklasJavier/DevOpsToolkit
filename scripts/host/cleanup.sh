@@ -7,9 +7,9 @@ currentUsername="$3"
 user_list=()
 
 # Finde alle Verzeichnisse in /home mit genau 11 Großbuchstaben
-find /home -maxdepth 1 -mindepth 1 -type d -regex ".*/[A-Z]{11}" | while read -r dir; do
+find /home -regextype posix-extended -maxdepth 1 -mindepth 1 -type d -regex '.*/[A-Z]{11}' | while read -r dir; do
   username=$(basename "$dir")
-  echo "$username"
+  echo "Extrahierter Benutzername: $username"
   
   # Füge den Benutzernamen zur Liste hinzu, falls er nicht der currentUsername ist
   if [ "$username" != "$currentUsername" ]; then

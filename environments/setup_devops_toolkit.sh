@@ -419,33 +419,31 @@ if [ "$FULL" = true ]; then
     fi
 fi
 
-cat <<EOF
-======================== DEVOPS TOOLKIT PARAMETER =========================
+# Ausgabe des Textes mit echo -e
+echo -e "${GREY}======================== DEVOPS TOOLKIT PARAMETER =========================${NC}\n"
 
-${GREY}The initialization of the repo was successful. 
-${GREY}The following parameters have been set, but can still be adjusted under $CONFIG_FILE. 
-${YELLOW}Nutze Standardwerte: "$USE_DEFAULTS" tools: "$TOOLS"
+echo -e "${GREY}The initialization of the repo was successful.${NC}"
+echo -e "${GREY}The following parameters have been set, but can still be adjusted under ${YELLOW}\$CONFIG_FILE${NC}.${NC}"
+echo -e "${YELLOW}Nutze Standardwerte: \"$USE_DEFAULTS\" tools: \"$TOOLS\"${NC}\n"
 
-${GREY}# system_name: System-/Servername (Standard: generiert) + username: Aktueller Benutzer
-${YELLOW}system_name: "$SYSTEM_NAME" username: "$USERNAME"
+echo -e "${GREY}# system_name: System-/Servername (Standard: generiert) + username: Aktueller Benutzer${NC}"
+echo -e "${YELLOW}system_name: \"$SYSTEM_NAME\" username: \"$USERNAME\"${NC}\n"
 
-${GREY}# ssh_port: SSH-Port (Standard: 282).
-${YELLOW}ssh_port: "$SSH_PORT"
+echo -e "${GREY}# ssh_port: SSH-Port (Standard: 282).${NC}"
+echo -e "${YELLOW}ssh_port: \"$SSH_PORT\"${NC}\n"
 
-${GREY}# ssh_key_function_enabled: SSH-Key-Funktion aktiv (true/false).
-${YELLOW}ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
-${YELLOW}ssh_key_public: "$SSH_KEY_PUBLIC"
+echo -e "${GREY}# ssh_key_function_enabled: SSH-Key-Funktion aktiv (true/false).${NC}"
+echo -e "${YELLOW}ssh_key_function_enabled: \"$SSH_KEY_FUNCTION_ENABLED\"${NC}"
+echo -e "${YELLOW}ssh_key_public: \"$SSH_KEY_PUBLIC\"${NC}\n"
 
-${GREY}# Datenverzeichnisse:
-${YELLOW}opt_data_dir: "$OPT_DATA_DIR"
-${YELLOW}tools_dir: "$TOOLS_DIR"
-${YELLOW}scripts_dir: "$SCRIPTS_DIR"
-${YELLOW}pipelines_dir: "$PIPELINES_DIR"
+echo -e "${GREY}# Datenverzeichnisse:${NC}"
+echo -e "${YELLOW}opt_data_dir: \"$OPT_DATA_DIR\"${NC}"
+echo -e "${YELLOW}tools_dir: \"$TOOLS_DIR\"${NC}"
+echo -e "${YELLOW}scripts_dir: \"$SCRIPTS_DIR\"${NC}"
+echo -e "${YELLOW}pipelines_dir: \"$PIPELINES_DIR\"${NC}\n"
 
-${GREY}# log_file: Pfad zur Logdatei + log_level: Log-Level
-${YELLOW}log_file: "$LOG_FILE" log_level: "$LOG_LEVEL"
+echo -e "${GREY}# log_file: Pfad zur Logdatei + log_level: Log-Level${NC}"
+echo -e "${YELLOW}log_file: \"$LOG_FILE\" log_level: \"$LOG_LEVEL\"${NC}\n"
 
-
-${GREY}*** Playbooks can be started via commands ***
-${GREY}>>> To do this, use 'devops' to see a list of all possible actions. ${NC}
-EOF
+echo -e "${GREY}*** Playbooks can be started via commands ***${NC}"
+echo -e "${GREY}>>> To do this, use 'devops' to see a list of all possible actions.${NC}\n"

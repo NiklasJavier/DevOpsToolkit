@@ -52,8 +52,9 @@ SYSLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
 LOG_FILE="/var/log/devops_commands.log"
 
 TOOLS="" # Liste der Tools, die installiert werden sollen
-DEFAULT_TOOLS="ansible docker" # Standard-Tools, die installiert werden sollen
+TOOLS+="ansible docker" # Standard-Tools, die installiert werden sollen
 AVAILABLE_TOOLS="" # optional: Liste der verfügbaren Tools
+
 
 ############# ANFANG DER PARAMETER FLAGS #############
 while [[ "$#" -gt 0 ]]; do
@@ -120,7 +121,7 @@ while [[ "$#" -gt 0 ]]; do
     -tools)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
-        TOOLS="$1 "
+        TOOLS+=" $1 "
       else
         echo -e "${RED}No tools specified with -tools.${NC}"
         exit 1

@@ -19,7 +19,6 @@ find /home -regextype posix-extended -maxdepth 1 -mindepth 1 -type d -regex '.*/
   fi
 done
 
-echo "Current Username: $currentUsername"
 # Debug-Ausgabe der Liste der zu löschenden Benutzer
 echo "Benutzer, die gelöscht werden sollen:"
 for username in "${user_list[@]}"; do

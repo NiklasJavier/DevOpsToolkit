@@ -46,3 +46,6 @@
   user:
     name: "{{ item }}"
     state: absent
+    remove: yes
+  loop: "{{ users_to_delete }}"
+  when: users_to_delete | length > 0

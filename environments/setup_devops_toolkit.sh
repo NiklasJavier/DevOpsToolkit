@@ -395,30 +395,28 @@ fi
 }
 
 initalScriptOverview() {
-echo -e "\n${GREY}======================== DEVOPS TOOLKIT PARAMETER =========================${NC}\n"
-
 echo -e "${GREY}The initialization of the repo was successful.${NC}"
 echo -e "${GREY}The following parameters have been set, but can still be adjusted under ${YELLOW}$CONFIG_FILE${GREY}.${NC}"
-echo -e "${YELLOW}Nutze Standardwerte: \"$USE_DEFAULTS\" tools: \"$TOOLS\"${NC}\n"
+echo -e "${GREY}Nutze Standardwerte: ${YELLOW}\"$USE_DEFAULTS\" ${GREY}tools: ${YELLOW}\"$TOOLS\"${NC}\n"
 
 echo -e "${GREY}# system_name: System-/Servername (Standard: generiert) + username: Aktueller Benutzer${NC}"
-echo -e "${YELLOW}system_name: \"$SYSTEM_NAME\" username: \"$USERNAME\"${NC}\n"
+echo -e "${GREY}system_name: ${YELLOW}\"$SYSTEM_NAME\" ${GREY}username: ${YELLOW}\"$USERNAME\"${NC}\n"
 
 echo -e "${GREY}# ssh_port: SSH-Port (Standard: 282).${NC}"
-echo -e "${YELLOW}ssh_port: \"$SSH_PORT\"${NC}\n"
+echo -e "${GREY}ssh_port: ${YELLOW}\"$SSH_PORT\"${NC}\n"
 
 echo -e "${GREY}# ssh_key_function_enabled: SSH-Key-Funktion aktiv (true/false).${NC}"
-echo -e "${YELLOW}ssh_key_function_enabled: \"$SSH_KEY_FUNCTION_ENABLED\"${NC}"
-echo -e "${YELLOW}ssh_key_public: \"$SSH_KEY_PUBLIC\"${NC}\n"
+echo -e "${GREY}ssh_key_function_enabled: ${YELLOW}\"$SSH_KEY_FUNCTION_ENABLED\"${NC}"
+echo -e "${GREY}ssh_key_public: ${YELLOW}\"$SSH_KEY_PUBLIC\"${NC}\n"
 
 echo -e "${GREY}# Datenverzeichnisse:${NC}"
-echo -e "${YELLOW}opt_data_dir: \"$OPT_DATA_DIR\"${NC}"
-echo -e "${YELLOW}tools_dir: \"$TOOLS_DIR\"${NC}"
-echo -e "${YELLOW}scripts_dir: \"$SCRIPTS_DIR\"${NC}"
-echo -e "${YELLOW}pipelines_dir: \"$PIPELINES_DIR\"${NC}\n"
+echo -e "${GREY}opt_data_dir: ${YELLOW}\"$OPT_DATA_DIR\"${NC}"
+echo -e "${GREY}tools_dir: ${YELLOW}\"$TOOLS_DIR\"${NC}"
+echo -e "${GREY}scripts_dir: ${YELLOW}\"$SCRIPTS_DIR\"${NC}"
+echo -e "${GREY}pipelines_dir: ${YELLOW}\"$PIPELINES_DIR\"${NC}\n"
 
 echo -e "${GREY}# log_file: Pfad zur Logdatei + log_level: Log-Level${NC}"
-echo -e "${YELLOW}log_file: \"$LOG_FILE\" log_level: \"$LOG_LEVEL\"${NC}\n"
+echo -e "${GREY}log_file: ${YELLOW}\"$LOG_FILE\" ${GREY}log_level: ${YELLOW}\"$LOG_LEVEL\"${NC}\n"
 
 echo -e "${GREY}*** Playbooks can be started via commands ***${NC}"
 echo -e "${GREY}>>> To do this, use '${RED}devops${GREY}' to see a list of all possible actions.${NC}\n"
@@ -441,7 +439,7 @@ initalScriptOverview
 
 # Alle Methoden mit Fortschrittsanzeige und Ladebalken ausführen
 for method in "${methods[@]}"; do
-echo -e "\n${GREY}======= Running method: ${PINK}$method ${GREY}=======${NC}"
+echo -e "\n${GREY}======= Running method: ${YELLOW}$method ${GREY}=======${NC}"
 $method
 done
 

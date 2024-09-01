@@ -448,7 +448,7 @@ settingsEnvironmentFolder
 editCliWrapperFile
 createCliWrapperSbinLink
 makeScriptExecutable
-parameterChanges
+#parameterChanges
 writeConfigFile
 installAvailableTools
 initalScriptOverview

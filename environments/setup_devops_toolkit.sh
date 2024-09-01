@@ -417,3 +417,35 @@ if [ "$FULL" = true ]; then
         exit 1
     fi
 fi
+
+cat <<EOF
+
+======================== DEVOPS TOOLKIT PARAMETER =========================
+
+The initialization of the repo was successful. 
+The following parameters have been set, but can still be adjusted under $CONFIG_FILE. 
+Nutze Standardwerte: "$USE_DEFAULTS" tools: "$TOOLS"
+
+# system_name: System-/Servername (Standard: generiert) + username: Aktueller Benutzer
+system_name: "$SYSTEM_NAME" username: "$USERNAME"
+
+# ssh_port: SSH-Port (Standard: 282).
+ssh_port: "$SSH_PORT"
+
+# ssh_key_function_enabled: SSH-Key-Funktion aktiv (true/false).
+ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
+ssh_key_public: "$SSH_KEY_PUBLIC"
+
+# Datenverzeichnisse:
+opt_data_dir: "$OPT_DATA_DIR"
+tools_dir: "$TOOLS_DIR"
+scripts_dir: "$SCRIPTS_DIR"
+pipelines_dir: "$PIPELINES_DIR"
+
+# log_file: Pfad zur Logdatei + log_level: Log-Level
+log_file: "$LOG_FILE" log_level: "$LOG_LEVEL"
+
+
+*** Playbooks can be started via commands ***
+>>> To do this, use 'devops' to see a list of all possible actions. 
+EOF

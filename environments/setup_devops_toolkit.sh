@@ -7,6 +7,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m' 
 PINK='\033[0;35m'
 BOLD='\033[1m'
+GREY='\033[1;90m'
 NC='\033[0m' # Keine Farbe
 
 REPO_URL="https://github.com/NiklasJavier/DevOpsToolkit.git" # Name des Repositories
@@ -419,33 +420,32 @@ if [ "$FULL" = true ]; then
 fi
 
 cat <<EOF
-${YELLOW}#
 ======================== DEVOPS TOOLKIT PARAMETER =========================
 
-The initialization of the repo was successful. 
-The following parameters have been set, but can still be adjusted under $CONFIG_FILE. 
-Nutze Standardwerte: "$USE_DEFAULTS" tools: "$TOOLS"
+${GREY}The initialization of the repo was successful. 
+${GREY}The following parameters have been set, but can still be adjusted under $CONFIG_FILE. 
+${YELLOW}Nutze Standardwerte: "$USE_DEFAULTS" tools: "$TOOLS"
 
-# system_name: System-/Servername (Standard: generiert) + username: Aktueller Benutzer
-system_name: "$SYSTEM_NAME" username: "$USERNAME"
+${GREY}# system_name: System-/Servername (Standard: generiert) + username: Aktueller Benutzer
+${YELLOW}system_name: "$SYSTEM_NAME" username: "$USERNAME"
 
-# ssh_port: SSH-Port (Standard: 282).
-ssh_port: "$SSH_PORT"
+${GREY}# ssh_port: SSH-Port (Standard: 282).
+${YELLOW}ssh_port: "$SSH_PORT"
 
-# ssh_key_function_enabled: SSH-Key-Funktion aktiv (true/false).
-ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
-ssh_key_public: "$SSH_KEY_PUBLIC"
+${GREY}# ssh_key_function_enabled: SSH-Key-Funktion aktiv (true/false).
+${YELLOW}ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
+${YELLOW}ssh_key_public: "$SSH_KEY_PUBLIC"
 
-# Datenverzeichnisse:
-opt_data_dir: "$OPT_DATA_DIR"
-tools_dir: "$TOOLS_DIR"
-scripts_dir: "$SCRIPTS_DIR"
-pipelines_dir: "$PIPELINES_DIR"
+${GREY}# Datenverzeichnisse:
+${YELLOW}opt_data_dir: "$OPT_DATA_DIR"
+${YELLOW}tools_dir: "$TOOLS_DIR"
+${YELLOW}scripts_dir: "$SCRIPTS_DIR"
+${YELLOW}pipelines_dir: "$PIPELINES_DIR"
 
-# log_file: Pfad zur Logdatei + log_level: Log-Level
-log_file: "$LOG_FILE" log_level: "$LOG_LEVEL"
+${GREY}# log_file: Pfad zur Logdatei + log_level: Log-Level
+${YELLOW}log_file: "$LOG_FILE" log_level: "$LOG_LEVEL"
 
 
-*** Playbooks can be started via commands ***
->>> To do this, use 'devops' to see a list of all possible actions. ${NC}
+${GREY}*** Playbooks can be started via commands ***
+${GREY}>>> To do this, use 'devops' to see a list of all possible actions. ${NC}
 EOF

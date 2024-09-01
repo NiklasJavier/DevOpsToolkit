@@ -452,7 +452,7 @@ show_loading() {
     printf "\r    \r"  # Zeile leeren
 }
 
-# Methoden ausführen mit Ladebalken
+
 for method in "${methods[@]}"; do
 echo -e "\n${GREY}======= ${GREEN}Running: ${PINK}[$method] ${GREY}=======${NC}"
 $method &

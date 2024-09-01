@@ -440,7 +440,7 @@ initalScriptOverview
 
 show_loading() {
     local pid=$1
-    local delay=0.1
+    local delay=0.01
     local spinstr='|/-\'
     local nc='\033[0m'
 

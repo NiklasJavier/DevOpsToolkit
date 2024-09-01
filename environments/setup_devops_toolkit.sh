@@ -199,7 +199,7 @@ fi
 
 # Prüfen, ob das Repository bereits geklont wurde
 if [ -d "$CLONE_DIR/.git" ]; then
-    echo -e "${GREEN}Repository already exists. Pulling latest changes...${NC}"
+    echo -e "${GREEN}Repository already exists. Pulling latest changes..."
     cd "$CLONE_DIR"
     sudo git pull
 else

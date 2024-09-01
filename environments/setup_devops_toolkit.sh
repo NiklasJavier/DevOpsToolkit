@@ -438,20 +438,21 @@ installAvailableTools
 initalScriptOverview
 )
 
-# Ladeanimation anzeigen
 show_loading() {
     local pid=$1
     local delay=0.1
     local spinstr='|/-\'
+    local green='\033[0;32m'
+    local nc='\033[0m'  # Keine Farbe (zurücksetzen)
+
     while kill -0 $pid 2>/dev/null; do
         for i in `seq 0 3`; do
-            printf "\r [%c] " "${spinstr:i:1}"
+            printf "\r ${green}[%c]${nc} " "${spinstr:i:1}"
             sleep $delay
         done
     done
     printf "\r    \r"  # Zeile leeren
 }
-
 
 for method in "${methods[@]}"; do
 echo -e "\n${GREY}======= ${GREEN}Running: ${PINK}[$method] ${GREY}=======${NC}"
@@ -459,7 +460,6 @@ $method &
 pid=$!
 show_loading $pid
 wait $pid  # Warten, bis die Methode abgeschlossen ist
-echo -e "\n${GREY}======= ${RED}Completed: ${PINK}[$method] ${GREY}=======${NC}"
 done
 
 echo -e "${GREY}All tasks completed!${NC}"

@@ -459,7 +459,7 @@ echo -e "\n${GREY}======= ${GREEN}Running: ${PINK}[$method] ${GREY}=======${NC}"
 $method &
 pid=$!
 show_loading $pid
-wait $pid  # Warten, bis die Methode abgeschlossen ist
+wait $pid  
 done
 
 echo -e "${GREY}All tasks completed!${NC}"

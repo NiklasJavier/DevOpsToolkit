@@ -18,7 +18,7 @@ show_loading() {
 
     while kill -0 $pid 2>/dev/null; do
         for i in `seq 0 3`; do
-            printf "\r ${GREEN}[%c]${GREY} " "${spinstr:i:1}"
+            printf "\r ${PINK}[%c]${GREY} " "${spinstr:i:1}"
             sleep $delay
         done
     done

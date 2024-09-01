@@ -16,7 +16,6 @@ BRANCH_DIR="" # Variable zur Speicherung des Branch-Verzeichnisses wird dynamisc
 
 FULL=false # Vollständige Installation (true) oder nicht (false)
 USE_DEFAULTS=false # Möchten immer mit default werten arbeiten (true) oder nicht (false) Bspw. true wenn -t dev angegeben wurde
-TOOLS="" # Liste der Tools, die installiert werden sollen
 
 USERNAME="$(< /dev/urandom tr -dc 'A-Z' | head -c 11)" # Benutzername (zufällig generiert)
 SYSTEM_NAME="SRV-$USERNAME" # Systemname (ehemals Hostname)
@@ -37,33 +36,9 @@ DEVOPS_CLI_FILE="$ENV_DIR/devops_cli.sh"
 SYSLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
 LOG_FILE="/var/log/devops_commands.log"
 
-DEFAULT_TOOLS="ansible"
-AVAILABLE_TOOLS="docker"
-
-# Funktion zum Anzeigen der Branch-Auswahl und Auswahl durch den Benutzer
-choose_branch() {
-    echo -e "${GREEN}Please select the branch to clone:${NC}"
-    echo "1) production"
-    echo "2) staging"
-    echo "3) dev"
-    read -p "Enter your choice (1-3):" choice < /dev/tty
-
-    case $choice in
-      1)
-        BRANCH="production"
-        ;;
-      2)
-        BRANCH="staging"
-        ;;
-      3)
-        BRANCH="dev"
-        ;;
-      *)
-        echo -e "${RED}Invalid choice. Exiting...${NC}"
-        exit 1
-        ;;
-    esac
-}
+TOOLS="" # Liste der Tools, die installiert werden sollen
+DEFAULT_TOOLS="ansible ansible" # Standard-Tools, die installiert werden sollen
+AVAILABLE_TOOLS="" # optional: Liste der verfügbaren Tools
 
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
@@ -94,7 +69,16 @@ while [[ "$#" -gt 0 ]]; do
       if [[ -n "$1" && "$1" != -* ]]; then
         SYSTEM_NAME="$1"
       else
-        echo -e "${RED}No systemname specified with -username.${NC}"
+        echo -e "${RED}No systemname specified with -systemname.${NC}"
+        exit 1
+      fi
+      ;;
+    -username) 
+      shift
+      if [[ -n "$1" && "$1" != -* ]]; then
+        USERNAME="$1"
+      else
+        echo -e "${RED}No username specified with -username.${NC}"
         exit 1
       fi
       ;;
@@ -113,7 +97,7 @@ while [[ "$#" -gt 0 ]]; do
       if [[ -n "$1" && "$1" != -* ]]; then
         PORT="$1"
       else
-        echo -e "${RED}No port specified with -p.${NC}"
+        echo -e "${RED}No port specified with -port.${NC}"
         exit 1
       fi
       ;;
@@ -136,7 +120,8 @@ done
 
 # Falls kein Branch angegeben wurde, den Benutzer fragen
 if [ -z "$BRANCH" ]; then
-    choose_branch
+      USE_DEFAULTS=true # Immer mit Standardwerten arbeiten
+      BRANCH="dev"
 fi
 
 BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
@@ -423,7 +408,7 @@ fi
 echo -e "\n${GREY}======================== DEVOPS TOOLKIT PARAMETER =========================${NC}\n"
 
 echo -e "${GREY}The initialization of the repo was successful.${NC}"
-echo -e "${GREY}The following parameters have been set, but can still be adjusted under ${YELLOW}\$CONFIG_FILE${NC}.${NC}"
+echo -e "${GREY}The following parameters have been set, but can still be adjusted under ${YELLOW}CONFIG_FILE${GREY}.${NC}"
 echo -e "${YELLOW}Nutze Standardwerte: \"$USE_DEFAULTS\" tools: \"$TOOLS\"${NC}\n"
 
 echo -e "${GREY}# system_name: System-/Servername (Standard: generiert) + username: Aktueller Benutzer${NC}"
@@ -447,3 +432,4 @@ echo -e "${YELLOW}log_file: \"$LOG_FILE\" log_level: \"$LOG_LEVEL\"${NC}\n"
 
 echo -e "${GREY}*** Playbooks can be started via commands ***${NC}"
 echo -e "${GREY}>>> To do this, use 'devops' to see a list of all possible actions.${NC}\n"
+

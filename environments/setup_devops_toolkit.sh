@@ -433,17 +433,17 @@ echo -e "${GREY}>>> To do this, use '${RED}devops${GREY}' to see a list of all p
 
 # Liste der Methoden
 methods=(
-    startOverview
-    checkRootPermissions
-    copyAndSetTheRepository
-    settingsEnvironmentFolder
-    editCliWrapperFile
-    createCliWrapperSbinLink
-    makeScriptExecutable
-    parameterChanges
-    writeConfigFile
-    installAvailableTools
-    initalScriptOverview
+startOverview
+checkRootPermissions
+copyAndSetTheRepository
+settingsEnvironmentFolder
+editCliWrapperFile
+createCliWrapperSbinLink
+makeScriptExecutable
+parameterChanges
+writeConfigFile
+installAvailableTools
+initalScriptOverview
 )
 
 # Alle Methoden mit Fortschrittsanzeige und Ladebalken ausführen

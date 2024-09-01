@@ -165,7 +165,6 @@ fi
 }
 
 copyAndSetTheRepository() {
-echo -e "${PINK}--- copy of the git repository ---"
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
     echo -e "${RED}Git is not installed. Installing Git..."
@@ -222,7 +221,6 @@ touch -f "$SETTINGS_DIR/config.yaml"
 }
 
 editCliWrapperFile() {
-echo -e "${PINK}--- change the cli-wrapper confline ---${NC}"
 # Konfigurationsdatei für das Setup in devops_cli.sh einfügen
 CLI_CONFIG_MODLINE="CONFIG_FILE="
 CLI_CONFIG_MODLINE+="\"$CONFIG_FILE\""
@@ -231,7 +229,6 @@ echo -e "${GREEN}Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt.${NC}"
 }
 
 createCliWrapperSbinLink() {
-echo -e "${PINK}--- create cli-wrapper sbin link ---${NC}"
 # Überprüfen, ob der Symlink bereits existiert
 if [ -L "$SYSLINK_PATH" ]; then
     # Wenn der Symlink existiert, überprüfen, ob er auf die richtige Datei zeigt
@@ -256,7 +253,6 @@ echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts ar
 }
 
 parameterChanges() {
-echo -e "${PINK}--- adjusting the parameters ---${NC}"
 # System Name festlegen (ehemals Hostname)
 if [ -z "$SYSTEM_NAME" ]; then
     default_system_name="$SYSTEM_NAME"
@@ -312,7 +308,6 @@ fi
 
 writeConfigFile() {
 # Konfiguration in config.yaml speichern
-echo -e "${PINK}--- saving the configuration ---${NC}"
 echo -e "${GREEN}To $CONFIG_FILE...${NC}"
 
 # Speichern der Konfiguration
@@ -387,7 +382,6 @@ echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
 }
 
 installAvailableTools() {
-echo -e "${PINK}--- installation of the tools ---${NC}"
 # Überprüfen, ob install_tools.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/install_tools.sh" ]; then
     echo -e "${GREEN}Switching to $CLONE_DIR/environments/install_tools.sh${NC}"
@@ -448,7 +442,7 @@ initalScriptOverview
 
 # Alle Methoden mit Fortschrittsanzeige und Ladebalken ausführen
 for method in "${methods[@]}"; do
-echo -e "${GREY}======= Running method: ${PINK}$method ${GREY}=======${NC}\n"
+echo -e "\n${GREY}======= Running method: ${PINK}$method ${GREY}=======${NC}"
 $method
 done
 

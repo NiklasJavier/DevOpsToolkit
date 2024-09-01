@@ -439,7 +439,7 @@ initalScriptOverview
 )
 
 for method in "${methods[@]}"; do
-echo -e "\n${GREY}======= Running: ${PINK}[$method] ${GREY}=======${NC}"
+echo -e "\n${GREY}======= ${GREEN}Running: ${PINK}[$method] ${GREY}=======${NC}"
 $method
 done
 

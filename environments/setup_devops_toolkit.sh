@@ -160,6 +160,8 @@ checkRootPermissions() {
 if [ "$EUID" -ne 0 ]; then
     echo -e "${RED}Please run as root.${NC}"
     exit 1
+    else
+    echo -e "${GREY}Running as root...${NC}"
 fi
 }
 

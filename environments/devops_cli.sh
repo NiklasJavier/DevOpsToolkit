@@ -55,7 +55,7 @@ execute_command() {
     shift
 
     if [ -x "$command_path" ]; then
-        "$command_path" "$@"
+        "$command_path" "$@" "$tools_dir"
         return $?
     else
         return 1

@@ -8,11 +8,27 @@
 
 - name: Debug output of found directories
   debug:
-    var: home_dirs
+    var: home_dirs.files
 
-- name: Filter directories with exactly 11 characters and uppercase letters, excluding specific pattern
+- name: Filter directories with exactly 11 characters
   set_fact:
-    dirs_to_delete: "{{ home_dirs.files | map(attribute='path') | select('match', '/home/[A-Za-z0-9]{11}$') | select('regex_search', '[A-Z]') | select('search', '/opt/SRV-*', invert=True) | list }}"
+    dirs_with_11_chars: "{{ home_dirs.files | map(attribute='path') | select('match', '/home/.{11}$') | list }}"
+
+- name: Debug output of directories with 11 characters
+  debug:
+    var: dirs_with_11_chars
+
+- name: Filter directories containing uppercase letters
+  set_fact:
+    dirs_with_uppercase: "{{ dirs_with_11_chars | select('regex_search', '[A-Z]') | list }}"
+
+- name: Debug output of directories with uppercase letters
+  debug:
+    var: dirs_with_uppercase
+
+- name: Exclude directories matching /opt/SRV-*
+  set_fact:
+    dirs_to_delete: "{{ dirs_with_uppercase | select('search', '/opt/SRV-*', invert=True) | list }}"
 
 - name: Debug output of directories to delete
   debug:
@@ -30,6 +46,3 @@
   user:
     name: "{{ item }}"
     state: absent
-    remove: yes
-  loop: "{{ users_to_delete }}"
-  when: users_to_delete | length > 0

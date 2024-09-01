@@ -167,7 +167,7 @@ copyAndSetTheRepository() {
 # Überprüfen, ob Git installiert ist
 if ! command -v git &> /dev/null; then
     echo -e "${RED}Git is not installed. Installing Git..."
-    echo -e "${GREEN}"
+    echo -e "${GREY}"
     sudo apt-get update
     sudo apt-get install -y git
     # Überprüfen, ob die Installation erfolgreich war
@@ -175,23 +175,23 @@ if ! command -v git &> /dev/null; then
         echo -e "${RED}Git installation failed. Aborting..."
         exit 1
     else
-        echo -e "${GREEN}Git installed successfully."
+        echo -e "${GREY}Git installed successfully."
     fi
 else
-    echo -e "${GREEN}Git is already installed."
+    echo -e "${GREY}Git is already installed."
 fi
 # Verzeichnis erstellen, wenn es nicht existiert
 if [ ! -d "$CLONE_DIR" ]; then
-    echo -e "${GREEN}Creating directory $CLONE_DIR...${NC}"
+    echo -e "${GREY}Creating directory $CLONE_DIR...${NC}"
     sudo mkdir -p "$CLONE_DIR"
 fi
 # Prüfen, ob das Repository bereits geklont wurde
 if [ -d "$CLONE_DIR/.git" ]; then
-    echo -e "${GREEN}Repository already exists. Pulling latest changes..."
+    echo -e "${GREY}Repository already exists. Pulling latest changes..."
     cd "$CLONE_DIR"
     sudo git pull
 else
-    echo -e "${GREEN}Cloning the repository into $CLONE_DIR with branch $BRANCH..."
+    echo -e "${GREY}Cloning the repository into $CLONE_DIR with branch $BRANCH..."
     sudo git clone -b "$BRANCH" --single-branch "$REPO_URL" "$CLONE_DIR"
     if [ $? -ne 0 ]; then
         echo -e "${RED}Failed to clone the repository. Aborting...${NC}"
@@ -203,17 +203,17 @@ fi
 settingsEnvironmentFolder() {
 # Prüfen, ob der branch-spezifische Ordner existiert, und erstellen, wenn nicht
 if [ ! -d "$BRANCH_DIR" ]; then
-    echo -e "${GREEN}Creating branch-specific folder: $BRANCH_DIR...${NC}"
+    echo -e "${GREY}Creating branch-specific folder: $BRANCH_DIR...${NC}"
     mkdir -p "$BRANCH_DIR"
 else
-    echo -e "${GREEN}Branch-specific folder already exists: $BRANCH_DIR...${NC}"
+    echo -e "${GREY}Branch-specific folder already exists: $BRANCH_DIR...${NC}"
 fi
 # Prüfen, ob der .settings-Ordner existiert, und erstellen, wenn nicht
 if [ ! -d "$SETTINGS_DIR" ]; then
-    echo -e "${GREEN}Creating .settings folder in $BRANCH_DIR...${NC}"
+    echo -e "${GREY}Creating .settings folder in $BRANCH_DIR...${NC}"
     mkdir -p "$SETTINGS_DIR"
 else
-    echo -e "${GREEN}.settings folder already exists in $BRANCH_DIR...${NC}"
+    echo -e "${GREY}.settings folder already exists in $BRANCH_DIR...${NC}"
 fi
 # Konfigurationsdatei erstellen
 touch -f "$SETTINGS_DIR/config.yaml"
@@ -224,7 +224,7 @@ editCliWrapperFile() {
 CLI_CONFIG_MODLINE="CONFIG_FILE="
 CLI_CONFIG_MODLINE+="\"$CONFIG_FILE\""
 sed -i "5i $CLI_CONFIG_MODLINE" "$DEVOPS_CLI_FILE"
-echo -e "${GREEN}Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt.${NC}"
+echo -e "${GREY}Zeile wurde in $DEVOPS_CLI_FILE an Position 5 eingefügt.${NC}"
 }
 
 createCliWrapperSbinLink() {
@@ -232,23 +232,23 @@ createCliWrapperSbinLink() {
 if [ -L "$SYSLINK_PATH" ]; then
     # Wenn der Symlink existiert, überprüfen, ob er auf die richtige Datei zeigt
     if [ "$(readlink "$SYSLINK_PATH")" != "$DEVOPS_CLI_FILE" ]; then
-        echo -e "${GREEN}Symlink $SYSLINK_PATH existiert und zeigt auf einen anderen Pfad. Aktualisierung...${NC}"
+        echo -e "${GREY}Symlink $SYSLINK_PATH existiert und zeigt auf einen anderen Pfad. Aktualisierung...${NC}"
         sudo ln -sf "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
     else
-        echo -e "${GREEN}Symlink $SYSLINK_PATH existiert bereits und zeigt auf das richtige Ziel.${NC}"
+        echo -e "${GREY}Symlink $SYSLINK_PATH existiert bereits und zeigt auf das richtige Ziel.${NC}"
     fi
 else
     # Wenn der Symlink nicht existiert, erstelle ihn
-    echo -e "${GREEN}Symlink $SYSLINK_PATH existiert nicht. Erstellen...${NC}"
+    echo -e "${GREY}Symlink $SYSLINK_PATH existiert nicht. Erstellen...${NC}"
     sudo ln -s "$DEVOPS_CLI_FILE" "$SYSLINK_PATH"
 fi
 }
 
 makeScriptExecutable() {
 # Alle Skripte ausführbar machen
-echo -e "${GREEN}Making all scripts in $CLONE_DIR executable...${NC}"
+echo -e "${GREY}Making all scripts in $CLONE_DIR executable...${NC}"
 sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;
-echo -e "${GREEN}Setup completed! Repository cloned to $CLONE_DIR and scripts are now executable.${NC}"
+echo -e "${GREY}Setup completed! Repository cloned to $CLONE_DIR and scripts are now executable.${NC}"
 }
 
 parameterChanges() {
@@ -261,7 +261,7 @@ if [ -z "$SYSTEM_NAME" ]; then
         read -r -p "Enter system name (default: $default_system_name): " SYSTEM_NAME < /dev/tty
         SYSTEM_NAME=${SYSTEM_NAME:-"$default_system_name"}
     fi
-    echo -e "${GREEN}SYSTEM_NAME set to: $SYSTEM_NAME${NC}"
+    echo -e "${GREY}SYSTEM_NAME set to: $SYSTEM_NAME${NC}"
 fi
 # SSH_PORT festlegen
 if [ -z "$SSH_PORT" ]; then
@@ -272,7 +272,7 @@ if [ -z "$SSH_PORT" ]; then
         read -r -p "Enter the SSH_PORT (default: $default_ssh_port): " SSH_PORT < /dev/tty
         SSH_PORT=${SSH_PORT:-"$default_ssh_port"}
     fi
-    echo -e "${GREEN}SSH_PORT set to: $SSH_PORT${NC}"
+    echo -e "${GREY}SSH_PORT set to: $SSH_PORT${NC}"
 fi
 # Log Level festlegen
 if [ -z "$LOG_LEVEL" ]; then
@@ -283,7 +283,7 @@ if [ -z "$LOG_LEVEL" ]; then
         read -r -p "Enter the log level (default: $default_log_level) [debug, info, warn, error]: " LOG_LEVEL < /dev/tty
         LOG_LEVEL=${LOG_LEVEL:-"$default_log_level"}
     fi
-    echo -e "${GREEN}LOG_LEVEL set to: $LOG_LEVEL${NC}"
+    echo -e "${GREY}LOG_LEVEL set to: $LOG_LEVEL${NC}"
 fi
 # OPT Datenverzeichnis festlegen, das auf dem Systemnamen basiert
 if [ -z "$OPT_DATA_DIR" ]; then
@@ -294,7 +294,7 @@ if [ -z "$OPT_DATA_DIR" ]; then
         read -r -p "Enter the opt data directory (default: $default_opt_data_dir): " OPT_DATA_DIR < /dev/tty
         OPT_DATA_DIR=${OPT_DATA_DIR:-"$default_opt_data_dir"}
     fi
-    echo -e "${GREEN}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
+    echo -e "${GREY}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
 fi
 # Benutzerauswahl der Tools
 if [ "$USE_DEFAULTS" = true ]; then
@@ -307,7 +307,7 @@ fi
 
 writeConfigFile() {
 # Konfiguration in config.yaml speichern
-echo -e "${GREEN}To $CONFIG_FILE...${NC}"
+echo -e "${GREY}To $CONFIG_FILE...${NC}"
 
 # Speichern der Konfiguration
 cat <<- EOL > "$CONFIG_FILE"
@@ -377,17 +377,17 @@ log_file: "$LOG_FILE"
 systemlink_path: "$SYSLINK_PATH"
 
 EOL
-echo -e "${GREEN}Configuration saved in $CONFIG_FILE.${NC}"
+echo -e "${GREY}Configuration saved in $CONFIG_FILE.${NC}"
 }
 
 installAvailableTools() {
 # Überprüfen, ob install_tools.sh existiert und ausführen
 if [ -f "$CLONE_DIR/environments/install_tools.sh" ]; then
-    echo -e "${GREEN}Switching to $CLONE_DIR/environments/install_tools.sh${NC}"
+    echo -e "${GREY}Switching to $CLONE_DIR/environments/install_tools.sh${NC}"
     bash "$CLONE_DIR/environments/install_tools.sh" "$TOOLS_DIR" "$TOOLS"
     
     # Weiter im Skript, nachdem install_tools.sh ausgeführt wurde
-    echo -e "${GREEN}Returned from install_tools.sh, continuing...${NC}"
+    echo -e "${GREY}Returned from install_tools.sh, continuing...${NC}"
 else
     echo -e "${RED}Error: $CLONE_DIR/environments/install_tools.sh not found!${NC}"
     exit 1

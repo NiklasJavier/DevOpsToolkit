@@ -76,7 +76,7 @@ fi
 }
 
 deleteDevopsToolkitSbinSystemLink(){
-if [ -l $systemlink_path ]; then
+if [ -L $systemlink_path ]; then
     rm -r $systemlink_path
     echo -e "${GREY}The systemlink ${YELLOW}$systemlink_path ${GREY}was successfully deleted.${NC}"
 else

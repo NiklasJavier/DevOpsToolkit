@@ -16,22 +16,34 @@
         echo: no
       register: vault_password
 
-    - name: Vault-Datei erstellen und verschlüsseln, falls sie nicht existiert
+    - name: Erstelle eine temporäre Datei für den Inhalt
+      copy:
+        content: |
+          # Hier kannst du initiale Inhalte einfügen, wenn gewünscht
+          secret_key: "example_value"
+        dest: /tmp/temp_vault_content.yml
       when: not vault_file_stat.stat.exists
-      shell: |
-        echo '{{ vault_password.user_input }}' > /tmp/vault_pass.txt
-        echo 'secret_key: "example_value"' | ansible-vault encrypt --vault-password-file=/tmp/vault_pass.txt --output {{ vault_file }} /dev/stdin
+
+    - name: Verschlüssele die temporäre Datei und speichere sie als Vault-Datei
+      command: >
+        ansible-vault encrypt /tmp/temp_vault_content.yml
+        --vault-password-file=<(echo '{{ vault_password.user_input }}')
+        --output {{ vault_file }}
       args:
         executable: /bin/bash
+      when: not vault_file_stat.stat.exists
+
+    - name: Lösche die temporäre Datei nach der Verschlüsselung
+      file:
+        path: /tmp/temp_vault_content.yml
+        state: absent
+      when: not vault_file_stat.stat.exists
 
     - name: Vault-Datei entschlüsseln und bearbeiten, falls sie existiert
       when: vault_file_stat.stat.exists
-      shell: echo '{{ vault_password.user_input }}' | ansible-vault edit --vault-password-file=/dev/stdin {{ vault_file }}
+      shell: |
+        echo '{{ vault_password.user_input }}' > /tmp/vault_pass.txt
+        ansible-vault edit --vault-password-file=/tmp/vault_pass.txt {{ vault_file }}
+        rm -f /tmp/vault_pass.txt
       args:
         executable: /bin/bash
-
-    - name: Lösche die temporäre Passwortdatei
-      file:
-        path: /tmp/vault_pass.txt
-        state: absent
-      when: not vault_file_stat.stat.exists

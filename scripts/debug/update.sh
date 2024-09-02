@@ -16,17 +16,21 @@ branch="$10"
 gitOpenLocalRepository() {
   echo -e "${GREY}Current branch: ${YELLOW}$branch${NC}"
   echo -e "${GREY}Current directory: ${YELLOW}$clone_dir${NC}"
-  cd "$clone_dir" || { echo "Fehler: Konnte das Verzeichnis $clone_dir nicht finden."; exit 1; }
+  cd "$clone_dir" || { echo -e "${GREY}Error: Could not find the directory $clone_dir."; exit 1; }
 }
 
 gitFetchAddedContent() {
   echo -e "${GREY}Fetching added content...${NC}"
+  echo -e "${YELLOW}"
   git fetch
+  echo -e "${NC}"
 }
 
 gitPullNewContentFromBranch() {
   echo -e "${GREY}Pulling new content from branch...${NC}"
+  echo -e "${YELLOW}"
   git pull --rebase --autostash
+  echo -e "${NC}"
 }
 
 methods=(

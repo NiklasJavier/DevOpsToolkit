@@ -76,11 +76,11 @@ fi
 }
 
 deleteDevopsToolkitSbinSystemLink(){
-if [ -f $systemlink_path ]; then
+if [ -l $systemlink_path ]; then
     rm -r $systemlink_path
-    echo -e "${GREY}The file ${YELLOW}$systemlink_path ${GREY}was successfully deleted.${NC}"
+    echo -e "${GREY}The systemlink ${YELLOW}$systemlink_path ${GREY}was successfully deleted.${NC}"
 else
-    echo -e "${GREY}The file ${YELLOW}$systemlink_path ${GREY}does not exist.${NC}"
+    echo -e "${GREY}The systemlink ${YELLOW}$systemlink_path ${GREY}does not exist.${NC}"
 fi
 }
 

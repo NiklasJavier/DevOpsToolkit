@@ -28,7 +28,7 @@ find /home -regextype posix-extended -maxdepth 1 -mindepth 1 -type d -regex '.*/
   # Add the user name to the list if it is not the currentUsername
   if [ "$username" != "$currentUsername" ]; then
     user_list+=("$username")
-    echo "$username wird gelöscht"
+    echo "$username wird gelöscht${YELLOW}"
     srv_dir="/opt/SRV-$username"
     home_dir="/home/$username"
     sudo userdel -r "$username"

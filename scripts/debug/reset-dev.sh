@@ -1,5 +1,7 @@
 #!/bin/bash
 
+devops debug exit-cleanup 
+
 # Farben für die Ausgabe
 echo "DEBUG: Cleanup"
 

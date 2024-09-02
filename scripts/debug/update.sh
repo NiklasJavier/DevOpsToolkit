@@ -26,7 +26,7 @@ gitFetchAddedContent() {
 
 gitPullNewContentFromBranch() {
   echo -e "${GREY}Pulling new content from branch...${NC}"
-  git pull
+  git pull --rebase --autostash
 }
 
 gitStatusOutput() {

@@ -50,7 +50,7 @@ ansible-vault view "$vault_file"
 EOF
 
 # Macht das enter_vault.sh-Skript ausführbar
-chmod +x "$vault_script"
+chmod +x "$vault_startup"
 
 # Erfolgsmeldung für das Vault-Skript
-echo "The script $vault_script was successfully created."
+echo "The script $vault_startup was successfully created."

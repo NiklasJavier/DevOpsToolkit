@@ -5,10 +5,11 @@ RED='\033[0;31m'
 PINK='\033[0;35m'
 GREY='\033[1;90m'
 YELLOW='\033[1;33m' 
-NC='\033[0m' 
+NC='\033[0m' # Keine Farbe
 
-vault_file=$4 
-vault_secret=$5 
+# Zuweisung der Argumente zu Variablen
+vault_file=$4 # Pfad zur Vault-Datei
+vault_secret=$5 # Vault-Passwort
 
 checkIfVaultExists(){
 if [ ! -f "$vault_file" ]; then
@@ -20,12 +21,10 @@ fi
 }
 
 createTemporaryAccessFile(){
-if echo "$vault_secret" > "$PASS_FILE"; then
-  echo -e "${GREY}The temporary password file ${YELLOW}$PASS_FILE ${GREY}was successfully created.${NC}"
-  chmod 600 "$PASS_FILE"
-else
-  echo -e "${RED}The temporary password file ${YELLOW}$PASS_FILE ${RED}could not be created.${NC}"
-fi
+PASS_FILE=$(mktemp)
+echo "$vault_secret" > "$PASS_FILE"
+echo -e "${GREY}Temporary access file: ${YELLOW}$PASS_FILE${NC}"
+chmod 600 "$PASS_FILE"
 }
 
 openVault(){

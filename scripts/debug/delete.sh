@@ -78,18 +78,18 @@ fi
 deleteDevopsToolkitSbinSystemLink(){
 if [ -f $systemlink_path ]; then
     rm -r $systemlink_path
-    echo -e "${GREY}The directory ${YELLOW}$systemlink_path ${GREY}was successfully deleted.${NC}"
+    echo -e "${GREY}The file ${YELLOW}$systemlink_path ${GREY}was successfully deleted.${NC}"
 else
-    echo -e "${GREY}The directory ${YELLOW}$systemlink_path ${GREY}does not exist.${NC}"
+    echo -e "${GREY}The file ${YELLOW}$systemlink_path ${GREY}does not exist.${NC}"
 fi
 }
 
 deleteDevopsToolkitLogFile(){
 if [ -f $log_file ]; then
     rm -r $log_file
-    echo -e "${GREY}The directory ${YELLOW}$log_file ${GREY}was successfully deleted.${NC}"
+    echo -e "${GREY}The file ${YELLOW}$log_file ${GREY}was successfully deleted.${NC}"
 else
-    echo -e "${GREY}The directory ${YELLOW}$log_file ${GREY}does not exist.${NC}"
+    echo -e "${GREY}The file ${YELLOW}$log_file ${GREY}does not exist.${NC}"
 fi
 }
 

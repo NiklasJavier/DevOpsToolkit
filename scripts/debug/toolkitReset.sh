@@ -9,19 +9,34 @@ BOLD='\033[1m'
 GREY='\033[1;90m'
 NC='\033[0m' # Keine Farbe
 
-# Variablen definieren
-username="$3"  # Ermittelt den username des Systems
-opt_data_dir="$6"  # Verzeichnis, in dem die Datei abgelegt wird
-output_file="${opt_data_dir}/devopsVaultAccessSecret-${username}.yml"  # Dateiname mit username
+config_file="$2"
 
-vault_file="$4"
-vault_secret="$5"
+loadParametersFromSettings(){
+while IFS= read -r line
+do
+    # Nur Zeilen verarbeiten, die ein ":" enthalten
+    if echo "$line" | grep -q ":"; then
+        # Den Namen und den Wert extrahieren
+        var_name=$(echo "$line" | cut -d ':' -f 1 | xargs | tr ' ' '_')
+        var_value=$(echo "$line" | cut -d ':' -f 2- | xargs)
+        # Entferne die Anführungszeichen, wenn sie vorhanden sind
+        var_value=$(echo "$var_value" | sed 's/^"\(.*\)"$/\1/')
+        # Die Variable setzen
+        eval "$var_name=\"$var_value\""
+    fi
+done < "$config_file"
+echo -e "${GREY}The configuration file ${YELLOW}$config_file ${GREY}was successfully loaded.${NC}"
+}
+
+# Variablen definieren
+output_file="${opt_data_dir}/devopsVaultAccessSecret-${username}.yml"  # Dateiname mit username
 vault_startup="${opt_data_dir}/openVault.sh"  # Pfad zur zu erstellenden .sh-Datei
 
 checkIfVaultFolderExists() {
-# Überprüfen, ob das Verzeichnis existiert, falls nicht, wird es erstellt
 if [ ! -d "$opt_data_dir" ]; then
     mkdir -p "$opt_data_dir"
+    else
+    echo -e "${GREY}The directory ${YELLOW}$opt_data_dir ${GREY}already exists.${NC}"
 fi
 }
 
@@ -64,10 +79,20 @@ chmod +x "$vault_startup"
 echo -e "${GREY}The script ${YELLOW}$vault_startup ${GREY}was successfully created.${NC}"
 }
 
+deleteDevopsToolkitRepository(){
+if [ -d $clone_dir ]; then
+    rm -r $clone_dir
+else
+    echo -e "${GREY}The directory ${YELLOW}$clone_dir ${GREY}does not exist.${NC}"
+fi
+}
+
 methods=(
+loadParametersFromSettings
 checkIfVaultFolderExists
 writeEnvironmentVariablesInBackupFile
 writeExecutionScriptForVaultAccess
+deleteDevopsToolkitRepository
 )
 
 for method in "${methods[@]}"; do

@@ -343,6 +343,8 @@ vault_content: "$VAULT_CONTENT"
 
 vault_mail: "$VAULT_MAIL"
 
+clone_dir: "$CLONE_DIR"
+
 EOL
 echo -e "${GREY}Configuration saved in $CONFIG_FILE.${NC}"
 }

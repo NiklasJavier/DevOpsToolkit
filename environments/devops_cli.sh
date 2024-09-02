@@ -6,6 +6,7 @@
 default_command="help"
 
 # Konfigurationsdatei laden, falls vorhanden
+loadParametersFromSettings(){
 while IFS= read -r line
 do
     # Nur Zeilen verarbeiten, die ein ":" enthalten
@@ -21,6 +22,9 @@ do
         eval "$var_name=\"$var_value\""
     fi
 done < "$CONFIG_FILE"
+}
+
+loadParametersFromSettings  # Konfigurationsdatei laden
 
 # Funktion zum Logging von Befehlen
 log_command() {
@@ -55,7 +59,7 @@ execute_command() {
     shift
 
     if [ -x "$command_path" ]; then
-        "$command_path" "$@" "$tools_dir" "$CONFIG_FILE" "$username" "$vault_file" "$vault_secret" "$opt_data_dir"
+        "$command_path" "$@" "$tools_dir" "$CONFIG_FILE" "$username" "$vault_file" "$vault_secret" "$opt_data_dir" "$clone_dir"
         return $?
     else
         return 1

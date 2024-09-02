@@ -30,12 +30,3 @@
       file:
         path: /tmp/temp_vault_content.yml
         state: absent
-
-- name: Vault-Datei entschlüsseln und bearbeiten, falls sie existiert
-  when: vault_file_stat.stat.exists
-  shell: |
-    echo '{{ vault_secret }}' > /tmp/vault_pass.txt
-    ansible-vault edit --vault-password-file=/tmp/vault_pass.txt {{ vault_file }}
-    rm -f /tmp/vault_pass.txt
-  args:
-    executable: /bin/bash

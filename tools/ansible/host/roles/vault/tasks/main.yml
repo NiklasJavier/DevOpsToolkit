@@ -30,11 +30,6 @@
       register: temp_file_stat
       when: not vault_file_stat.stat.exists
 
-    - name: Debug-Ausgabe, ob die temporäre Datei existiert
-      debug:
-        var: temp_file_stat
-      when: not vault_file_stat.stat.exists
-
     - name: Vault-Datei erstellen und verschlüsseln, falls sie nicht existiert
       when:
         - not vault_file_stat.stat.exists

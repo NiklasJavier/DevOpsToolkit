@@ -7,15 +7,14 @@ BLUE='\033[0;34m'
 PINK='\033[0;35m'
 BOLD='\033[1m'
 GREY='\033[1;90m'
-NC='\033[0m' # Keine Farbe
+NC='\033[0m' 
 
-# Variablen definieren
-username="$3"  # Ermittelt den username des Systems
-opt_data_dir="$6"  # Verzeichnis, in dem die Datei abgelegt wird
-output_file="${opt_data_dir}/devopsVaultAccessSecret-${username}.yml"  # Dateiname mit username
+username="$3"  
+opt_data_dir="$6"
+output_file="${opt_data_dir}/devopsVaultAccessSecret-${username}.yml" 
 vault_file="$4"
 vault_secret="$5"
-vault_startup="${opt_data_dir}/openVault.sh"  # Pfad zur zu erstellenden .sh-Datei
+vault_startup="${opt_data_dir}/openVault.sh"
 clone_dir="$7"
 systemlink_path="$8" 
 log_file="$9"

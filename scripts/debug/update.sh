@@ -7,9 +7,8 @@ BLUE='\033[0;34m'
 PINK='\033[0;35m'
 BOLD='\033[1m'
 GREY='\033[1;90m'
-NC='\033[0m' # Keine Farbe
+NC='\033[0m' 
 
-# Variablen definieren
 clone_dir="$7"
 branch="$10"
 

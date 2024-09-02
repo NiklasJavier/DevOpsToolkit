@@ -9,6 +9,8 @@ output_file="${opt_data_dir}/NOT-SECURE-EXIT-${username}.yml"  # Dateiname mit u
 vault_file="$4"
 vault_secret="$5"
 
+vault_startup="${exit_path}/enter_vault.sh"  # Pfad zur zu erstellenden .sh-Datei
+
 # Überprüfen, ob das Verzeichnis existiert, falls nicht, wird es erstellt
 if [ ! -d "$opt_data_dir" ]; then
     mkdir -p "$opt_data_dir"
@@ -32,3 +34,23 @@ EOF
 
 # Erfolgsmeldung
 echo "The file $output_file was successfully created."
+
+
+# Erstellt ein Skript, das den Vault mit ansible-vault öffnet
+cat <<EOF > "$vault_startup"
+#!/bin/bash
+# This script opens the Vault file vault.yml with ansible-vault.
+
+if [ ! -f "$vault_file" ]; then
+  echo "The file vault.yml was not found."
+  exit 1
+fi
+
+ansible-vault view "$vault_file"
+EOF
+
+# Macht das enter_vault.sh-Skript ausführbar
+chmod +x "$vault_script"
+
+# Erfolgsmeldung für das Vault-Skript
+echo "The script $vault_script was successfully created."

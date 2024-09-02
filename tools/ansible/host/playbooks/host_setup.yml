@@ -9,4 +9,4 @@
     - role: variables  # Einbinden der Rolle zum Laden der Variablen
     - role: common
     - role: protection
-    - role: vault
+    - role: vault # Einbinden der Rolle zum Erstellen der Vault-Datei

@@ -10,25 +10,26 @@ GREY='\033[1;90m'
 NC='\033[0m' 
 
 issueReturnRequestToWork() {
-    echo -e "${RED}⚠️    This script will delete all ports not listed in the SSH configuration and all folders not present in the config.yml file.${NC}"
-    echo -e "${RED}      Please ensure the current directory is listed in the config.yml file, or these files will be permanently deleted.${NC}"
+    echo -e "${RED}⚠️  This script will delete all ports not listed in the SSH configuration and all folders not present in the config.yml file.${NC}"
+    echo -e "${RED}    Please ensure the current directory is listed in the config.yml file, or these files will be permanently deleted.${NC}"
     
     read -p "Do you wish to proceed? (yes/no): " confirmation
     
     if [[ "$confirmation" != "yes" ]]; then
-        echo "${RED}Operation aborted. No changes were made.${NC}"
+        echo -e "${RED}Operation aborted. No changes were made.${NC}"
         exit 1
     fi
 }
 
 findAndDeleteOldUsers(){
+echo -e "${GREY}Extracting user names from the home directory.${NC}"
 find /home -regextype posix-extended -maxdepth 1 -mindepth 1 -type d -regex '.*/[A-Z]{11}' | while read -r dir; do
   username=$(basename "$dir")
   echo -e "${GREY}Extracted user name: ${YELLOW}$username${NC}"
   # Add the user name to the list if it is not the currentUsername
   if [ "$username" != "$currentUsername" ]; then
     user_list+=("$username")
-    echo "$username wird gelöscht${YELLOW}"
+    echo -e "${RED}The user ${YELLOW}$username ${RED}will be deleted.${NC}"
     srv_dir="/opt/SRV-$username"
     home_dir="/home/$username"
     sudo userdel -r "$username"

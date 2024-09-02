@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Standardkonfigurationsdatei (kann angepasst werden)
-# bspw. CONFIG_FILE=""
+# bspw. festgelegt VAR: CONFIG_FILE
 
 default_command="help"
 

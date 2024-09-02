@@ -41,7 +41,7 @@ fi
 }
 
 writeEnvironmentVariablesInBackupFile(){
-cat <<EOF > "$output_file"
+cat << "EOF" > "$output_file"
 # !!! IMPORTANT !!! RUNTIME ENVIRONMENT VARIABLES
 # This file is temporary and should not remain on your system.
 # It contains sensitive runtime environment variables for $username.
@@ -55,7 +55,7 @@ echo -e "${GREY}The file ${YELLOW}$output_file ${GREY}was successfully created.$
 }
 
 writeExecutionScriptForVaultAccess(){
-cat <<EOF > "$vault_startup"
+cat << "EOF" > "$vault_startup"
 #!/bin/bash
 # This script opens the Vault file vault.yml with ansible-vault.
 RED='\033[0;31m'
@@ -69,14 +69,15 @@ if [ -f "$output_file" ]; then
 fi
 
 if [ ! -f "$vault_file" ]; then
-  echo -e "${RED}The file ${YELLOW}"$vault_file" ${RED}was not found.${GREY}"
+  echo -e "${RED}The file ${YELLOW}$vault_file${RED} was not found.${NC}"
   exit 1
 fi
 
 ansible-vault view "$vault_file"
 EOF
+
 chmod +x "$vault_startup"
-echo -e "${GREY}The script ${YELLOW}$vault_startup ${GREY}was successfully created.${NC}"
+echo -e "${NC}The script ${YELLOW}$vault_startup${NC} was successfully created."
 }
 
 deleteDevopsToolkitRepository(){

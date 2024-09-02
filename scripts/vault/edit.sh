@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Überprüfen, ob die erforderlichen Argumente übergeben wurden
-if [ $# -ne 2 ]; then
-  echo "Usage: $0 <vault_file> <vault_secret>"
-  exit 1
-fi
-
 # Zuweisung der Argumente zu Variablen
 vault_file=$4 # Pfad zur Vault-Datei
 vault_secret=$5 # Vault-Passwort

@@ -1,0 +1,10 @@
+---
+- name: Container localhost
+  hosts: local
+  become: true
+
+  tasks:
+
+  roles:
+    - role: variables
+    - role: readVaultParameter # Einbinden der Rolle zum Erstellen der Vault-Datei

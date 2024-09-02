@@ -1,14 +1,13 @@
 #!/bin/bash
 
-# Farben für die Ausgabe
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 PINK='\033[0;35m'
 GREY='\033[1;90m'
-NC='\033[0m' # Keine Farbe
+NC='\033[0m'
 
-tools_dir="$1"      # Tools-Verzeichnis
-config_file="$2"    # Konfigurationsdatei
+tools_dir="$1"
+config_file="$2"
 
 ansibleName="host_setup" # Name des Ansible Playbooks -> playbookname bspw. (local_setup).yml
 ansibleFolder="host"    # Ordner, in dem das Playbook liegt -> playbookfolder bspw. (local)

@@ -5,7 +5,10 @@ api_key3: "{{ lookup('password', '/dev/null length=50 chars=ABCDEFGHIJKLMNOPQRST
 api_key4: "{{ lookup('password', '/dev/null length=50 chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-.*') }}"
 api_key5: "{{ lookup('password', '/dev/null length=50 chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-.*') }}"
 api_key6: "{{ lookup('password', '/dev/null length=50 chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-.*') }}"
-
+user_name: "{{ lookup('password', '/dev/null length=5 chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') }}"
+server_name: "{{ inventory_hostname }}"
+server_ip: "{{ ansible_default_ipv4.address }}"
+server_email: "{{ vault_mail }}"
 
 
 

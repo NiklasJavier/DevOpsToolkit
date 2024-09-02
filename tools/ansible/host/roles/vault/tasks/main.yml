@@ -1,4 +1,5 @@
 ---
+
 - name: Gebe den Pfad der Vault-Datei aus
   debug:
     msg: "Der Pfad zur Vault-Datei ist: {{ vault_file }}"

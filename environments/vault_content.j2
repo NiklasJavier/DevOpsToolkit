@@ -1,7 +1,7 @@
 # SECRETS
 db_password: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
 api_key: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
-api_key2: "{{ lookup('password', '/dev/null length=20 chars=ascii_lowercase+ascii_uppercase+digits') }}"
+api_key3: "{{ lookup('password', '/dev/null length=20 chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') }}"
 
 
 

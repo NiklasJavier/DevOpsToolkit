@@ -21,8 +21,21 @@
         echo: no
       register: vault_password
 
-    - name: Vault-Datei erstellen
-      shell: echo '{{ vault_password.user_input }}' | ansible-vault create --vault-password-file=/dev/stdin {{ vault_file }}
+    - name: Erstelle unverschlüsselte Datei, um sie zu verschlüsseln
+      copy:
+        content: |
+          # Hier kannst du initiale Inhalte einfügen, wenn gewünscht
+          secret_key: "example_value"
+        dest: "{{ vault_file }}.tmp"
+
+    - name: Verschlüssle die Datei mit Ansible Vault
+      command: >
+        echo '{{ vault_password.user_input }}' | ansible-vault encrypt --vault-password-file=/dev/stdin {{ vault_file }}.tmp --output {{ vault_file }}
+
+    - name: Lösche die temporäre Datei
+      file:
+        path: "{{ vault_file }}.tmp"
+        state: absent
 
 - name: Eingabeaufforderung für Passwort zur Entschlüsselung, falls die Datei existiert
   when: vault_file_stat.stat.exists

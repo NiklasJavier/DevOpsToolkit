@@ -343,6 +343,10 @@ vault_content: "$VAULT_CONTENT"
 
 vault_mail: "$VAULT_MAIL"
 
+clone_dir: "$CLONE_DIR"
+
+branch: "$BRANCH"
+
 EOL
 echo -e "${GREY}Configuration saved in $CONFIG_FILE.${NC}"
 }
@@ -415,7 +419,7 @@ show_loading() {
             sleep $delay
         done
     done
-    printf "\r    \r"  # Zeile leeren 01
+    printf "\r    \r"
 }
 
 for method in "${methods[@]}"; do

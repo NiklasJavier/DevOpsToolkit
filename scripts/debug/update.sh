@@ -1,33 +1,43 @@
 #!/bin/bash
 
-# Verzeichnis des geclonten Repositories (hier anpassen)
-REPO_DIR="$1/.."    # 
-BRANCH_NAME="dev"  # 
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m' 
+BLUE='\033[0;34m' 
+PINK='\033[0;35m'
+BOLD='\033[1m'
+GREY='\033[1;90m'
+NC='\033[0m' 
 
-# In das Verzeichnis des Repos wechseln
-cd "$REPO_DIR" || { echo "Fehler: Konnte das Verzeichnis $REPO_DIR nicht finden."; exit 1; }
+clone_dir="$7"
+branch="$10"
 
-# Überprüfe den aktuellen Status
-echo "Überprüfe den aktuellen Status des Repositories..."
-git status
+gitOpenLocalRepository() {
+  echo -e "${GREY}Current branch: ${YELLOW}$branch${NC}"
+  echo -e "${GREY}Current directory: ${YELLOW}$clone_dir${NC}"
+  cd "$clone_dir" || { echo -e "${GREY}Error: Could not find the directory $clone_dir."; exit 1; }
+}
 
-# Sicherstellen, dass alle Änderungen committet sind
-echo "Committing alle Änderungen..."
-git add .
-git commit -ma "Speichere meine Änderungen" || echo "Keine Änderungen zu committen."
+gitFetchAddedContent() {
+  echo -e "${GREY}Fetching added content.${NC}"
+  echo -e "${YELLOW}>> GIT FETCH <<"
+  git fetch
+}
 
-# Hole die neuesten Änderungen vom Remote-Repository
-echo "Hole die neuesten Änderungen vom Remote-Repository..."
-git fetch origin
+gitPullNewContentFromBranch() {
+  echo -e "${GREY}Pulling new content from branch.${NC}"
+  echo -e "${YELLOW}>> GIT PULL --REBASE --AUTOSTASH <<${NC}"
+  git pull --rebase --autostash
+  echo -e "${YELLOW}Successfully pulled new content from branch.${NC}"
+}
 
-# Rebase auf die neuesten Änderungen
-echo "Führe rebase auf die neuesten Änderungen durch..."
-git rebase "origin/$BRANCH_NAME"
+methods=(
+gitOpenLocalRepository
+gitFetchAddedContent
+gitPullNewContentFromBranch
+)
 
-# Überprüfe auf Konflikte
-if [ $? -ne 0 ]; then
-  echo "Konflikte während des Rebases entdeckt. Bitte behebe die Konflikte und fahre dann fort."
-  exit 1
-fi
-
-echo "Rebase erfolgreich abgeschlossen."
+for method in "${methods[@]}"; do
+echo -e "\n${GREY}======= ${GREEN}Running: ${PINK}[$method] ${GREY}=======${NC}"
+$method 
+done

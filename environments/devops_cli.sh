@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # Standardkonfigurationsdatei (kann angepasst werden)
-# bspw. CONFIG_FILE=""
+# bspw. festgelegt VAR: CONFIG_FILE
 
 default_command="help"
 
 # Konfigurationsdatei laden, falls vorhanden
+
 while IFS= read -r line
 do
     # Nur Zeilen verarbeiten, die ein ":" enthalten
@@ -55,7 +56,7 @@ execute_command() {
     shift
 
     if [ -x "$command_path" ]; then
-        "$command_path" "$@" "$tools_dir" "$CONFIG_FILE" "$username" "$vault_file" "$vault_secret" "$opt_data_dir"
+        "$command_path" "$@" "$tools_dir" "$CONFIG_FILE" "$username" "$vault_file" "$vault_secret" "$opt_data_dir" "$clone_dir" "$systemlink_path" "$log_file" "$branch"
         return $?
     else
         return 1

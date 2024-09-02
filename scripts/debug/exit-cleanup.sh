@@ -9,7 +9,7 @@ output_file="${opt_data_dir}/NOT-SECURE-EXIT-${username}.yml"  # Dateiname mit u
 vault_file="$4"
 vault_secret="$5"
 
-vault_startup="${exit_path}/enter_vault.sh"  # Pfad zur zu erstellenden .sh-Datei
+vault_startup="${opt_data_dir}/enter_vault.sh"  # Pfad zur zu erstellenden .sh-Datei
 
 # Überprüfen, ob das Verzeichnis existiert, falls nicht, wird es erstellt
 if [ ! -d "$opt_data_dir" ]; then

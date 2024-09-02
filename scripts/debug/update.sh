@@ -29,16 +29,10 @@ gitPullNewContentFromBranch() {
   git pull --rebase --autostash
 }
 
-gitStatusOutput() {
-  echo -e "${GREY}Checking status of the repository...${NC}"
-  git status
-}
-
 methods=(
 gitOpenLocalRepository
 gitFetchAddedContent
 gitPullNewContentFromBranch
-gitStatusOutput
 )
 
 for method in "${methods[@]}"; do

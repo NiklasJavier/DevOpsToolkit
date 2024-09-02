@@ -1,7 +1,8 @@
 # SECRETS
 db_password: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
 api_key: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
-user_password: "{{ lookup('ansible.builtin.password', '/dev/null length=20 chars=ascii_letters+digits') }}"
+api_key2: "{{ lookup('password', '/dev/null length=20 chars=ascii_lowercase+ascii_uppercase+digits') }}"
+
 
 
 

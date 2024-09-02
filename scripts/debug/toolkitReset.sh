@@ -48,9 +48,7 @@ NC='\033[0m'
 YELLOW='\033[1;33m'
 
 if [ -f "$output_file" ]; then
-  echo -e "${YELLOW}"
   cat "$output_file"
-  echo -e "${NC}"
 fi
 
 if [ ! -f "$vault_file" ]; then

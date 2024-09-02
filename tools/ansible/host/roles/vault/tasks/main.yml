@@ -22,7 +22,7 @@
       register: vault_password
 
     - name: Vault-Datei erstellen
-      command: "echo '{{ vault_password.user_input }}' | ansible-vault create --vault-password-file=/dev/stdin {{ vault_file }}"
+      shell: echo '{{ vault_password.user_input }}' | ansible-vault create --vault-password-file=/dev/stdin {{ vault_file }}
 
 - name: Eingabeaufforderung für Passwort zur Entschlüsselung, falls die Datei existiert
   when: vault_file_stat.stat.exists
@@ -38,4 +38,4 @@
       register: vault_password
 
     - name: Vault-Datei entschlüsseln und bearbeiten
-      command: "echo '{{ vault_password.user_input }}' | ansible-vault edit --vault-password-file=/dev/stdin {{ vault_file }}"
+      shell: echo '{{ vault_password.user_input }}' | ansible-vault edit --vault-password-file=/dev/stdin {{ vault_file }}

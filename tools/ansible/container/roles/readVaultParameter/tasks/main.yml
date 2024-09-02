@@ -1,0 +1,40 @@
+---
+---
+- name: Setze Pfad zur Passwortdatei für die Vault
+  set_fact:
+    vault_password_file: /path/to/vault-password-file  # Pfad zur Passwortdatei für die Vault
+
+- name: Setze Pfad zur verschlüsselten Vault-Datei
+  set_fact:
+    vault_file: /path/to/vault.yml  # Pfad zur verschlüsselten Vault-Datei
+
+- name: Entschlüsseln der Vault-Datei
+  command: >
+    ansible-vault view "{{ vault_file }}"
+    --vault-password-file="{{ vault_password_file }}"
+  register: decrypted_vault
+  changed_when: false
+
+- name: Parsen des entschlüsselten Vault-Inhalts in Variablen
+  set_fact:
+    vault_vars: "{{ decrypted_vault.stdout | from_yaml }}"
+
+- name: Setze Variablen aus der Vault-Datei
+  set_fact:
+    db_password: "{{ vault_vars.db_password | default('default_password') }}"
+    api_key: "{{ vault_vars.api_key | default('default_api_key') }}"
+    server_name: "{{ vault_vars.server_name | default('default_server_name') }}"
+    user_name: "{{ vault_vars.user_name | default('default_user_name') }}"
+    server_ip: "{{ vault_vars.server_ip | default('default_server_ip') }}"
+    server_email: "{{ vault_vars.server_email | default('default_server_email') }}"
+    opt_data_dir: "{{ vault_vars.opt_data_dir | default('/default/opt_data_dir') }}"
+    system_name: "{{ vault_vars.system_name | default('default_system_name') }}"
+    username: "{{ vault_vars.username | default('default_username') }}"
+    log_level: "{{ vault_vars.log_level | default('info') }}"
+    log_file: "{{ vault_vars.log_file | default('/var/log/default.log') }}"
+    os_family: "{{ vault_vars.os_family | default('default_os_family') }}"
+    kernel_version: "{{ vault_vars.kernel_version | default('default_kernel_version') }}"
+
+- name: Zeige alle geladenen Variablen
+  debug:
+    msg: "{{ vars | to_yaml }}"

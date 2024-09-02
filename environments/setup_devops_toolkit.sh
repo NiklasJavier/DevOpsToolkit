@@ -19,7 +19,7 @@ USE_DEFAULTS=false # Möchten immer mit default werten arbeiten (true) oder nich
 
 USERNAME="$(< /dev/urandom tr -dc 'A-Z' | head -c 11)" # Benutzername (zufällig generiert)
 SYSTEM_NAME="SRV-$USERNAME" # Systemname (ehemals Hostname)
-PORT="282" # Port für SSH-Verbindung
+SSH_PORT="282" # Port für SSH-Verbindung
 SSH_KEY_FUNCTION_ENABLED=false # SSH-Key-Funktion aktivieren
 SSH_KEY_PUBLIC="none" # Öffentlicher SSH-Schlüssel
 
@@ -28,16 +28,23 @@ ENV_DIR="$CLONE_DIR/environments"
 TOOLS_DIR="$CLONE_DIR/tools"
 SCRIPTS_DIR="$CLONE_DIR/scripts" 
 PIPELINES_DIR="$CLONE_DIR/pipelines" 
+OPT_DATA_DIR="/opt/$SYSTEM_NAME" # Datenverzeichnis, in dem Anwendungsdaten gespeichert werden
 
 SETTINGS_DIR="" 
 CONFIG_FILE="" # Konfigurationsdatei für das Setup in Settings-Verzeichnis
 DEVOPS_CLI_FILE="$ENV_DIR/devops_cli.sh"
 
+VAULT_FILE="$OPT_DATA_DIR/vault.yml" # Vault-Datei für sensible Daten (Ansible)
+VAULT_SECRET="$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 60)" # Geheimer Schlüssel für die Vault-Datei
+VAULT_CONTENT="$ENV_DIR/vault_content.j2" # Vorlage für den Inhalt der Vault-Datei
+VAULT_MAIL="$USERNAME@" # E-Mail-Adresse für die Vault-Datei
+
 SYSLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
+LOG_LEVEL="info" # Log-Level für die Protokollierung debug, info, warn, error
 LOG_FILE="/var/log/devops_commands.log"
 
 TOOLS="" # Liste der Tools, die installiert werden sollen
-DEFAULT_TOOLS="ansible docker" # Standard-Tools, die installiert werden sollen
+TOOLS+="ansible docker" # Standard-Tools, die installiert werden sollen
 AVAILABLE_TOOLS="" # optional: Liste der verfügbaren Tools
 
 ############# ANFANG DER PARAMETER FLAGS #############
@@ -96,7 +103,7 @@ while [[ "$#" -gt 0 ]]; do
     -port)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
-        PORT="$1"
+        SSH_PORT="$1"
       else
         echo -e "${RED}No port specified with -port.${NC}"
         exit 1
@@ -105,7 +112,7 @@ while [[ "$#" -gt 0 ]]; do
     -tools)
       shift
       if [[ -n "$1" && "$1" != -* ]]; then
-        TOOLS="$1 "
+        TOOLS+=" $1 "
       else
         echo -e "${RED}No tools specified with -tools.${NC}"
         exit 1
@@ -131,14 +138,14 @@ SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
 CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
 
 startOverview() {
-echo -e "${GREY}    ____            ____            ";
-echo -e "${GREY}   / __ \___ _   __/ __ \____  _____";
-echo -e "${GREY}  / / / / _ \ | / / / / / __ \/ ___/";
-echo -e "${GREY} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
-echo -e "${GREY}/_____/\___/|___/\____/ .___/____/  ";
-echo -e "${GREY}                     /_/            ";
-echo -e "${GREY}                                    ";
-echo -e "${GREY}                                    ";
+echo -e "${PINK}    ____            ____            ";
+echo -e "${PINK}   / __ \___ _   __/ __ \____  _____";
+echo -e "${PINK}  / / / / _ \ | / / / / / __ \/ ___/";
+echo -e "${PINK} / /_/ /  __/ |/ / /_/ / /_/ (__  ) ";
+echo -e "${PINK}/_____/\___/|___/\____/ .___/____/  ";
+echo -e "${PINK}                     /_/            ";
+echo -e "${PINK}                                    ";
+echo -e "${PINK}                                    ";
 # Debugging-Ausgabe (kann entfernt werden) 
 echo -e "${GREY}Branch: ${YELLOW}$BRANCH ${NC}"
 echo -e "${GREY}Full HostSetup: ${YELLOW}$FULL ${NC}"
@@ -253,59 +260,9 @@ sudo find "$CLONE_DIR" -type f -name "*.sh" -exec chmod +x {} \;
 echo -e "${GREY}Setup completed! Repository cloned to $CLONE_DIR and scripts are now executable.${NC}"
 }
 
-parameterChanges() {
-# System Name festlegen (ehemals Hostname)
-if [ -z "$SYSTEM_NAME" ]; then
-    default_system_name="$SYSTEM_NAME"
-    if [ "$USE_DEFAULTS" = true ]; then
-        SYSTEM_NAME="$default_system_name"
-    else
-        read -r -p "Enter system name (default: $default_system_name): " SYSTEM_NAME < /dev/tty
-        SYSTEM_NAME=${SYSTEM_NAME:-"$default_system_name"}
-    fi
-    echo -e "${GREY}SYSTEM_NAME set to: $SYSTEM_NAME${NC}"
-fi
-# SSH_PORT festlegen
-if [ -z "$SSH_PORT" ]; then
-    default_ssh_port="282"
-    if [ "$USE_DEFAULTS" = true ]; then
-        SSH_PORT="$default_ssh_port"
-    else
-        read -r -p "Enter the SSH_PORT (default: $default_ssh_port): " SSH_PORT < /dev/tty
-        SSH_PORT=${SSH_PORT:-"$default_ssh_port"}
-    fi
-    echo -e "${GREY}SSH_PORT set to: $SSH_PORT${NC}"
-fi
-# Log Level festlegen
-if [ -z "$LOG_LEVEL" ]; then
-    default_log_level="info"
-    if [ "$USE_DEFAULTS" = true ]; then
-        LOG_LEVEL="$default_log_level"
-    else
-        read -r -p "Enter the log level (default: $default_log_level) [debug, info, warn, error]: " LOG_LEVEL < /dev/tty
-        LOG_LEVEL=${LOG_LEVEL:-"$default_log_level"}
-    fi
-    echo -e "${GREY}LOG_LEVEL set to: $LOG_LEVEL${NC}"
-fi
-# OPT Datenverzeichnis festlegen, das auf dem Systemnamen basiert
-if [ -z "$OPT_DATA_DIR" ]; then
-    default_opt_data_dir="/opt/$SYSTEM_NAME/data"
-    if [ "$USE_DEFAULTS" = true ]; then
-        OPT_DATA_DIR="$default_opt_data_dir"
-    else
-        read -r -p "Enter the opt data directory (default: $default_opt_data_dir): " OPT_DATA_DIR < /dev/tty
-        OPT_DATA_DIR=${OPT_DATA_DIR:-"$default_opt_data_dir"}
-    fi
-    echo -e "${GREY}OPT_DATA_DIR set to: $OPT_DATA_DIR${NC}"
-fi
-# Benutzerauswahl der Tools
-if [ "$USE_DEFAULTS" = true ]; then
-    TOOLS+="$DEFAULT_TOOLS"
-else
-    read -r -p "Which tools do you want to install? (default: $AVAILABLE_TOOLS): " selected_tools < /dev/tty
-    TOOLS=${TOOLS:-$AVAILABLE_TOOLS}
-fi
-}
+#parameterChanges() {
+# Überprüfen, ob der Benutzer die Standardwerte verwenden möchte
+#}
 
 writeConfigFile() {
 # Konfiguration in config.yaml speichern
@@ -378,6 +335,14 @@ log_file: "$LOG_FILE"
 # Der Wert kann z.B. auf "/usr/local/bin/myapp" gesetzt sein, um auf eine ausführbare Datei zu verweisen.
 systemlink_path: "$SYSLINK_PATH"
 
+vault_file: "$VAULT_FILE"
+
+vault_secret: "$VAULT_SECRET"
+
+vault_content: "$VAULT_CONTENT"
+
+vault_mail: "$VAULT_MAIL"
+
 EOL
 echo -e "${GREY}Configuration saved in $CONFIG_FILE.${NC}"
 }
@@ -432,15 +397,33 @@ settingsEnvironmentFolder
 editCliWrapperFile
 createCliWrapperSbinLink
 makeScriptExecutable
-parameterChanges
+#parameterChanges
 writeConfigFile
 installAvailableTools
 initalScriptOverview
 )
 
+show_loading() {
+    local pid=$1
+    local delay=0.01
+    local spinstr='|/-\'
+    local nc='\033[0m'
+
+    while kill -0 $pid 2>/dev/null; do
+        for i in `seq 0 3`; do
+            printf "\r ${PINK}[%c]${GREY} " "${spinstr:i:1}"
+            sleep $delay
+        done
+    done
+    printf "\r    \r"  # Zeile leeren 01
+}
+
 for method in "${methods[@]}"; do
-echo -e "\n${GREY}======= Running: ${PINK}[$method] ${GREY}=======${NC}"
-$method
+echo -e "\n${GREY}======= ${GREEN}Running: ${PINK}[$method] ${GREY}=======${NC}"
+$method &
+pid=$!
+show_loading $pid
+wait $pid  
 done
 
 echo -e "${GREY}All tasks completed!${NC}"

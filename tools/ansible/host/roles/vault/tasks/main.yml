@@ -1,0 +1,52 @@
+---
+
+- name: Gebe den Pfad der Vault-Datei aus
+  debug:
+    msg: "Der Pfad zur Vault-Datei ist: {{ vault_file }}"
+
+- name: Prüfe, ob die Vault-Datei existiert
+  stat:
+    path: "{{ vault_file }}"
+  register: vault_file_stat
+
+- name: Erstellung der Vault-Datei
+  block:
+    - name: Schreibe Passwort in eine temporäre Datei
+      copy:
+        content: "{{ vault_secret }}"
+        dest: /tmp/vault_pass.txt
+        mode: '0600'
+
+    - name: Erstelle eine temporäre Datei für den Vault-Inhalt
+      template:
+        src: "{{ vault_content }}"
+        dest: /tmp/temp_vault_content.yml
+      when: not vault_file_stat.stat.exists
+
+    - name: Prüfe, ob die temporäre Datei erstellt wurde
+      stat:
+        path: /tmp/temp_vault_content.yml
+      register: temp_file_stat
+      when: not vault_file_stat.stat.exists
+
+    - name: Vault-Datei erstellen und verschlüsseln, falls sie nicht existiert
+      when:
+        - not vault_file_stat.stat.exists
+        - temp_file_stat.stat.exists
+      shell: >
+        ansible-vault encrypt /tmp/temp_vault_content.yml
+        --vault-password-file=/tmp/vault_pass.txt
+        --output {{ vault_file }}
+      args:
+        executable: /bin/bash
+
+    - name: Lösche die temporäre Datei nach der Verschlüsselung
+      file:
+        path: /tmp/temp_vault_content.yml
+        state: absent
+      when: not vault_file_stat.stat.exists
+
+    - name: Lösche die temporäre Passwortdatei
+      file:
+        path: /tmp/vault_pass.txt
+        state: absent

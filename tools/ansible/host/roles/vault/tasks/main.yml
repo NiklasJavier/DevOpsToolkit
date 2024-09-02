@@ -1,4 +1,8 @@
 ---
+- name: Gebe den Pfad der Vault-Datei aus
+  debug:
+    msg: "Der Pfad zur Vault-Datei ist: {{ vault_file }}"
+
 - name: Prüfe, ob die Vault-Datei existiert
   stat:
     path: "{{ vault_file }}"

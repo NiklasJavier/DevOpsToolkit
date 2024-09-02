@@ -419,7 +419,7 @@ show_loading() {
             sleep $delay
         done
     done
-    printf "\r    \r"  # Zeile leeren 01
+    printf "\r    \r"
 }
 
 for method in "${methods[@]}"; do

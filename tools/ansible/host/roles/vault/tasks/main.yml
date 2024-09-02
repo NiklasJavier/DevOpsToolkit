@@ -6,8 +6,6 @@
 
 - name: Eingabeaufforderung für Passwort zur Erstellung der Vault-Datei, falls sie nicht existiert
   when: not vault_file_stat.stat.exists
-  vars:
-    ansible_become_pass: "{{ vault_password }}"
   block:
     - name: Prompt für Passwort
       ansible.builtin.debug:
@@ -20,8 +18,7 @@
       register: vault_password
 
     - name: Vault-Datei erstellen
-      ansible.builtin.command:
-        cmd: "ansible-vault create --vault-password-file=<(echo {{ vault_password.user_input }}) {{ vault_file }}"
+      command: "echo '{{ vault_password.user_input }}' | ansible-vault create --vault-password-file=/dev/stdin {{ vault_file }}"
 
 - name: Eingabeaufforderung für Passwort zur Entschlüsselung, falls die Datei existiert
   when: vault_file_stat.stat.exists
@@ -37,5 +34,4 @@
       register: vault_password
 
     - name: Vault-Datei entschlüsseln und bearbeiten
-      ansible.builtin.command:
-        cmd: "ansible-vault edit --vault-password-file=<(echo {{ vault_password.user_input }}) {{ vault_file }}"
+      command: "echo '{{ vault_password.user_input }}' | ansible-vault edit --vault-password-file=/dev/stdin {{ vault_file }}"

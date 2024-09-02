@@ -8,26 +8,21 @@
     path: "{{ vault_file }}"
   register: vault_file_stat
 
-- name: Eingabeaufforderung für Passwort zur Erstellung oder Entschlüsselung der Vault-Datei
+- name: Vault-Datei erstellen und verschlüsseln, falls sie nicht existiert
+  when: not vault_file_stat.stat.exists
   block:
-    - name: Passwort erfassen (geheim)
-      ansible.builtin.pause:
-        prompt: "Bitte geben Sie das Passwort ein: "
-        echo: no
-      register: vault_password
-
-    - name: Schreibe Passwort in eine temporäre Datei
+    - name: Schreibe den initialen Inhalt in eine temporäre Datei
       copy:
-        content: "{{ vault_password.user_input }}"
-        dest: /tmp/vault_pass.txt
-        mode: '0600'
+        content: |
+          # Initialer Inhalt, falls benötigt
+          secret_key: "example_value"
+        dest: /tmp/temp_vault_content.yml
 
-    - name: Vault-Datei erstellen und verschlüsseln, falls sie nicht existiert
-      when: not vault_file_stat.stat.exists
-      shell: >
-        ansible-vault encrypt /tmp/temp_vault_content.yml
-        --vault-password-file=/tmp/vault_pass.txt
-        --output {{ vault_file }}
+    - name: Vault-Datei verschlüsseln und erstellen
+      shell: |
+        echo '{{ vault_secret }}' > /tmp/vault_pass.txt
+        ansible-vault encrypt /tmp/temp_vault_content.yml --vault-password-file=/tmp/vault_pass.txt --output {{ vault_file }}
+        rm -f /tmp/vault_pass.txt
       args:
         executable: /bin/bash
 
@@ -35,16 +30,12 @@
       file:
         path: /tmp/temp_vault_content.yml
         state: absent
-      when: not vault_file_stat.stat.exists
 
-    - name: Vault-Datei entschlüsseln und bearbeiten, falls sie existiert
-      when: vault_file_stat.stat.exists
-      shell: >
-        ansible-vault edit --vault-password-file=/tmp/vault_pass.txt {{ vault_file }}
-      args:
-        executable: /bin/bash
-
-    - name: Lösche die temporäre Passwortdatei
-      file:
-        path: /tmp/vault_pass.txt
-        state: absent
+- name: Vault-Datei entschlüsseln und bearbeiten, falls sie existiert
+  when: vault_file_stat.stat.exists
+  shell: |
+    echo '{{ vault_secret }}' > /tmp/vault_pass.txt
+    ansible-vault edit --vault-password-file=/tmp/vault_pass.txt {{ vault_file }}
+    rm -f /tmp/vault_pass.txt
+  args:
+    executable: /bin/bash

@@ -26,8 +26,9 @@ gitFetchAddedContent() {
 
 gitPullNewContentFromBranch() {
   echo -e "${GREY}Pulling new content from branch...${NC}"
-  echo -e "${YELLOW}GIT PULL --REBASE --AUTOSTASH"
+  echo -e "${YELLOW}GIT PULL --REBASE --AUTOSTASH${NC}"
   git pull --rebase --autostash
+  echo -e "${YELLOW}Successfully pulled new content from branch.${NC}"
 }
 
 methods=(

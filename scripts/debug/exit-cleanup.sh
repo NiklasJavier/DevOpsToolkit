@@ -9,11 +9,6 @@ output_file="${opt_data_dir}/NOT-SECURE-EXIT-${username}.yml"  # Dateiname mit u
 vault_file="$4"
 vault_secret="$5"
 
-db_password="super_secret_password"
-api_key="super_secret_api_key"
-db_user="admin"
-db_name="mydatabase"
-
 # Überprüfen, ob das Verzeichnis existiert, falls nicht, wird es erstellt
 if [ ! -d "$opt_data_dir" ]; then
     mkdir -p "$opt_data_dir"

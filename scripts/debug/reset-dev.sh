@@ -1,5 +1,7 @@
 #!/bin/bash
 
+devops debug save-exit-runtime-vars
+
 # Farben für die Ausgabe
 echo "DEBUG: Cleanup"
 

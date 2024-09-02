@@ -1,5 +1,7 @@
 #!/bin/bash
 
+devops debug save-exit-runtime-vars
+
 if [ -d /etc/DevOpsToolkit ]; then
     rm -r /etc/DevOpsToolkit
 else

@@ -1,7 +1,10 @@
 # SECRETS
 db_password: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
 api_key: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
-api_key3: "{{ lookup('password', '/dev/null length=20 chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') }}"
+api_key3: "{{ lookup('password', '/dev/null length=50 chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-.*') }}"
+api_key4: "{{ lookup('password', '/dev/null length=50 chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-.*') }}"
+api_key5: "{{ lookup('password', '/dev/null length=50 chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-.*') }}"
+api_key6: "{{ lookup('password', '/dev/null length=50 chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-.*') }}"
 
 
 

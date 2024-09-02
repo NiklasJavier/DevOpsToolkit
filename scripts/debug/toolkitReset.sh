@@ -77,7 +77,7 @@ fi
 }
 
 deleteDevopsToolkitSbinSystemLink(){
-if [ -d $systemlink_path ]; then
+if [ -f $systemlink_path ]; then
     rm -r $systemlink_path
     echo -e "${GREY}The directory ${YELLOW}$systemlink_path ${GREY}was successfully deleted.${NC}"
 else
@@ -86,7 +86,7 @@ fi
 }
 
 deleteDevopsToolkitLogFile(){
-if [ -d $log_file ]; then
+if [ -f $log_file ]; then
     rm -r $log_file
     echo -e "${GREY}The directory ${YELLOW}$log_file ${GREY}was successfully deleted.${NC}"
 else

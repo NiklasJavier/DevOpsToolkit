@@ -13,6 +13,7 @@ fi
 # Erstelle eine temporäre Datei für das Passwort
 PASS_FILE=$(mktemp)
 echo "$vault_secret" > "$PASS_FILE"
+echo "temp_file: $PASS_FILE"
 chmod 600 "$PASS_FILE"
 
 # Öffne und bearbeite die Vault-Datei

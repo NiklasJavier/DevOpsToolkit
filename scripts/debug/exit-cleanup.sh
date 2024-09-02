@@ -4,7 +4,7 @@
 username="$3"  # Ermittelt den username des Systems
 opt_data_dir="$6"  # Verzeichnis, in dem die Datei abgelegt wird
 
-output_file="${opt_data_dir}/not-secure-env-exit-${username}.yml"  # Dateiname mit username
+output_file="${opt_data_dir}/NOT-SECURE-EXIT-${username}.yml"  # Dateiname mit username
 
 vault_file="$4"
 vault_secret="$5"

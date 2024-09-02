@@ -22,6 +22,6 @@ ansibleOpenPlaybook
 )
 
 for method in "${methods[@]}"; do
-echo -e "\n${GREY}======= ${GREEN}Running: ${PINK}[$method/$ansibleFolder/$ansibleName] ${GREY}=======${NC}"
+echo -e "\n${GREY}======= ${GREEN}Running: ${PINK}[$method] ${GREY}=======${NC}"
 $method 
 done

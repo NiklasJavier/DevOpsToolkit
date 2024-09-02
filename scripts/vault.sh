@@ -43,8 +43,6 @@ if [ $? -eq 0 ]; then
 else
   echo -e "${RED}The temporary access file ${YELLOW}$PASS_FILE ${RED}could not be deleted.${NC}"
   exit 1
-else
-
 fi
 }
 

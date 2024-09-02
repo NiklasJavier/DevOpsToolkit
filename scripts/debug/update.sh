@@ -19,14 +19,14 @@ gitOpenLocalRepository() {
 }
 
 gitFetchAddedContent() {
-  echo -e "${GREY}Fetching added content...${NC}"
-  echo -e "${YELLOW}GIT FETCH"
+  echo -e "${GREY}Fetching added content.${NC}"
+  echo -e "${YELLOW}>> GIT FETCH <<"
   git fetch
 }
 
 gitPullNewContentFromBranch() {
-  echo -e "${GREY}Pulling new content from branch...${NC}"
-  echo -e "${YELLOW}GIT PULL --REBASE --AUTOSTASH${NC}"
+  echo -e "${GREY}Pulling new content from branch.${NC}"
+  echo -e "${YELLOW}>> GIT PULL --REBASE --AUTOSTASH <<${NC}"
   git pull --rebase --autostash
   echo -e "${YELLOW}Successfully pulled new content from branch.${NC}"
 }

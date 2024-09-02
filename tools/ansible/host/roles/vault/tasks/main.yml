@@ -8,47 +8,30 @@
     path: "{{ vault_file }}"
   register: vault_file_stat
 
-- name: Eingabeaufforderung für Passwort zur Erstellung der Vault-Datei, falls sie nicht existiert
-  when: not vault_file_stat.stat.exists
+- name: Eingabeaufforderung für Passwort zur Erstellung oder Entschlüsselung der Vault-Datei
   block:
-    - name: Prompt für Passwort
-      ansible.builtin.debug:
-        msg: "Bitte geben Sie das Passwort zur Erstellung der Vault-Datei ein:"
-
     - name: Passwort erfassen (geheim)
       ansible.builtin.pause:
-        prompt: "Passwort: "
+        prompt: "Bitte geben Sie das Passwort ein: "
         echo: no
       register: vault_password
 
-    - name: Erstelle unverschlüsselte Datei, um sie zu verschlüsseln
-      copy:
-        content: |
-          # Hier kannst du initiale Inhalte einfügen, wenn gewünscht
-          secret_key: "example_value"
-        dest: "{{ vault_file }}.tmp"
+    - name: Vault-Datei erstellen und verschlüsseln, falls sie nicht existiert
+      when: not vault_file_stat.stat.exists
+      shell: |
+        echo '{{ vault_password.user_input }}' > /tmp/vault_pass.txt
+        echo 'secret_key: "example_value"' | ansible-vault encrypt --vault-password-file=/tmp/vault_pass.txt --output {{ vault_file }} /dev/stdin
+      args:
+        executable: /bin/bash
 
-    - name: Verschlüssle die Datei mit Ansible Vault
-      command: >
-        echo '{{ vault_password.user_input }}' | ansible-vault encrypt --vault-password-file=/dev/stdin {{ vault_file }}.tmp --output {{ vault_file }}
-
-    - name: Lösche die temporäre Datei
-      file:
-        path: "{{ vault_file }}.tmp"
-        state: absent
-
-- name: Eingabeaufforderung für Passwort zur Entschlüsselung, falls die Datei existiert
-  when: vault_file_stat.stat.exists
-  block:
-    - name: Prompt für Passwort zur Entschlüsselung
-      ansible.builtin.debug:
-        msg: "Bitte geben Sie das Passwort zum Öffnen der Vault-Datei ein:"
-
-    - name: Passwort erfassen (geheim)
-      ansible.builtin.pause:
-        prompt: "Passwort: "
-        echo: no
-      register: vault_password
-
-    - name: Vault-Datei entschlüsseln und bearbeiten
+    - name: Vault-Datei entschlüsseln und bearbeiten, falls sie existiert
+      when: vault_file_stat.stat.exists
       shell: echo '{{ vault_password.user_input }}' | ansible-vault edit --vault-password-file=/dev/stdin {{ vault_file }}
+      args:
+        executable: /bin/bash
+
+    - name: Lösche die temporäre Passwortdatei
+      file:
+        path: /tmp/vault_pass.txt
+        state: absent
+      when: not vault_file_stat.stat.exists

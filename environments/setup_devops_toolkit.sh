@@ -36,6 +36,7 @@ DEVOPS_CLI_FILE="$ENV_DIR/devops_cli.sh"
 
 VAULT_FILE="$OPT_DATA_DIR/vault.yml" # Vault-Datei für sensible Daten (Ansible)
 VAULT_SECRET="$(tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 60)" # Geheimer Schlüssel für die Vault-Datei
+VAULT_CONTENT="$ENV_DIR/vault_content.j2" # Vorlage für den Inhalt der Vault-Datei
 
 SYSLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
 LOG_LEVEL="info" # Log-Level für die Protokollierung debug, info, warn, error
@@ -336,6 +337,8 @@ systemlink_path: "$SYSLINK_PATH"
 vault_file: "$VAULT_FILE"
 
 vault_secret: "$VAULT_SECRET"
+
+vault_content: "$VAULT_CONTENT"
 
 EOL
 echo -e "${GREY}Configuration saved in $CONFIG_FILE.${NC}"

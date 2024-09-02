@@ -1,0 +1,39 @@
+# SECRETS
+db_password: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
+api_key: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
+another_key: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
+user_password: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
+
+
+
+
+
+
+# Beispielkonfiguration
+# Datenbankkonfiguration
+#db_host: "localhost"
+#db_port: 3306
+#db_name: "example_db"
+#db_user: "admin"
+#db_password: "securepassword123"
+
+# API-Schlüssel
+#api_key: "123456789abcdef"
+
+# Benutzerkonfiguration
+#users:
+#  - name: "john_doe"
+#    password: "password123"
+#    roles:
+#      - "admin"
+#      - "developer"
+#  - name: "jane_doe"
+#    password: "password456"
+#    roles:
+#      - "user"
+
+# Weitere Konfigurationen
+#site_name: "Example Site"
+#admin_email: "admin@example.com"
+#enable_feature_x: true
+#max_connections: 100

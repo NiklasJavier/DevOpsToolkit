@@ -17,10 +17,8 @@
         mode: '0600'
 
     - name: Erstelle eine temporäre Datei für den Vault-Inhalt
-      copy:
-        content: |
-          # Initialer Inhalt, falls benötigt
-          secret_key: "example_value"
+      template:
+        src: "{{ vault_content }}"
         dest: /tmp/temp_vault_content.yml
       when: not vault_file_stat.stat.exists
 

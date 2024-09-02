@@ -14,7 +14,7 @@ git status
 # Sicherstellen, dass alle Änderungen committet sind
 echo "Committing alle Änderungen..."
 git add .
-git commit -m "Speichere meine Änderungen" || echo "Keine Änderungen zu committen."
+git commit -ma "Speichere meine Änderungen" || echo "Keine Änderungen zu committen."
 
 # Hole die neuesten Änderungen vom Remote-Repository
 echo "Hole die neuesten Änderungen vom Remote-Repository..."

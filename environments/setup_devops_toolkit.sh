@@ -28,10 +28,11 @@ ENV_DIR="$CLONE_DIR/environments"
 TOOLS_DIR="$CLONE_DIR/tools"
 SCRIPTS_DIR="$CLONE_DIR/scripts" 
 PIPELINES_DIR="$CLONE_DIR/pipelines" 
-OPT_DATA_DIR="/opt/$SYSTEM_NAME/data" # Datenverzeichnis, in dem Anwendungsdaten gespeichert werden
+OPT_DATA_DIR="/opt/$SYSTEM_NAME" # Datenverzeichnis, in dem Anwendungsdaten gespeichert werden
 
 SETTINGS_DIR="" 
 CONFIG_FILE="" # Konfigurationsdatei für das Setup in Settings-Verzeichnis
+VAULT_FILE="$OPT_DATA_DIR/vault.yml" # Vault-Datei für sensible Daten (Ansible)
 DEVOPS_CLI_FILE="$ENV_DIR/devops_cli.sh"
 
 SYSLINK_PATH="/usr/sbin/devops" # Pfad für den Symlink
@@ -329,6 +330,8 @@ log_file: "$LOG_FILE"
 # Der Pfad zum System-Symlink, der auf eine bestimmte Datei oder ein Verzeichnis verweist, wird durch die Umgebungsvariable festgelegt.
 # Der Wert kann z.B. auf "/usr/local/bin/myapp" gesetzt sein, um auf eine ausführbare Datei zu verweisen.
 systemlink_path: "$SYSLINK_PATH"
+
+vault_file: "$VAULT_FILE"
 
 EOL
 echo -e "${GREY}Configuration saved in $CONFIG_FILE.${NC}"

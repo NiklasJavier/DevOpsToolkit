@@ -8,7 +8,7 @@
     path: "{{ vault_file }}"
   register: vault_file_stat
 
-- name: Eingabeaufforderung für Passwort zur Erstellung oder Entschlüsselung der Vault-Datei
+- name: Erstellung der Vault-Datei
   block:
     - name: Schreibe Passwort in eine temporäre Datei
       copy:
@@ -16,8 +16,29 @@
         dest: /tmp/vault_pass.txt
         mode: '0600'
 
-    - name: Vault-Datei erstellen und verschlüsseln, falls sie nicht existiert
+    - name: Erstelle eine temporäre Datei für den Vault-Inhalt
+      copy:
+        content: |
+          # Initialer Inhalt, falls benötigt
+          secret_key: "example_value"
+        dest: /tmp/temp_vault_content.yml
       when: not vault_file_stat.stat.exists
+
+    - name: Prüfe, ob die temporäre Datei erstellt wurde
+      stat:
+        path: /tmp/temp_vault_content.yml
+      register: temp_file_stat
+      when: not vault_file_stat.stat.exists
+
+    - name: Debug-Ausgabe, ob die temporäre Datei existiert
+      debug:
+        var: temp_file_stat
+      when: not vault_file_stat.stat.exists
+
+    - name: Vault-Datei erstellen und verschlüsseln, falls sie nicht existiert
+      when:
+        - not vault_file_stat.stat.exists
+        - temp_file_stat.stat.exists
       shell: >
         ansible-vault encrypt /tmp/temp_vault_content.yml
         --vault-password-file=/tmp/vault_pass.txt

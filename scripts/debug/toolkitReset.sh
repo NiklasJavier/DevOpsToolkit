@@ -11,7 +11,6 @@ NC='\033[0m' # Keine Farbe
 
 config_file="$2"
 
-loadParametersFromSettings(){
 while IFS= read -r line
 do
     # Nur Zeilen verarbeiten, die ein ":" enthalten
@@ -26,7 +25,6 @@ do
     fi
 done < "$config_file"
 echo -e "${GREY}The configuration file ${YELLOW}$config_file ${GREY}was successfully loaded.${NC}"
-}
 
 # Variablen definieren
 output_file="${opt_data_dir}/devopsVaultAccessSecret-${username}.yml"  # Dateiname mit username
@@ -89,7 +87,6 @@ fi
 }
 
 methods=(
-loadParametersFromSettings
 checkIfVaultFolderExists
 writeEnvironmentVariablesInBackupFile
 writeExecutionScriptForVaultAccess

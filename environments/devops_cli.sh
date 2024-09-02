@@ -6,7 +6,7 @@
 default_command="help"
 
 # Konfigurationsdatei laden, falls vorhanden
-loadParametersFromSettings(){
+
 while IFS= read -r line
 do
     # Nur Zeilen verarbeiten, die ein ":" enthalten
@@ -22,9 +22,6 @@ do
         eval "$var_name=\"$var_value\""
     fi
 done < "$CONFIG_FILE"
-}
-
-loadParametersFromSettings  # Konfigurationsdatei laden
 
 # Funktion zum Logging von Befehlen
 log_command() {

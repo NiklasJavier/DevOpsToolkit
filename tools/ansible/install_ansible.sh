@@ -23,6 +23,7 @@ else
 
     echo -e "${GREY}Installing Ansible..."
     sudo apt-get install -y ansible
+    sudo ansible-galaxy collection install community.general
 
     # Prüfen, ob Ansible installiert wurde
     echo -e "${GREY}Checking if Ansible was installed successfully...${NC}"

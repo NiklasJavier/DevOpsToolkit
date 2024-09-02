@@ -2,7 +2,7 @@
 db_password: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
 api_key: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
 another_key: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits') }}"
-user_password: "{{ lookup('password', '/dev/null length=20 chars=ascii_letters+digits+punctuation') }}"
+user_password: "{{ lookup('community.general.random_password', length=20, special=True) }}"
 
 
 

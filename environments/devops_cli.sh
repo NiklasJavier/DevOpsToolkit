@@ -56,7 +56,7 @@ execute_command() {
     shift
 
     if [ -x "$command_path" ]; then
-        "$command_path" "$@" "$tools_dir" "$CONFIG_FILE" "$username" "$vault_file" "$vault_secret" "$opt_data_dir" "$clone_dir"
+        "$command_path" "$@" "$tools_dir" "$CONFIG_FILE" "$username" "$vault_file" "$vault_secret" "$opt_data_dir" "$clone_dir" "$systemlink_path" "$log_file"
         return $?
     else
         return 1

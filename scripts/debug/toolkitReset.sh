@@ -17,6 +17,8 @@ vault_file="$4"
 vault_secret="$5"
 vault_startup="${opt_data_dir}/openVault.sh"  # Pfad zur zu erstellenden .sh-Datei
 clone_dir="$7"
+systemlink_path="$8" 
+log_file="$9"
 
 checkIfVaultFolderExists() {
 if [ ! -d "$opt_data_dir" ]; then
@@ -74,11 +76,31 @@ else
 fi
 }
 
+deleteDevopsToolkitSbinSystemLink(){
+if [ -d $systemlink_path ]; then
+    rm -r $systemlink_path
+    echo -e "${GREY}The directory ${YELLOW}$systemlink_path ${GREY}was successfully deleted.${NC}"
+else
+    echo -e "${GREY}The directory ${YELLOW}$systemlink_path ${GREY}does not exist.${NC}"
+fi
+}
+
+deleteDevopsToolkitLogFile(){
+if [ -d $log_file ]; then
+    rm -r $log_file
+    echo -e "${GREY}The directory ${YELLOW}$log_file ${GREY}was successfully deleted.${NC}"
+else
+    echo -e "${GREY}The directory ${YELLOW}$log_file ${GREY}does not exist.${NC}"
+fi
+}
+
 methods=(
 checkIfVaultFolderExists
 writeEnvironmentVariablesInBackupFile
 writeExecutionScriptForVaultAccess
 deleteDevopsToolkitRepository
+deleteDevopsToolkitSbinSystemLink
+deleteDevopsToolkitLogFile
 )
 
 for method in "${methods[@]}"; do

@@ -345,7 +345,7 @@ vault_mail: "$VAULT_MAIL"
 
 clone_dir: "$CLONE_DIR"
 
-branch="$BRANCH"
+branch: "$BRANCH"
 
 EOL
 echo -e "${GREY}Configuration saved in $CONFIG_FILE.${NC}"

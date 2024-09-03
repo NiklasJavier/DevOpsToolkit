@@ -137,6 +137,17 @@ BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
 SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
 CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
 
+
+checkSettingsDirExist() {
+    if [ -d "$SETTINGS_DIR" ]; then
+        echo -e "${GREY}Settings directory exists: ${YELLOW}$SETTINGS_DIR${NC}"
+        echo -e "${RED}Please use ${YELLOW}'devops debug update' ${RED}to apply the latest changes or ${YELLOW}'devops debug delete' ${RED}to remove the current setup.${NC}"
+        exit 1
+        else
+        echo -e "${GREY}Settings directory does not exist: ${YELLOW}$SETTINGS_DIR${NC}"
+    fi
+}
+
 startOverview() {
 echo -e "${PINK}    ____            ____            ";
 echo -e "${PINK}   / __ \___ _   __/ __ \____  _____";
@@ -394,6 +405,7 @@ echo -e "${GREY}>>> To do this, use '${RED}devops${GREY}' to see a list of all p
 }
 
 methods=(
+checkSettingsDirExist
 startOverview
 checkRootPermissions
 copyAndSetTheRepository

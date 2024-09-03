@@ -126,7 +126,7 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-############# BRANCH FLAGS WENN NULL #############
+############# BRANCH FLAGS WENN NULL ############
 if [ -z "$BRANCH" ]; then
       USE_DEFAULTS=true # Immer mit Standardwerten arbeiten
       BRANCH="production"

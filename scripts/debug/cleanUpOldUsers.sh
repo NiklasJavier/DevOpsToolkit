@@ -35,7 +35,7 @@ find /home -regextype posix-extended -maxdepth 1 -mindepth 1 -type d -regex '.*/
     srv_dir="/opt/SRV-$username"
     home_dir="/home/$username"
     sudo userdel -r "$username"
-    sudo rm -rf "$srv_dir"
+    sudo rm -r "$srv_dir"
     sudo rm -rf "$home_dir"
   else
     echo -e "${RED}The user ${YELLOW}$username ${RED}is the ${GREEN}current ${RED}user and will not be deleted.${NC}"

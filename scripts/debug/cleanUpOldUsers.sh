@@ -58,7 +58,7 @@ for port in $open_ports; do
     echo -e "${RED}Port ${YELLOW}$port ${RED}is not the SSH port and will be deleted.${NC}"
     sudo ufw delete allow "$port/tcp"
     else 
-    echo -e "${GREY}Port ${YELLOW}$port ${GREY}is the SSH port and will not be deleted.${NC}"
+    echo -e "${GREY}Port (IPV4/IPV6) ${YELLOW}$port ${GREY}is the SSH port and will not be deleted.${NC}"
   fi
 done
 }

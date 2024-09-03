@@ -116,10 +116,10 @@ devops [foldername] <command> [args]
 ### Example:
 
 ```bash
-devops update
+devops debug update
 ```
 
-If `deploy` is a folder in the script directory and `myapp.sh` is a script within it, this script will be executed with the specified arguments.
+If `debug` is a folder in the script directory and `update.sh` is a script within it, this script will be executed with the specified arguments.
 
 ### Error Handling:
 

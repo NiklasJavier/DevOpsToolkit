@@ -126,7 +126,7 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-############# BRANCH FLAGS WENN NULL #############
+############# BRANCH FLAGS WENN NULL ############
 if [ -z "$BRANCH" ]; then
       USE_DEFAULTS=true # Immer mit Standardwerten arbeiten
       BRANCH="production"
@@ -136,6 +136,17 @@ fi
 BRANCH_DIR="$ENV_DIR/$BRANCH" # Branch-Verzeichnis festlegen
 SETTINGS_DIR="$BRANCH_DIR/.settings" # Einstellungsverzeichnis festlegen
 CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
+
+
+checkSettingsDirExist() {
+    if [ -d "$SETTINGS_DIR" ]; then
+        echo -e "${RED}Settings directory exists: ${YELLOW}$SETTINGS_DIR${NC}"
+        echo -e "${RED}Please use ${YELLOW}'devops debug update' ${RED}to apply the latest changes or ${YELLOW}'devops debug delete' ${RED}to remove the current setup.${NC}"
+        kill -INT $$
+        else
+        echo -e "${GREY}Settings directory does not exist: ${YELLOW}$SETTINGS_DIR${NC}"
+    fi
+}
 
 startOverview() {
 echo -e "${PINK}    ____            ____            ";
@@ -394,6 +405,7 @@ echo -e "${GREY}>>> To do this, use '${RED}devops${GREY}' to see a list of all p
 }
 
 methods=(
+checkSettingsDirExist
 startOverview
 checkRootPermissions
 copyAndSetTheRepository

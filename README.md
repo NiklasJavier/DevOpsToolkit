@@ -1,138 +1,132 @@
 # DevOpsToolkit
 
+## Überblick
+
 The **DevOpsToolkit** repository provides a collection of scripts and configurations to quickly and easily set up a development, staging, or production environment. It is flexible and allows configuration based on user-defined settings or the use of default values.
 
-## Configuration
+## Inhaltsverzeichnis
 
-The file [config.temp.yaml](https://github.com/NiklasJavier/DevOpsToolkit/blob/HEAD/environments/config.temp.yaml) illustrates the options that can be set as variables during the execution of our script. However, the actual configuration takes place dynamically during the script execution, where the user can adjust the variables or use automatically generated default values.
+- [Installation](#installation)
+- [Verwendung](#verwendung)
+- [Konfiguration](#konfiguration)
+- [DevOps CLI Tool](#devops-cli-tool)
+- [Verwendung der Ansible Vault](#verwendung-der-ansible-vault)
+- [Debugging und Updates](#debugging-und-updates)
+- [Features](#features)
+- [Lizenz](#lizenz)
+- [Kontakt](#kontakt)
 
-### Variables in `config.yaml`:
+## Installation
 
-- **`system_name`**:  
-  The name of the system or server used for configuration. If the user does not provide a name, a random name will be generated.  
-  Example:  
-  ```yaml
-  system_name: "$SYSTEM_NAME"
-  ```
+Das DevOpsToolkit kann über verschiedene Befehle initialisiert und installiert werden. Hier ist ein Beispiel für ein schnelles Setup.
 
-- **`ssh_port`**:  
-  The SSH port through which the connection to the server is established. By default, port **282** is used if the user does not specify a port.  
-  Example:  
-  ```yaml
-  ssh_port: "$SSH_PORT"
-  ```
+### Beispiel für ein schnelles Setup:
 
-- **`log_level`**:  
-  The desired log level for the application’s logging. Possible options are `"debug"`, `"info"`, `"warn"`, and `"error"`. Default value: **info**.  
-  Example:  
-  ```yaml
-  log_level: "$LOG_LEVEL"
-  ```
-
-- **`opt_data_dir`**:  
-  The data directory where application data is stored. It is by default based on `system_name` (e.g., `/opt/$SYSTEM_NAME/data`) unless another directory is specified.  
-  Example:  
-  ```yaml
-  opt_data_dir: "$OPT_DATA_DIR"
-  ```
-
-- **`use_defaults`**:  
-  A flag variable indicating whether the script runs in "default mode." When `use_defaults` is set to **true**, no prompts are given to the user, and default values are used automatically.  
-  Example:  
-  ```yaml
-  use_defaults: "$USE_DEFAULTS"
-  ```
-
-- **`tools`**:  
-  This variable contains the list of tools to be installed. The user can manually specify the tools (e.g., `docker ansible terraform`). If no input is provided or `USE_DEFAULTS=true`, all default tools will be selected automatically.  
-  Example:  
-  ```yaml
-  tools: "$TOOLS"
-  ```
-
-- **`ssh_key_function_enabled`**:  
-  This variable indicates whether the SSH key function is enabled. It is set to **false** if no SSH key is provided or the function is disabled by default unless a valid SSH key is entered.  
-  Example:  
-  ```yaml
-  ssh_key_function_enabled: "$SSH_KEY_FUNCTION_ENABLED"
-  ```
-
-- **`ssh_key_public`**:  
-  Contains the public SSH key provided by the user. If no key is entered, this variable remains empty.  
-  Example:  
-  ```yaml
-  ssh_key_public: "$SSH_KEY_PUBLIC"
-  ```
-
-- **`tools_dir`**:  
-  Stores the path to the directory where various tools (e.g., Ansible, Docker, Terraform) are stored.  
-  Example:  
-  ```yaml
-  tools_dir: "$TOOLS_DIR"
-  ```
-
-- **`scripts_dir`**:  
-  Stores the path to the directory where general scripts are stored.  
-  Example:  
-  ```yaml
-  scripts_dir: "$SCRIPTS_DIR"
-  ```
-
-- **`pipelines_dir`**:  
-  Stores the path to the directory where pipeline configuration files (e.g., CI/CD pipelines) are stored.  
-  Example:  
-  ```yaml
-  pipelines_dir: "$PIPELINES_DIR"
-  ```
-
-## Setup
-
-To install and configure **DevOpsToolkit**, the following script can be used. Several options are available to configure different environments.
-
-### Standard Setup
-
-This setup uses default values for all variables:
+Mit diesem Befehl wird das Toolkit installiert und direkt danach ein Setup-Skript ausgeführt. Dies ermöglicht ein reibungsloses und schnelles Setup.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash
+curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev -key "ssh-pub-key" && devops setup
 ```
 
-### Setup Options:
+- **curl -fsSL**: Ruft das Setup-Skript vom angegebenen GitHub-Repository ab.
+- **bash -s -- -branch dev -key "ssh-pub-key"**: Führt das Skript aus, richtet eine Entwicklungsumgebung ein und aktiviert die SSH-Key-Funktion mit dem angegebenen öffentlichen Schlüssel.
+- **&& devops setup**: Startet unmittelbar nach der Installation das `setup`-Skript über das `devops`-Kommando, um die Einrichtung abzuschließen. Dabei wird auch eine Ansible Vault im `${opt_data_dir}` Verzeichnis angelegt.
 
-The following commands use the **`-t`** flag to specify the type of environment. The **`-key`** flag can optionally be added to provide a public SSH key.
+## DevOps CLI Tool
 
-- **`-t production`**:  
-  Sets **`USE_DEFAULTS=true`** and sets up a production environment.
+Das DevOps CLI Tool ist ein zentraler Bestandteil des DevOpsToolkit, das die Ausführung von Automatisierungsskripten erleichtert. Nach der Installation und Initialisierung ist das Tool über das Kommando `devops` verfügbar, wodurch der Aufruf von `./devops_cli.sh` nicht mehr notwendig ist.
 
+### Verwendung:
+
+Nach der Initialisierung des Toolkits kann das Tool direkt über das `devops`-Kommando aufgerufen werden:
+
+```bash
+devops [foldername] <command> [args]
+```
+
+### Funktionsweise:
+
+1. **Konfiguration laden**: Das Tool lädt eine Konfigurationsdatei, die vorab definiert oder durch den Benutzer angepasst wurde. Diese Datei enthält Schlüssel-Wert-Paare, die als Umgebungsvariablen im Skript verfügbar gemacht werden.
+
+2. **Befehlslogging**: Alle ausgeführten Befehle werden mit Zeitstempel und Benutzername in einer Logdatei (`$LOG_FILE`) protokolliert.
+
+3. **Befehlsausführung**: Basierend auf dem angegebenen Befehl sucht das Tool im Skriptverzeichnis (`$SCRIPTS_DIR`) nach dem entsprechenden Skript und führt es mit den notwendigen Argumenten und Umgebungsvariablen aus.
+
+4. **Hilfe anzeigen**: Wird `help` als Befehl angegeben, zeigt das Tool eine Liste aller verfügbaren Skripte und Befehle an. Es kann auch spezifische Hilfestellungen für einzelne Befehle anzeigen.
+
+### Beispiel:
+
+```bash
+devops debug update
+```
+
+Wenn `deploy` ein Ordner im Skriptverzeichnis ist und `myapp.sh` ein Skript darin, wird dieses Skript mit den angegebenen Argumenten ausgeführt.
+
+### Fehlerbehandlung:
+
+Falls ein Befehl nicht gefunden oder nicht erfolgreich ausgeführt wird, zeigt das Tool eine Fehlermeldung an und bietet die Möglichkeit, einen Standardbefehl (`$default_command`) auszuführen.
+
+## Verwendung der Ansible Vault
+
+Das DevOpsToolkit verwendet eine verschlüsselte Ansible Vault, um vertrauliche und dynamisch konfigurierbare Parameter sicher zu speichern und zu verwalten. Bei der Ausführung des `devops setup`-Befehls wird eine Vault-Datei im `${opt_data_dir}` Verzeichnis angelegt, die sensible Daten wie Zugangsdaten und Konfigurationsparameter enthält.
+
+### Verwaltung der Vault:
+
+- **Vault-Inhalt anzeigen und bearbeiten**: Der Inhalt der Vault kann über das `devops vault` Kommando eingesehen und bearbeitet werden.
+- **Vault-Schlüssel**: Der geheime Schlüssel zur Entschlüsselung der Vault-Datei wird in der Variable `$VAULT_SECRET` gespeichert. Dieser Schlüssel wird nur dann im `${opt_data_dir}` Verzeichnis unter dem Namen `devopsVaultAccessSecret-${username}.yml` abgelegt, wenn eine saubere Entfernung des Toolkits über `devops debug delete` durchgeführt wird. Es wird empfohlen, diesen Schlüssel sicher zu notieren und die Datei nach dem Setup zu löschen.
+
+### Beispiel für die Verwaltung der Vault:
+
+- **Vault anzeigen**:
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch production
+  devops vault
   ```
 
-- **`-t staging`**:  
-  Sets **`USE_DEFAULTS=true`** and sets up a staging environment.
-
+- **Vault öffnen mit gespeichertem Schlüssel**:
+  Ein Skript namens `openVault.sh` im `${opt_data_dir}` Verzeichnis ermöglicht es, die Vault mit dem gespeicherten Schlüssel zu öffnen:
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch staging 
+  ${opt_data_dir}/openVault.sh
   ```
 
-- **`-t dev`**:  
-  Sets **`USE_DEFAULTS=true`** and sets up a development environment.
+  Dies stellt sicher, dass die durch das Skript eingerichteten Systeme weiterhin Zugriff auf die notwendigen Konfigurationsparameter haben, selbst wenn der Schlüssel aus dem System entfernt wird. Es wird jedoch empfohlen, den Zugangsschlüssel zu löschen, um die Sicherheit zu gewährleisten.
 
+## Debugging und Updates
+
+Das DevOpsToolkit enthält Funktionen für die Fehlerbehebung und Aktualisierung. Über das `devops update` Kommando können die neuesten Änderungen an den Skripten bezogen werden, während eigene Änderungen und Ergänzungen bestehen bleiben.
+
+### Funktionen des Debugging und der Updates:
+
+- **Toolkit-Bereinigung**: Entfernt alle temporären Dateien, Konfigurationen und Zugangsdaten aus dem System, außer einer Sicherungskopie der Zugangsdaten, die im `${opt_data_dir}` als `.yml` abgelegt wird. Der Vault-Schlüssel wird nur abgelegt, wenn `devops debug delete` ausgeführt wird.
+  
+- **Toolkit-Updates**: Mit dem Befehl `devops update` können die neuesten Änderungen an den Skripten bezogen werden, während eigene Anpassungen erhalten bleiben. Dies stellt sicher, dass das Toolkit immer auf dem neuesten Stand ist.
+
+### Beispiel:
+
+- **Toolkit bereinigen**:
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev
+  devops debug delete
   ```
 
-- **`-t dev -key "ssh-pub-key"`**:  
-  Sets **`USE_DEFAULTS=true`**, sets up a development environment, and enables the SSH key function with the provided public key.
-
+- **Toolkit aktualisieren**:
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev -key "ssh-pub-key"
+  devops update
   ```
 
-## Option Explanations
+Dieses Skript aktualisiert das Toolkit und stellt sicher, dass alle Komponenten auf dem neuesten Stand sind, während eigene Anpassungen erhalten bleiben.
 
-- **`-t production / staging / dev`**:  
-  This option specifies which environment will be set up. The **`USE_DEFAULTS=true`** option ensures that no user input is required, and the default values are applied automatically.
+## Features
 
-- **`-key "ssh-pub-key"`**:  
-  This option allows you to provide a public SSH key. When a key is provided, the SSH key function is enabled, and the key is added to the server.
+- **Automatisierte Skripterkennung und -ausführung**: Durchsucht das Skriptverzeichnis nach ausführbaren Dateien und führt diese basierend auf der Benutzeranweisung aus.
+- **Konfigurierbare Umgebungsvariablen**: Lädt und setzt Variablen aus einer Konfigurationsdatei, um Skripte dynamisch anzupassen.
+- **Integriertes Logging**: Protokolliert alle ausgeführten Befehle für eine spätere Überprüfung.
+- **Sicheres Vault-Management**: Verwaltung von vertraulichen Daten über eine verschlüsselte Ansible Vault, mit der Möglichkeit, den Zugangsschlüssel sicher zu löschen oder zu sichern.
+- **Debugging und Updates**: Enthält Werkzeuge zur Bereinigung und Aktualisierung des Toolkits, während eine sichere Kopie der Zugangsdaten erhalten bleibt. Änderungen an Skripten können über `devops update` bezogen werden, ohne dass eigene Anpassungen verloren gehen.
+- **Einfacher Zugriff über `devops`**: Nach der Installation kann das CLI-Tool direkt über das Kommando `devops` genutzt werden, ohne den Pfad explizit angeben zu müssen.
+
+## Lizenz
+
+Dieses Projekt steht unter der [Lizenztyp] Lizenz.
+
+## Kontakt
+
+Bei Fragen oder für Unterstützung können Sie uns unter [Kontaktinformation] erreichen.

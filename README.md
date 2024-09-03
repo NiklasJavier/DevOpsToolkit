@@ -1,189 +1,191 @@
 # DevOpsToolkit
 
-## Überblick
+## Overview
 
 The **DevOpsToolkit** repository provides a collection of scripts and configurations to quickly and easily set up a development, staging, or production environment. It is flexible and allows configuration based on user-defined settings or the use of default values.
 
-## Inhaltsverzeichnis
+## Table of Contents
 
 - [Installation](#installation)
-- [Verwendung](#verwendung)
-- [Konfiguration](#konfiguration)
+- [Usage](#usage)
+- [Configuration](#configuration)
 - [DevOps CLI Tool](#devops-cli-tool)
-- [Verwendung der Ansible Vault](#verwendung-der-ansible-vault)
-- [Debugging und Updates](#debugging-und-updates)
+- [Using the Ansible Vault](#using-the-ansible-vault)
+- [Debugging and Updates](#debugging-and-updates)
 - [Features](#features)
-- [Lizenz](#lizenz)
-- [Kontakt](#kontakt)
+- [License](#license)
+- [Contact](#contact)
 
 ## Installation
 
-Das DevOpsToolkit kann über verschiedene Befehle initialisiert und installiert werden. Hier ist ein Beispiel für ein schnelles Setup.
+The DevOpsToolkit can be initialized and installed using various commands. Here is an example for a quick setup.
 
-### Beispiel für ein schnelles Setup:
+### Example for a Quick Setup:
 
-Mit diesem Befehl wird das Toolkit installiert und direkt danach ein Setup-Skript ausgeführt. Dies ermöglicht ein reibungsloses und schnelles Setup.
+This command installs the toolkit and immediately executes a setup script, enabling a smooth and quick setup.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev -key "ssh-pub-key" && devops setup
+curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev -key "ssh-pub-key" -port "22" && devops setup
 ```
 
-- **curl -fsSL**: Ruft das Setup-Skript vom angegebenen GitHub-Repository ab.
-- **bash -s -- -branch dev -key "ssh-pub-key"**: Führt das Skript aus, richtet eine Entwicklungsumgebung ein und aktiviert die SSH-Key-Funktion mit dem angegebenen öffentlichen Schlüssel.
-- **&& devops setup**: Startet unmittelbar nach der Installation das `setup`-Skript über das `devops`-Kommando, um die Einrichtung abzuschließen. Dabei wird auch eine Ansible Vault im `${opt_data_dir}` Verzeichnis angelegt.
+- **curl -fsSL**: Fetches the setup script from the specified GitHub repository.
+- **bash -s -- -branch dev -key "ssh-pub-key" -port "22"**: Executes the script, sets up a development environment, enables the SSH key function with the provided public key, and configures SSH to use port 22.
+- **&& devops setup**: After the installation, it immediately runs the `setup` script using the `devops` command to complete the setup. This also creates an Ansible Vault in the `${opt_data_dir}` directory.
 
-### Weitere Beispiel-Befehle:
+**Note**: You can use `&&` to chain additional DevOps scripts to be executed automatically after the initial setup.
 
-- **Production Umgebung einrichten**:
+### Additional Example Commands:
+
+- **Set up a Production Environment**:
   
-  Dieser Befehl setzt `USE_DEFAULTS=true` und richtet eine Produktionsumgebung ein.
+  This command sets `USE_DEFAULTS=true` and configures a production environment.
 
   ```bash
   curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch production
   ```
 
-- **Staging Umgebung einrichten**:
+- **Set up a Staging Environment**:
   
-  Dieser Befehl setzt `USE_DEFAULTS=true` und richtet eine Staging-Umgebung ein.
+  This command sets `USE_DEFAULTS=true` and configures a staging environment.
 
   ```bash
   curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch staging 
   ```
 
-- **Development Umgebung einrichten**:
+- **Set up a Development Environment**:
   
-  Dieser Befehl setzt `USE_DEFAULTS=true` und richtet eine Entwicklungsumgebung ein.
+  This command sets `USE_DEFAULTS=true` and configures a development environment.
 
   ```bash
   curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev
   ```
 
-- **Development Umgebung mit SSH-Schlüssel einrichten**:
+- **Set up a Development Environment with SSH Key**:
   
-  Dieser Befehl setzt `USE_DEFAULTS=true`, richtet eine Entwicklungsumgebung ein und aktiviert die SSH-Schlüssel-Funktion mit dem angegebenen öffentlichen Schlüssel.
+  This command sets `USE_DEFAULTS=true`, configures a development environment, and enables the SSH key function with the provided public key.
 
   ```bash
   curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev -key "ssh-pub-key"
   ```
 
-### Verfügbare Flags:
+### Available Flags:
 
 - **`-branch [production|staging|dev]`**:
-  - Legt den Branch fest, der verwendet wird. Diese Option aktiviert standardmäßig `USE_DEFAULTS=true` und richtet die entsprechende Umgebung ein.
+  - Specifies the branch to be used. This option automatically sets `USE_DEFAULTS=true` and configures the corresponding environment.
   
 - **`-full [true|false]`**:
-  - Führt eine vollständige Installation durch, wenn auf `true` gesetzt.
+  - Performs a full installation if set to `true`.
   
 - **`-systemname [Name]`**:
-  - Setzt den Systemnamen (ehemals Hostname).
+  - Sets the system name (formerly hostname).
   
 - **`-username [Name]`**:
-  - Definiert den Benutzernamen für die Konfiguration.
+  - Defines the username for the configuration.
   
-- **`-key [Pfad]`**:
-  - Aktiviert die SSH-Key-Funktion und verwendet den angegebenen öffentlichen Schlüssel.
+- **`-key [Path]`**:
+  - Enables the SSH key function and uses the provided public key.
   
-- **`-port [Portnummer]`**:
-  - Legt den Port für SSH-Verbindungen fest.
+- **`-port [Port Number]`**:
+  - Sets the port for SSH connections.
   
 - **`-tools [Tools]`**:
-  - Installiert zusätzliche Tools, die durch Leerzeichen getrennt werden.
+  - Installs additional tools separated by spaces.
 
 ## DevOps CLI Tool
 
-Das DevOps CLI Tool ist ein zentraler Bestandteil des DevOpsToolkit, das die Ausführung von Automatisierungsskripten erleichtert. Nach der Installation und Initialisierung ist das Tool über das Kommando `devops` verfügbar, wodurch der Aufruf von `./devops_cli.sh` nicht mehr notwendig ist.
+The DevOps CLI Tool is a core component of the DevOpsToolkit that facilitates the execution of automation scripts. After installation and initialization, the tool is available via the `devops` command, eliminating the need to call `./devops_cli.sh`.
 
-### Verwendung:
+### Usage:
 
-Nach der Initialisierung des Toolkits kann das Tool direkt über das `devops`-Kommando aufgerufen werden:
+Once the toolkit is initialized, the tool can be invoked directly via the `devops` command:
 
 ```bash
 devops [foldername] <command> [args]
 ```
 
-### Funktionsweise:
+### Functionality:
 
-1. **Konfiguration laden**: Das Tool lädt eine Konfigurationsdatei, die vorab definiert oder durch den Benutzer angepasst wurde. Diese Datei enthält Schlüssel-Wert-Paare, die als Umgebungsvariablen im Skript verfügbar gemacht werden.
+1. **Load Configuration**: The tool loads a configuration file that is either predefined or customized by the user. This file contains key-value pairs that are made available as environment variables in the script.
 
-2. **Befehlslogging**: Alle ausgeführten Befehle werden mit Zeitstempel und Benutzername in einer Logdatei (`$LOG_FILE`) protokolliert.
+2. **Command Logging**: All executed commands are logged with a timestamp and username in a log file (`$LOG_FILE`).
 
-3. **Befehlsausführung**: Basierend auf dem angegebenen Befehl sucht das Tool im Skriptverzeichnis (`$SCRIPTS_DIR`) nach dem entsprechenden Skript und führt es mit den notwendigen Argumenten und Umgebungsvariablen aus.
+3. **Command Execution**: Based on the provided command, the tool searches the script directory (`$SCRIPTS_DIR`) for the corresponding script and executes it with the necessary arguments and environment variables.
 
-4. **Hilfe anzeigen**: Wird `help` als Befehl angegeben, zeigt das Tool eine Liste aller verfügbaren Skripte und Befehle an. Es kann auch spezifische Hilfestellungen für einzelne Befehle anzeigen.
+4. **Display Help**: If `help` is provided as a command, the tool displays a list of all available scripts and commands. It can also display specific help for individual commands.
 
-### Beispiel:
+### Example:
 
 ```bash
-devops debug update
+devops update
 ```
 
-Wenn `deploy` ein Ordner im Skriptverzeichnis ist und `myapp.sh` ein Skript darin, wird dieses Skript mit den angegebenen Argumenten ausgeführt.
+If `deploy` is a folder in the script directory and `myapp.sh` is a script within it, this script will be executed with the specified arguments.
 
-### Fehlerbehandlung:
+### Error Handling:
 
-Falls ein Befehl nicht gefunden oder nicht erfolgreich ausgeführt wird, zeigt das Tool eine Fehlermeldung an und bietet die Möglichkeit, einen Standardbefehl (`$default_command`) auszuführen.
+If a command is not found or fails to execute, the tool displays an error message and offers the option to execute a default command (`$default_command`).
 
-## Verwendung der Ansible Vault
+## Using the Ansible Vault
 
-Das DevOpsToolkit verwendet eine verschlüsselte Ansible Vault, um vertrauliche und dynamisch konfigurierbare Parameter sicher zu speichern und zu verwalten. Bei der Ausführung des `devops setup`-Befehls wird eine Vault-Datei im `${opt_data_dir}` Verzeichnis angelegt, die sensible Daten wie Zugangsdaten und Konfigurationsparameter enthält.
+The DevOpsToolkit uses an encrypted Ansible Vault to securely store and manage sensitive and dynamically configurable parameters. When the `devops setup` command is executed, a Vault file is created in the `${opt_data_dir}` directory, containing sensitive data such as credentials and configuration parameters.
 
-### Verwaltung der Vault:
+### Managing the Vault:
 
-- **Vault-Inhalt anzeigen und bearbeiten**: Der Inhalt der Vault kann über das `devops vault` Kommando eingesehen und bearbeitet werden.
-- **Vault-Schlüssel**: Der geheime Schlüssel zur Entschlüsselung der Vault-Datei wird in der Variable `$VAULT_SECRET` gespeichert. Dieser Schlüssel wird nur dann im `${opt_data_dir}` Verzeichnis unter dem Namen `devopsVaultAccessSecret-${username}.yml` abgelegt, wenn eine saubere Entfernung des Toolkits über `devops debug delete` durchgeführt wird. Es wird empfohlen, diesen Schlüssel sicher zu notieren und die Datei nach dem Setup zu löschen.
+- **View and Edit Vault Contents**: The contents of the Vault can be viewed and edited using the `devops vault` command.
+- **Vault Key**: The secret key to decrypt the Vault file is stored in the `$VAULT_SECRET` variable. This key is only stored in the `${opt_data_dir}` directory under the name `devopsVaultAccessSecret-${username}.yml` if a clean removal of the toolkit is performed via `devops debug delete`. It is recommended to securely note this key and delete the file after setup.
 
-### Beispiel für die Verwaltung der Vault:
+### Example for Managing the Vault:
 
-- **Vault anzeigen**:
+- **View Vault**:
   ```bash
   devops vault
   ```
 
-- **Vault öffnen mit gespeichertem Schlüssel**:
-  Ein Skript namens `openVault.sh` im `${opt_data_dir}` Verzeichnis ermöglicht es, die Vault mit dem gespeicherten Schlüssel zu öffnen:
+- **Open Vault with Stored Key**:
+  A script named `openVault.sh` in the `${opt_data_dir}` directory allows the Vault to be opened with the stored key:
   ```bash
   ${opt_data_dir}/openVault.sh
   ```
 
-  Dies stellt sicher, dass die durch das Skript eingerichteten Systeme weiterhin Zugriff auf die notwendigen Konfigurationsparameter haben, selbst wenn der Schlüssel aus dem System entfernt wird. Es wird jedoch empfohlen, den Zugangsschlüssel zu löschen, um die Sicherheit zu gewährleisten.
+  This ensures that the systems configured by the script continue to have access to the necessary configuration parameters, even if the key is removed from the system. However, it is recommended to delete the access key to ensure security.
 
-## Debugging und Updates
+## Debugging and Updates
 
-Das DevOpsToolkit enthält Funktionen für die Fehlerbehebung und Aktualisierung. Über das `devops update` Kommando können die neuesten Änderungen an den Skripten bezogen werden, während eigene Änderungen und Ergänzungen bestehen bleiben.
+The DevOpsToolkit includes features for debugging and updating. Using the `devops update` command, the latest changes to the scripts can be retrieved, while retaining any custom changes or additions.
 
-### Funktionen des Debugging und der Updates:
+### Features of Debugging and Updates:
 
-- **Toolkit-Bereinigung**: Entfernt alle temporären Dateien, Konfigurationen und Zugangsdaten aus dem System, außer einer Sicherungskopie der Zugangsdaten, die im `${opt_data_dir}` als `.yml` abgelegt wird. Der Vault-Schlüssel wird nur abgelegt, wenn `devops debug delete` ausgeführt wird.
+- **Toolkit Cleanup**: Removes all temporary files, configurations, and credentials from the system, except for a backup of the credentials stored in the `${opt_data_dir}` as `.yml`. The Vault key is only stored if `devops debug delete` is executed.
   
-- **Toolkit-Updates**: Mit dem Befehl `devops update` können die neuesten Änderungen an den Skripten bezogen werden, während eigene Anpassungen erhalten bleiben. Dies stellt sicher, dass das Toolkit immer auf dem neuesten Stand ist.
+- **Toolkit Updates**: The `devops update` command allows you to retrieve the latest changes to the scripts while preserving custom modifications. This ensures that the toolkit is always up to date.
 
-### Beispiel:
+### Example:
 
-- **Toolkit bereinigen**:
+- **Clean Up Toolkit**:
   ```bash
   devops debug delete
   ```
 
-- **Toolkit aktualisieren**:
+- **Update Toolkit**:
   ```bash
   devops update
   ```
 
-Dieses Skript aktualisiert das Toolkit und stellt sicher, dass alle Komponenten auf dem neuesten Stand sind, während eigene Anpassungen erhalten bleiben.
+This script updates the toolkit and ensures that all components are up to date while retaining any custom modifications.
 
 ## Features
 
-- **Automatisierte Skripterkennung und -ausführung**: Durchsucht das Skriptverzeichnis nach ausführbaren Dateien und führt diese basierend auf der Benutzeranweisung aus.
-- **Konfigurierbare Umgebungsvariablen**: Lädt und setzt Variablen aus einer Konfigurationsdatei, um Skripte dynamisch anzupassen.
-- **Integriertes Logging**: Protokolliert alle ausgeführten Befehle für eine spätere Überprüfung.
-- **Sicheres Vault-Management**: Verwaltung von vertraulichen Daten über eine verschlüsselte Ansible Vault, mit der Möglichkeit, den Zugangsschlüssel sicher zu löschen oder zu sichern.
-- **Debugging und Updates**: Enthält Werkzeuge zur Bereinigung und Aktualisierung des Toolkits, während eine sichere Kopie der Zugangsdaten erhalten bleibt. Änderungen an Skripten können über `devops update` bezogen werden, ohne dass eigene Anpassungen verloren gehen.
-- **Einfacher Zugriff über `devops`**: Nach der Installation kann das CLI-Tool direkt über das Kommando `devops` genutzt werden, ohne den Pfad explizit angeben zu müssen.
+- **Automated Script Detection and Execution**: Scans the script directory for executable files and executes them based on user input.
+- **Configurable Environment Variables**: Loads and sets variables from a configuration file to dynamically adapt scripts.
+- **Integrated Logging**: Logs all executed commands for later review.
+- **Secure Vault Management**: Manages sensitive data through an encrypted Ansible Vault, with the option to securely delete or retain the access key.
+- **Debugging and Updates**: Includes tools for cleaning up and updating the toolkit while retaining a secure copy of the credentials. Script changes can be retrieved via `devops update` without losing custom modifications.
+- **Easy Access via `devops`**: After installation, the CLI tool can be used directly with the `devops` command, without needing to specify the path.
 
-## Lizenz
+## License
 
-Dieses Projekt steht unter der [Lizenztyp] Lizenz.
+This project is licensed under the [License Type] license.
 
-## Kontakt
+## Contact
 
-Bei Fragen oder für Unterstützung können Sie uns unter [Kontaktinformation] erreichen.
+For questions or support, you can reach us at [Contact Information].

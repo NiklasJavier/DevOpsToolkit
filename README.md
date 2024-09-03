@@ -89,8 +89,6 @@ curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/envi
 - **`-tools [Tools]`**:
   - Installiert zusätzliche Tools, die durch Leerzeichen getrennt werden.
 
-### Beispiel für die Verwendung der Flags:
-
 ## DevOps CLI Tool
 
 Das DevOps CLI Tool ist ein zentraler Bestandteil des DevOpsToolkit, das die Ausführung von Automatisierungsskripten erleichtert. Nach der Installation und Initialisierung ist das Tool über das Kommando `devops` verfügbar, wodurch der Aufruf von `./devops_cli.sh` nicht mehr notwendig ist.

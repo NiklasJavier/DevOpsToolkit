@@ -38,7 +38,7 @@ find /home -regextype posix-extended -maxdepth 1 -mindepth 1 -type d -regex '.*/
     sudo rm -rf "$srv_dir"
     sudo rm -rf "$home_dir"
   else
-    echo -e "${RED}The user ${YELLOW}$username ${RED}is the current user and will not be deleted.${NC}"
+    echo -e "${RED}The user ${YELLOW}$username ${RED}is the ${GREEN}current ${RED}user and will not be deleted.${NC}"
   fi
 done
 }

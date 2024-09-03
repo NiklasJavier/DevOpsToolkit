@@ -25,7 +25,7 @@ The DevOpsToolkit can be initialized and installed using various commands. Here 
 This command installs the toolkit and immediately executes a setup script, enabling a smooth and quick setup.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev -key "ssh-pub-key" -port "22" && devops setup
+curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev -port "22" && devops setup
 ```
 
 - **curl -fsSL**: Fetches the setup script from the specified GitHub repository.

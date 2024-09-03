@@ -32,6 +32,65 @@ curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/envi
 - **bash -s -- -branch dev -key "ssh-pub-key"**: Führt das Skript aus, richtet eine Entwicklungsumgebung ein und aktiviert die SSH-Key-Funktion mit dem angegebenen öffentlichen Schlüssel.
 - **&& devops setup**: Startet unmittelbar nach der Installation das `setup`-Skript über das `devops`-Kommando, um die Einrichtung abzuschließen. Dabei wird auch eine Ansible Vault im `${opt_data_dir}` Verzeichnis angelegt.
 
+### Weitere Beispiel-Befehle:
+
+- **Production Umgebung einrichten**:
+  
+  Dieser Befehl setzt `USE_DEFAULTS=true` und richtet eine Produktionsumgebung ein.
+
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch production
+  ```
+
+- **Staging Umgebung einrichten**:
+  
+  Dieser Befehl setzt `USE_DEFAULTS=true` und richtet eine Staging-Umgebung ein.
+
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch staging 
+  ```
+
+- **Development Umgebung einrichten**:
+  
+  Dieser Befehl setzt `USE_DEFAULTS=true` und richtet eine Entwicklungsumgebung ein.
+
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev
+  ```
+
+- **Development Umgebung mit SSH-Schlüssel einrichten**:
+  
+  Dieser Befehl setzt `USE_DEFAULTS=true`, richtet eine Entwicklungsumgebung ein und aktiviert die SSH-Schlüssel-Funktion mit dem angegebenen öffentlichen Schlüssel.
+
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/NiklasJavier/DevOpsToolkit/dev/environments/setup_devops_toolkit.sh | bash -s -- -branch dev -key "ssh-pub-key"
+  ```
+
+### Verfügbare Flags:
+
+- **`-branch [production|staging|dev]`**:
+  - Legt den Branch fest, der verwendet wird. Diese Option aktiviert standardmäßig `USE_DEFAULTS=true` und richtet die entsprechende Umgebung ein.
+  
+- **`-full [true|false]`**:
+  - Führt eine vollständige Installation durch, wenn auf `true` gesetzt.
+  
+- **`-systemname [Name]`**:
+  - Setzt den Systemnamen (ehemals Hostname).
+  
+- **`-username [Name]`**:
+  - Definiert den Benutzernamen für die Konfiguration.
+  
+- **`-key [Pfad]`**:
+  - Aktiviert die SSH-Key-Funktion und verwendet den angegebenen öffentlichen Schlüssel.
+  
+- **`-port [Portnummer]`**:
+  - Legt den Port für SSH-Verbindungen fest.
+  
+- **`-tools [Tools]`**:
+  - Installiert zusätzliche Tools, die durch Leerzeichen getrennt werden.
+
+### Beispiel für die Verwendung der Flags:
+
 ## DevOps CLI Tool
 
 Das DevOps CLI Tool ist ein zentraler Bestandteil des DevOpsToolkit, das die Ausführung von Automatisierungsskripten erleichtert. Nach der Installation und Initialisierung ist das Tool über das Kommando `devops` verfügbar, wodurch der Aufruf von `./devops_cli.sh` nicht mehr notwendig ist.

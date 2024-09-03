@@ -58,6 +58,7 @@ for port in $open_ports; do
     echo -e "${RED}Port ${YELLOW}$port ${RED}is not the SSH port and will be deleted.${NC}"
     sudo ufw delete allow "$port/tcp"
     else 
+    echo -e "${GREY}If the same port is specified twice, this means 1x IPV4 and 1x IPV6 for the same port as a rule.${NC}"
     echo -e "${GREY}Port (IPV4/IPV6) ${YELLOW}$port ${GREY}is the SSH port and will not be deleted.${NC}"
   fi
 done

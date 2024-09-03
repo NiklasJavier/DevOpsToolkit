@@ -56,7 +56,7 @@ if [ -f "$output_file" ]; then
 fi
 
 if [ ! -f "$vault_file" ]; then
-  echo -e "${RED}The file ${YELLOW}"$vault_file" ${RED}was not found.${GREY}"
+  echo "${RED}The file ${YELLOW}"$vault_file" ${RED}was not found.${GREY}"
   exit 1
 fi
 

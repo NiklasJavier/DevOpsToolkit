@@ -33,6 +33,7 @@ find /home -regextype posix-extended -maxdepth 1 -mindepth 1 -type d -regex '.*/
     user_list+=("$username")
     echo -e "${RED}The user ${YELLOW}$username ${RED}will be deleted."
     srv_dir="/opt/SRV-$username"
+    echo -e "${GREY}Extracted service directory: ${YELLOW}$srv_dir${NC}"
     home_dir="/home/$username"
     sudo userdel -r "$username"
     sudo rm -r "$srv_dir"

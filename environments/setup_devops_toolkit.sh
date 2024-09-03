@@ -140,9 +140,9 @@ CONFIG_FILE="$SETTINGS_DIR/config.yaml" # Konfigurationsdatei festlegen
 
 checkSettingsDirExist() {
     if [ -d "$SETTINGS_DIR" ]; then
-        echo -e "${GREY}Settings directory exists: ${YELLOW}$SETTINGS_DIR${NC}"
+        echo -e "${RED}Settings directory exists: ${YELLOW}$SETTINGS_DIR${NC}"
         echo -e "${RED}Please use ${YELLOW}'devops debug update' ${RED}to apply the latest changes or ${YELLOW}'devops debug delete' ${RED}to remove the current setup.${NC}"
-        exit 1
+        kill -INT $$
         else
         echo -e "${GREY}Settings directory does not exist: ${YELLOW}$SETTINGS_DIR${NC}"
     fi

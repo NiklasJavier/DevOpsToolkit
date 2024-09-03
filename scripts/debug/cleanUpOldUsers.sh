@@ -47,6 +47,7 @@ ssh_port=$(grep "^Port " /etc/ssh/sshd_config | awk '{print $2}')
 # If no port is explicitly set in the file, use default port 22
 if [ -z "$ssh_port" ]; then
   ssh_port=22
+  echo -e "${RED}No SSH port was found in the configuration file. Using default port 22.${NC}"
 fi
 echo -e "${GREY}Extracted SSH port: ${YELLOW}$ssh_port${NC}"
 # Step 2: List of open ports with ufw
@@ -56,6 +57,8 @@ for port in $open_ports; do
   if [ "$port" -ne "$ssh_port" ]; then
     echo -e "${RED}Port ${YELLOW}$port ${RED}is not the SSH port and will be deleted.${NC}"
     sudo ufw delete allow "$port/tcp"
+    else 
+    echo -e "${GREY}Port ${YELLOW}$port ${GREY}is the SSH port and will not be deleted.${NC}"
   fi
 done
 }

@@ -27,7 +27,7 @@ findAndDeleteOldUsers(){
 echo -e "${GREY}Extracting user names from the home directory.${NC}"
 find /home -regextype posix-extended -maxdepth 1 -mindepth 1 -type d -regex '.*/[A-Z]{11}' | while read -r dir; do
   username=$(basename "$dir")
-  echo -e "${GREY}Extracted user name: ${YELLOW}$username${NC}"
+  echo -e "${GREY}>> Extracted user name: ${YELLOW}$username${NC}"
   # Add the user name to the list if it is not the currentUsername
   if [ "$username" != "$currentUsername" ]; then
     user_list+=("$username")
@@ -51,7 +51,7 @@ if [ -z "$ssh_port" ]; then
   ssh_port=22
   echo -e "${RED}No SSH port was found in the configuration file. Using default port 22.${NC}"
 fi
-echo -e "${GREY}Extracted SSH port: ${YELLOW}$ssh_port${NC}"
+echo -e "${GREY}>> Extracted SSH port: ${YELLOW}$ssh_port${NC}"
 # Step 2: List of open ports with ufw
 open_ports=$(sudo ufw status numbered | grep -oP '\d+(?=/tcp)')
 # Step 3: Remove rules for unused ports

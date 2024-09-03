@@ -9,6 +9,8 @@ BOLD='\033[1m'
 GREY='\033[1;90m'
 NC='\033[0m' 
 
+currentUsername="$3"
+
 issueReturnRequestToWork() {
     echo -e "${RED}⚠️  This script will delete all ports not listed in the SSH configuration and all folders not present in the config.yml file.${NC}"
     echo -e "${RED}    Please ensure the current directory is listed in the config.yml file, or these files will be permanently deleted.${NC}"
